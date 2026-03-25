@@ -26,11 +26,13 @@ module.exports = {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       animation: {
-        "float":   "float 5s ease-in-out infinite",
-        "marquee": "marquee 22s linear infinite",
+        "float":     "float 5s ease-in-out infinite",
+        "marquee":   "marquee 22s linear infinite",
         "pulse-dot": "pulse-dot 1.8s ease-in-out infinite",
-        "fade-up": "fadeUp 0.5s ease both",
-        "count-up": "countUp 0.6s ease both",
+        "fade-up":   "fadeUp 0.6s ease both",
+        "scale-in":  "scaleIn 0.5s ease both",
+        "slide-in":  "slideInRight 0.5s ease both",
+        "glow":      "glow 2s ease-in-out infinite",
       },
       keyframes: {
         float: {
@@ -46,12 +48,20 @@ module.exports = {
           "50%":     { opacity: 0.4 },
         },
         fadeUp: {
-          from: { opacity: 0, transform: "translateY(14px)" },
+          from: { opacity: 0, transform: "translateY(20px)" },
           to:   { opacity: 1, transform: "translateY(0)" },
         },
-        countUp: {
-          from: { opacity: 0, transform: "translateY(10px)" },
-          to:   { opacity: 1, transform: "translateY(0)" },
+        scaleIn: {
+          from: { opacity: 0, transform: "scale(0.95)" },
+          to:   { opacity: 1, transform: "scale(1)" },
+        },
+        slideInRight: {
+          from: { opacity: 0, transform: "translateX(30px)" },
+          to:   { opacity: 1, transform: "translateX(0)" },
+        },
+        glow: {
+          "0%,100%": { opacity: 0.5 },
+          "50%":     { opacity: 1 },
         },
       },
     },

@@ -1,9 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
-  i18n: undefined,
-};
+const nextConfig = {};
 
 module.exports = nextConfig;
