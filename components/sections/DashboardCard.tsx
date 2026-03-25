@@ -2,7 +2,7 @@
 
 interface DashboardCardProps { t: any; }
 
-const BAR_HEIGHTS = [76, 50, 90, 62, 100, 46, 82];
+const BAR_HEIGHTS = [76, 50, 90, 62, 100, 46, 82, 58, 94];
 
 export default function DashboardCard({ t }: DashboardCardProps) {
   const { dash } = t.home;
@@ -12,65 +12,75 @@ export default function DashboardCard({ t }: DashboardCardProps) {
 
   return (
     <div
-      className="rounded-2xl p-6 animate-float border"
+      className="rounded-2xl p-6 animate-float border relative overflow-hidden"
       style={{ background: "var(--bg2)", borderColor: "var(--border)" }}
     >
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg, rgba(15,144,255,0.03), transparent 50%)" }} />
+
       {/* Header */}
-      <div className="flex justify-between items-center mb-4 pb-4 border-b" style={{ borderColor: "var(--border)" }}>
-        <span className="text-sm font-bold" style={{ color: "var(--white)" }}>{dash.title}</span>
-        <span className="live-pulse flex items-center text-xs font-medium" style={{ color: "var(--green)" }}>
+      <div className="relative flex justify-between items-center mb-5 pb-4 border-b" style={{ borderColor: "var(--border)" }}>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full" style={{ background: "var(--blue)" }} />
+          <span className="text-sm font-bold" style={{ color: "var(--white)" }}>{dash.title}</span>
+        </div>
+        <span className="live-pulse flex items-center text-xs font-semibold" style={{ color: "var(--green)" }}>
           {dash.live}
         </span>
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-2 gap-2.5 mb-4">
+      <div className="relative grid grid-cols-2 gap-3 mb-5">
         {dash.metrics.map((m: any, i: number) => (
           <div
             key={i}
-            className="rounded-xl p-3"
+            className="rounded-xl p-3.5 transition-all duration-200 hover:scale-[1.02]"
             style={{
               background: "var(--bg3)",
               borderLeft: `3px solid ${colorMap[m.color]}`,
             }}
           >
-            <div className="text-[10px] mb-1.5" style={{ color: "var(--w55)" }}>{m.label}</div>
-            <div className="text-xl font-bold" style={{ color: colorMap[m.color] }}>{m.val}</div>
-            <div className="text-[10px] mt-1" style={{ color: "var(--w25)" }}>{m.sub}</div>
+            <div className="text-[10px] font-medium mb-1.5" style={{ color: "var(--w55)" }}>{m.label}</div>
+            <div className="text-xl font-extrabold" style={{ color: colorMap[m.color] }}>{m.val}</div>
+            <div className="text-[10px] mt-1 font-medium" style={{ color: "var(--w25)" }}>{m.sub}</div>
           </div>
         ))}
       </div>
 
       {/* Bar Chart */}
-      <div className="text-[10px] mb-2" style={{ color: "var(--w55)" }}>{dash.activity}</div>
-      <div className="flex items-end gap-1.5 h-14 mb-2">
+      <div className="relative text-[10px] font-medium mb-2.5" style={{ color: "var(--w55)" }}>{dash.activity}</div>
+      <div className="relative flex items-end gap-1.5 h-16 mb-3">
         {BAR_HEIGHTS.map((h, i) => (
           <div
             key={i}
-            className="flex-1 rounded-t transition-opacity hover:opacity-100"
+            className="flex-1 rounded-t-sm transition-all duration-300 hover:opacity-100"
             style={{
               height: `${h}%`,
-              background: i % 2 === 0 ? "var(--blue)" : "var(--cyan)",
-              opacity: 0.72,
+              background: i % 2 === 0
+                ? "linear-gradient(to top, var(--blue), rgba(15,144,255,0.6))"
+                : "linear-gradient(to top, var(--cyan), rgba(0,220,230,0.5))",
+              opacity: 0.75,
             }}
           />
         ))}
       </div>
 
       {/* Status rows */}
-      {dash.statuses.map((s: any, i: number) => (
-        <div
-          key={i}
-          className="flex justify-between items-center py-1.5 text-[10px] border-t"
-          style={{ borderColor: "var(--border)" }}
-        >
-          <span className="flex items-center gap-1.5" style={{ color: "var(--w55)" }}>
-            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: colorMap[s.color] }} />
-            {s.label}
-          </span>
-          <span style={{ color: colorMap[s.color] }}>{s.val}</span>
-        </div>
-      ))}
+      <div className="relative">
+        {dash.statuses.map((s: any, i: number) => (
+          <div
+            key={i}
+            className="flex justify-between items-center py-2 text-[11px] border-t"
+            style={{ borderColor: "var(--border)" }}
+          >
+            <span className="flex items-center gap-2 font-medium" style={{ color: "var(--w55)" }}>
+              <span className="w-2 h-2 rounded-full inline-block" style={{ background: colorMap[s.color], boxShadow: `0 0 6px ${colorMap[s.color]}` }} />
+              {s.label}
+            </span>
+            <span className="font-semibold" style={{ color: colorMap[s.color] }}>{s.val}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

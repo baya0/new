@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type Lang } from "@/lib/i18n";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
   t: any;
@@ -26,21 +27,47 @@ const PAGES = [
 export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
     <nav
-      className="sticky top-0 z-50 border-b"
-      style={{ background: "var(--bg1)", borderColor: "var(--border)", height: 68 }}
+      className={cn(
+        "sticky top-0 z-50 border-b transition-all duration-300",
+        scrolled ? "glass" : ""
+      )}
+      style={{
+        background: scrolled ? "var(--glass)" : "var(--bg1)",
+        borderColor: scrolled ? "var(--glass-border)" : "var(--border)",
+        height: 68,
+      }}
     >
-      <div className="max-w-6xl mx-auto px-8 h-full flex items-center gap-0">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 h-full flex items-center">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-[17px] shrink-0" style={{ color: "var(--white)" }}>
-          <span className="w-7 h-7 rounded-[7px] flex items-center justify-center text-xs font-bold text-white" style={{ background: "var(--blue)" }}>S</span>
-          supportiva<span style={{ color: "var(--blue)" }}>.net</span>
+        <Link href="/" className="flex items-center gap-2.5 font-bold text-[17px] shrink-0 group" style={{ color: "var(--white)" }}>
+          <span
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-white transition-transform group-hover:scale-110"
+            style={{ background: "linear-gradient(135deg, var(--blue), #0066CC)" }}
+          >
+            S
+          </span>
+          <span>
+            supportiva<span style={{ color: "var(--blue)" }}>.net</span>
+          </span>
         </Link>
 
         {/* Desktop Nav Links */}
-        <div className="hidden md:flex gap-1 ml-8 flex-1">
+        <div className="hidden md:flex gap-0.5 ml-10 flex-1">
           {PAGES.map((p) => {
             const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
             return (
@@ -48,52 +75,65 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                 key={p.key}
                 href={p.href}
                 className={cn(
-                  "px-3 py-2 rounded-lg text-[13px] transition-all",
+                  "relative px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-200",
                   isActive
-                    ? "text-[var(--blue)] bg-[rgba(15,144,255,0.09)]"
-                    : "hover:text-[var(--blue)] hover:bg-[rgba(15,144,255,0.06)]"
+                    ? "text-[var(--blue)]"
+                    : "hover:text-[var(--blue)]"
                 )}
                 style={{ color: isActive ? "var(--blue)" : "var(--w55)" }}
               >
-                {(t.nav as any)[p.key]}
+                {isActive && (
+                  <span
+                    className="absolute inset-0 rounded-lg"
+                    style={{ background: "rgba(15,144,255,0.08)" }}
+                  />
+                )}
+                <span className="relative">{(t.nav as any)[p.key]}</span>
               </Link>
             );
           })}
         </div>
 
         {/* Right Controls */}
-        <div className="hidden md:flex items-center gap-2 ml-auto">
+        <div className="hidden md:flex items-center gap-2.5 ml-auto">
           {/* Language pills */}
-          {(["en", "ar", "tr"] as Lang[]).map((l) => (
-            <button
-              key={l}
-              onClick={() => setLang(l)}
-              className={cn(
-                "px-3 py-1.5 rounded-2xl text-xs border transition-all font-medium",
-                lang === l
-                  ? "border-[var(--blue)] text-[var(--blue)] bg-[rgba(15,144,255,0.09)]"
-                  : "border-[var(--border)] text-[var(--w55)] hover:border-[var(--blue)] hover:text-[var(--blue)]"
-              )}
-              style={{ borderColor: lang === l ? "var(--blue)" : "var(--border)" }}
-            >
-              {l === "en" ? "EN" : l === "ar" ? "عر" : "TR"}
-            </button>
-          ))}
+          <div className="flex gap-1 p-1 rounded-xl" style={{ background: "var(--bg2)" }}>
+            {(["en", "ar", "tr"] as Lang[]).map((l) => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                className={cn(
+                  "px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all duration-200",
+                  lang === l
+                    ? "text-white shadow-sm"
+                    : "text-[var(--w55)] hover:text-[var(--blue)]"
+                )}
+                style={{
+                  background: lang === l ? "var(--blue)" : "transparent",
+                }}
+              >
+                {l === "en" ? "EN" : l === "ar" ? "عر" : "TR"}
+              </button>
+            ))}
+          </div>
 
           {/* Theme toggle */}
           <button
             onClick={() => setDark(!dark)}
-            className="w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:border-[var(--blue)]"
-            style={{ background: "var(--bg2)", borderColor: "var(--border)" }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
+            style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}
           >
-            {dark ? <Sun size={14} color="var(--w55)" /> : <Moon size={14} color="var(--w55)" />}
+            {dark ? <Sun size={14} color="var(--amber)" /> : <Moon size={14} color="var(--blue)" />}
           </button>
 
           {/* CTA */}
           <Link
             href="/contact"
-            className="px-5 py-2 rounded-[10px] text-[13px] font-bold text-white transition-all hover:opacity-85 hover:-translate-y-0.5"
-            style={{ background: "var(--blue)" }}
+            className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg"
+            style={{
+              background: "linear-gradient(135deg, var(--blue), #0066CC)",
+              boxShadow: "0 2px 12px rgba(15, 144, 255, 0.25)",
+            }}
           >
             {t.nav.cta}
           </Link>
@@ -101,48 +141,71 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
 
         {/* Mobile Hamburger */}
         <button
-          className="md:hidden ml-auto"
+          className="md:hidden ml-auto w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
-          style={{ color: "var(--w55)" }}
+          style={{ color: "var(--w55)", background: "var(--bg2)" }}
         >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {/* Mobile Menu */}
-      {mobileOpen && (
-        <div
-          className="md:hidden absolute top-full left-0 right-0 border-b z-50 py-4 px-6"
-          style={{ background: "var(--bg1)", borderColor: "var(--border)" }}
-        >
-          {PAGES.map((p) => (
-            <Link
-              key={p.key}
-              href={p.href}
-              onClick={() => setMobileOpen(false)}
-              className="block py-3 text-sm border-b transition-colors"
-              style={{ color: "var(--w85)", borderColor: "var(--border)" }}
-            >
-              {(t.nav as any)[p.key]}
-            </Link>
-          ))}
-          <div className="flex gap-2 mt-4">
-            {(["en", "ar", "tr"] as Lang[]).map((l) => (
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden absolute top-full left-0 right-0 border-b z-50 py-3 px-4"
+            style={{ background: "var(--bg1)", borderColor: "var(--border)" }}
+          >
+            {PAGES.map((p, i) => {
+              const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
+              return (
+                <Link
+                  key={p.key}
+                  href={p.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between py-3.5 px-3 rounded-lg text-sm font-medium transition-colors mb-0.5"
+                  style={{
+                    color: isActive ? "var(--blue)" : "var(--w85)",
+                    background: isActive ? "rgba(15,144,255,0.08)" : "transparent",
+                  }}
+                >
+                  <span>{(t.nav as any)[p.key]}</span>
+                  <ChevronRight size={14} style={{ opacity: 0.4 }} />
+                </Link>
+              );
+            })}
+
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t px-1" style={{ borderColor: "var(--border)" }}>
+              <div className="flex gap-1 p-1 rounded-xl flex-1" style={{ background: "var(--bg2)" }}>
+                {(["en", "ar", "tr"] as Lang[]).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => { setLang(l); setMobileOpen(false); }}
+                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                    style={{
+                      background: lang === l ? "var(--blue)" : "transparent",
+                      color: lang === l ? "#fff" : "var(--w55)",
+                    }}
+                  >
+                    {l === "en" ? "EN" : l === "ar" ? "عر" : "TR"}
+                  </button>
+                ))}
+              </div>
               <button
-                key={l}
-                onClick={() => { setLang(l); setMobileOpen(false); }}
-                className="px-3 py-1.5 rounded-2xl text-xs border"
-                style={{
-                  borderColor: lang === l ? "var(--blue)" : "var(--border)",
-                  color: lang === l ? "var(--blue)" : "var(--w55)",
-                }}
+                onClick={() => { setDark(!dark); setMobileOpen(false); }}
+                className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}
               >
-                {l === "en" ? "EN" : l === "ar" ? "عر" : "TR"}
+                {dark ? <Sun size={14} color="var(--amber)" /> : <Moon size={14} color="var(--blue)" />}
               </button>
-            ))}
-          </div>
-        </div>
-      )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
