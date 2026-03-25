@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+/* ── CSS VARIABLES ── */
+:root {
+  --bg0: #090A0F;
+  --bg1: #0E1018;
+  --bg2: #151821;
+  --bg3: #1C2029;
+  --blue: #0F90FF;
+  --cyan: #00DCE6;
+  --green: #1EDD80;
+  --amber: #FFA600;
+  --purple: #9B6DFF;
+  --white: #FFFFFF;
+  --w85: #D8DAE5;
+  --w55: #8A8D9F;
+  --w25: #3A3C4A;
+  --border: #1E2230;
+}
+
+.light {
+  --bg0: #F6F7FB;
+  --bg1: #FFFFFF;
+  --bg2: #ECEEF5;
+  --bg3: #E1E4EF;
+  --blue: #0A6FDD;
+  --cyan: #007A8C;
+  --green: #0F8040;
+  --amber: #A05C00;
+  --purple: #6B3FCC;
+  --white: #070B1A;
+  --w85: #181C30;
+  --w55: #464A60;
+  --w25: #9096B0;
+  --border: #D2D5E2;
+}
+
+/* ── BASE ── */
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg0);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* RTL Support */
+[dir="rtl"] .tl-timeline { padding-left: 0; padding-right: 2rem; }
+[dir="rtl"] .tl-timeline::before { left: auto; right: 0.3rem; }
+[dir="rtl"] .tl-dot { left: auto; right: -2rem; }
+[dir="rtl"] .service-wide-inner { flex-direction: row-reverse; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg1); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+
+/* ── GLOW ORBS ── */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+/* ── MARQUEE ── */
+.marquee-track {
+  display: flex;
+  gap: 3.5rem;
+  align-items: center;
+  animation: marquee 22s linear infinite;
+  white-space: nowrap;
+}
+
+/* ── HERO DOTS ── */
+.hero-dot-grid {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ── CARD HOVER ── */
+.card-hover {
+  transition: transform 0.22s ease, border-color 0.22s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  border-color: var(--blue) !important;
+}
+
+/* ── TIMELINE ── */
+.tl-timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+.tl-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.35rem;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  width: 1px;
+  background: rgba(15, 144, 255, 0.22);
+}
+.tl-dot {
+  position: absolute;
+  left: -2rem;
+  top: 0.5rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* ── LIVE DOT ── */
+.live-pulse::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 6px;
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+/* ── FOCUS RING ── */
+*:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ── SELECTION ── */
+::selection { background: rgba(15, 144, 255, 0.25); }
