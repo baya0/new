@@ -5,7 +5,7 @@ import { motion, useInView } from "framer-motion";
 import DashboardCard from "@/components/sections/DashboardCard";
 import { Button } from "@/components/ui/Button";
 import { translations } from "@/lib/i18n";
-import { Shield, Zap, Server, Headphones, ArrowRight, Star, ChevronRight } from "lucide-react";
+import { Shield, Zap, Server, Headphones, ArrowRight, Star, ChevronRight, Cloud, Monitor } from "lucide-react";
 
 const t = translations.en;
 const th = t.home;
@@ -16,15 +16,11 @@ const fadeUp = {
   transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
 };
 
-const stagger = {
-  animate: { transition: { staggerChildren: 0.08 } },
-};
-
 const colorMap: Record<string, string> = {
   blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)", amber: "var(--amber)",
 };
 
-const serviceIcons = [Server, Zap, Shield, Headphones];
+const serviceIcons = [Cloud, Zap, Server, Headphones];
 
 function AnimatedSection({ children, className, style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   const ref = useRef(null);
@@ -48,18 +44,13 @@ export default function HomePage() {
     <>
       {/* ── HERO ─────────────────────────────────────────────── */}
       <section className="relative overflow-hidden flex items-center grid-pattern" style={{ background: "var(--bg0)", minHeight: "calc(100vh - 68px)" }}>
-        {/* Glow orbs */}
         <div className="glow-orb w-[700px] h-[700px] opacity-[0.06]" style={{ background: "radial-gradient(circle, var(--blue), transparent 70%)", right: -100, top: -100 }} />
         <div className="glow-orb w-[400px] h-[400px] opacity-[0.04]" style={{ background: "radial-gradient(circle, var(--cyan), transparent 70%)", left: -60, bottom: 60 }} />
-        <div className="glow-orb w-[300px] h-[300px] opacity-[0.03]" style={{ background: "radial-gradient(circle, var(--purple), transparent 70%)", right: 200, bottom: -50 }} />
 
         <div className="relative max-w-6xl mx-auto px-6 lg:px-8 py-20 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
-          {/* Left */}
           <motion.div {...fadeUp}>
-            <div
-              className="inline-flex items-center gap-2 text-xs font-semibold border rounded-full px-4 py-1.5 mb-6"
-              style={{ background: "rgba(15,144,255,0.08)", borderColor: "rgba(15,144,255,0.2)", color: "var(--blue)" }}
-            >
+            <div className="inline-flex items-center gap-2 text-xs font-semibold border rounded-full px-4 py-1.5 mb-6"
+              style={{ background: "rgba(15,144,255,0.08)", borderColor: "rgba(15,144,255,0.2)", color: "var(--blue)" }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--blue)" }} />
               {th.eyebrow}
             </div>
@@ -77,7 +68,6 @@ export default function HomePage() {
               <Link href="/projects"><Button variant="secondary" size="lg">{th.btn2}</Button></Link>
             </div>
 
-            {/* Stats row */}
             <div className="flex gap-8 mt-10 pt-8 border-t flex-wrap" style={{ borderColor: "var(--border)" }}>
               {th.stats.map((s, i) => (
                 <div key={i}>
@@ -88,66 +78,56 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* Right — Dashboard card */}
-          <motion.div
-            initial={{ opacity: 0, x: 30, scale: 0.97 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <motion.div initial={{ opacity: 0, x: 30, scale: 0.97 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}>
             <DashboardCard t={t} />
           </motion.div>
         </div>
       </section>
 
-      {/* ── CLIENTS MARQUEE ──────────────────────────────────── */}
-      <div className="border-t border-b overflow-hidden py-5 px-8" style={{ background: "var(--bg1)", borderColor: "var(--border)" }}>
-        <div className="marquee-track">
-          <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: "var(--w25)" }}>{th.trustedBy}</span>
-          {[...th.clients, ...th.clients].map((c, i) => (
-            <span key={i} className="text-lg font-bold whitespace-nowrap opacity-60 hover:opacity-100 transition-opacity cursor-default" style={{ color: "var(--w55)" }}>{c}</span>
-          ))}
-        </div>
-      </div>
+      {/* ── WHO WE ARE ────────────────────────────────────────── */}
+      <section className="section-glow" style={{ background: "var(--bg1)", padding: "80px 24px" }}>
+        <AnimatedSection className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+            {/* Image placeholder */}
+            <div className="rounded-2xl border overflow-hidden relative min-h-[280px]" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
+              <div className="absolute inset-0 grid-pattern opacity-50" />
+              <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 40% 50%, rgba(15,144,255,0.08), transparent 60%)" }} />
+              <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, var(--blue), transparent)" }} />
+              <div className="flex items-center justify-center h-full relative">
+                <Monitor size={48} style={{ color: "var(--blue)", opacity: 0.3 }} />
+              </div>
+            </div>
 
-      {/* ── SERVICES ─────────────────────────────────────────── */}
+            <div>
+              <div className="text-[10px] font-semibold tracking-widest uppercase mb-3" style={{ color: "var(--blue)" }}>ABOUT US</div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold mb-5 leading-tight" style={{ color: "var(--white)" }}>{th.whoWeAreTitle}</h2>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--w55)" }}>{th.whoWeAreText}</p>
+            </div>
+          </div>
+        </AnimatedSection>
+      </section>
+
+      {/* ── SERVICE CARDS ─────────────────────────────────────── */}
       <section className="relative" style={{ background: "var(--bg0)", padding: "96px 24px" }}>
         <AnimatedSection className="max-w-6xl mx-auto">
           <div className="flex justify-between items-end mb-14 flex-wrap gap-4">
             <div>
               <div className="text-[10px] font-semibold tracking-widest uppercase mb-3" style={{ color: "var(--blue)" }}>{th.servicesLabel}</div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold leading-tight" style={{ color: "var(--white)" }} dangerouslySetInnerHTML={{ __html: th.servicesTitle }} />
+              <h2 className="text-3xl sm:text-4xl font-extrabold leading-tight" style={{ color: "var(--white)" }}>{th.servicesTitle}</h2>
             </div>
             <Link href="/solutions" className="text-sm font-semibold transition-colors hover:opacity-75 flex items-center gap-1" style={{ color: "var(--blue)" }}>
               {th.servicesAll} <ArrowRight size={14} />
             </Link>
           </div>
 
-          {/* Bento grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Big card */}
-            <div className="md:row-span-2 rounded-2xl p-8 border card-hover relative overflow-hidden group" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
-              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${colorMap[th.services[0].color]}, transparent)` }} />
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110" style={{ background: `${colorMap[th.services[0].color]}14` }}>
-                {(() => { const Icon = serviceIcons[0]; return <Icon size={22} style={{ color: colorMap[th.services[0].color] }} />; })()}
-              </div>
-              <h3 className="text-xl font-bold mb-3" style={{ color: "var(--white)" }}>{th.services[0].title}</h3>
-              <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--w55)" }}>{th.services[0].desc}</p>
-              <div className="tag" style={{ background: `${colorMap[th.services[0].color]}0D`, border: `1px solid ${colorMap[th.services[0].color]}22`, color: colorMap[th.services[0].color] }}>
-                {th.services[0].tag}
-              </div>
-              <Link href="/solutions" className="flex items-center gap-1 mt-5 text-sm font-semibold transition-all hover:gap-2" style={{ color: "var(--blue)" }}>
-                Learn more <ChevronRight size={14} />
-              </Link>
-            </div>
-
-            {/* Two small cards */}
-            {th.services.slice(1, 3).map((svc, i) => {
-              const Icon = serviceIcons[i + 1];
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {th.services.map((svc, i) => {
+              const Icon = serviceIcons[i];
               return (
                 <div key={i} className="rounded-2xl p-6 border card-hover relative overflow-hidden group" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
                   <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${colorMap[svc.color]}, transparent)` }} />
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110" style={{ background: `${colorMap[svc.color]}14` }}>
-                    <Icon size={18} style={{ color: colorMap[svc.color] }} />
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110" style={{ background: `${colorMap[svc.color]}14` }}>
+                    <Icon size={22} style={{ color: colorMap[svc.color] }} />
                   </div>
                   <h3 className="text-base font-bold mb-2" style={{ color: "var(--white)" }}>{svc.title}</h3>
                   <p className="text-xs leading-relaxed" style={{ color: "var(--w55)" }}>{svc.desc}</p>
@@ -157,32 +137,39 @@ export default function HomePage() {
                 </div>
               );
             })}
+          </div>
+        </AnimatedSection>
+      </section>
 
-            {/* Wide card */}
-            <div className="md:col-span-2 rounded-2xl p-6 border card-hover relative overflow-hidden group" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
-              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${colorMap[th.services[3].color]}, transparent)` }} />
-              <div className="flex items-center gap-5">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110" style={{ background: `${colorMap[th.services[3].color]}14` }}>
-                  {(() => { const Icon = serviceIcons[3]; return <Icon size={20} style={{ color: colorMap[th.services[3].color] }} />; })()}
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-base font-bold mb-1" style={{ color: "var(--white)" }}>{th.services[3].title}</h3>
-                  <p className="text-xs leading-relaxed" style={{ color: "var(--w55)" }}>{th.services[3].desc}</p>
-                </div>
-                <div className="tag shrink-0" style={{ background: `${colorMap[th.services[3].color]}0D`, border: `1px solid ${colorMap[th.services[3].color]}22`, color: colorMap[th.services[3].color] }}>
-                  {th.services[3].tag}
-                </div>
+      {/* ── OUR SERVICES (text + image section) ────────────────── */}
+      <section style={{ background: "var(--bg1)", padding: "80px 24px" }}>
+        <AnimatedSection className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+            {/* Image placeholder */}
+            <div className="rounded-2xl border overflow-hidden relative min-h-[320px]" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
+              <div className="absolute inset-0 grid-pattern opacity-50" />
+              <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, rgba(0,220,230,0.06), transparent 60%)" }} />
+              <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, var(--cyan), transparent)" }} />
+              <div className="flex items-center justify-center h-full relative">
+                <Server size={48} style={{ color: "var(--cyan)", opacity: 0.3 }} />
               </div>
+            </div>
+
+            <div>
+              <div className="text-[10px] font-semibold tracking-widest uppercase mb-3" style={{ color: "var(--blue)" }}>WHAT WE DO</div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold mb-5 leading-tight" style={{ color: "var(--white)" }}>{th.ourServicesTitle}</h2>
+              <p className="text-sm leading-relaxed mb-8" style={{ color: "var(--w55)" }}>{th.ourServicesText}</p>
+              <Link href="/vision"><Button>{th.ourServicesBtn}</Button></Link>
             </div>
           </div>
         </AnimatedSection>
       </section>
 
       {/* ── STATS BAR ─────────────────────────────────────────── */}
-      <div className="section-glow border-t border-b" style={{ background: "var(--bg1)", borderColor: "var(--border)" }}>
-        <AnimatedSection className="max-w-6xl mx-auto px-6 lg:px-8 py-12 grid grid-cols-2 md:grid-cols-4">
+      <div className="section-glow border-t border-b" style={{ background: "var(--bg0)", borderColor: "var(--border)" }}>
+        <AnimatedSection className="max-w-6xl mx-auto px-6 lg:px-8 py-12 grid grid-cols-2 md:grid-cols-5">
           {th.statsBar.map((s, i) => (
-            <div key={i} className="px-5 border-r last:border-r-0" style={{ borderColor: "var(--border)" }}>
+            <div key={i} className="px-4 border-r last:border-r-0" style={{ borderColor: "var(--border)" }}>
               <div className="text-4xl sm:text-5xl font-extrabold leading-none gradient-text">{s.val}</div>
               <div className="text-sm font-bold mt-2" style={{ color: "var(--white)" }}>{s.label}</div>
               <div className="text-xs mt-1" style={{ color: "var(--w55)" }}>{s.sub}</div>
@@ -190,6 +177,18 @@ export default function HomePage() {
           ))}
         </AnimatedSection>
       </div>
+
+      {/* ── CLIENTS ──────────────────────────────────────────── */}
+      <section style={{ background: "var(--bg1)", padding: "64px 24px" }}>
+        <AnimatedSection className="max-w-6xl mx-auto text-center">
+          <div className="text-[10px] font-semibold tracking-widest uppercase mb-8" style={{ color: "var(--blue)" }}>SUPPORTED END CLIENTS</div>
+          <div className="flex justify-center items-center gap-12 flex-wrap">
+            {th.clients.map((c, i) => (
+              <span key={i} className="text-2xl font-bold opacity-50 hover:opacity-100 transition-opacity cursor-default" style={{ color: "var(--w55)" }}>{c}</span>
+            ))}
+          </div>
+        </AnimatedSection>
+      </section>
 
       {/* ── WHY US ──────────────────────────────────────────────── */}
       <section className="relative" style={{ background: "var(--bg0)", padding: "96px 24px" }}>
@@ -203,15 +202,12 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Timeline */}
           <div className="tl-timeline">
             {th.timeline.map((item, i) => (
               <div key={i} className="tl-item relative mb-5">
                 <div className="tl-dot" style={{ background: colorMap[item.color], color: colorMap[item.color] }} />
-                <div
-                  className="rounded-xl p-5 border transition-all duration-200 hover:translate-x-1 hover:shadow-lg"
-                  style={{ background: "var(--bg2)", borderColor: "var(--border)", borderLeft: `3px solid ${colorMap[item.color]}` }}
-                >
+                <div className="rounded-xl p-5 border transition-all duration-200 hover:translate-x-1 hover:shadow-lg"
+                  style={{ background: "var(--bg2)", borderColor: "var(--border)", borderLeft: `3px solid ${colorMap[item.color]}` }}>
                   <div className="text-sm font-bold" style={{ color: "var(--white)" }}>{item.title}</div>
                   <div className="text-xs mt-2 leading-relaxed" style={{ color: "var(--w55)" }}>{item.desc}</div>
                 </div>
@@ -230,10 +226,8 @@ export default function HomePage() {
           </div>
           <p className="text-xl sm:text-2xl font-bold leading-relaxed pl-4 mb-7" style={{ color: "var(--white)" }}>{th.testimonial.quote}</p>
           <div className="flex items-center gap-4 pl-4">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-              style={{ background: "linear-gradient(135deg, rgba(15,144,255,0.2), rgba(0,220,230,0.15))", color: "var(--blue)" }}
-            >
+            <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+              style={{ background: "linear-gradient(135deg, rgba(15,144,255,0.2), rgba(0,220,230,0.15))", color: "var(--blue)" }}>
               NK
             </div>
             <div>
@@ -251,11 +245,11 @@ export default function HomePage() {
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% -20%, rgba(15,144,255,0.08), transparent 60%)" }} />
 
         <AnimatedSection className="relative max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold" style={{ color: "var(--white)" }} dangerouslySetInnerHTML={{ __html: th.ctaTitle }} />
-          <p className="mt-5 text-base lg:text-lg" style={{ color: "var(--w55)" }}>{th.ctaSub}</p>
+          <h2 className="text-3xl sm:text-4xl font-extrabold" style={{ color: "var(--white)" }}>{th.ctaTitle}</h2>
+          <p className="mt-5 text-base lg:text-lg leading-relaxed" style={{ color: "var(--w55)" }}>{th.ctaSub}</p>
           <div className="flex gap-3 justify-center mt-9 flex-wrap">
             <Link href="/contact"><Button size="lg">{th.ctaBtn1}</Button></Link>
-            <Button variant="secondary" size="lg">{th.ctaBtn2}</Button>
+            <Link href="/solutions"><Button variant="secondary" size="lg">{th.ctaBtn2}</Button></Link>
           </div>
         </AnimatedSection>
       </section>

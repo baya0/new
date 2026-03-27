@@ -64,45 +64,39 @@ export default function VisionPage() {
             {v.eyebrow}
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight max-w-3xl" style={{ color: "var(--white)" }}>
-            Technology Should <span className="gradient-text">Empower</span>,<br />Not Slow You Down.
+            {v.h1}
           </h1>
-          <p className="mt-5 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{v.sub}</p>
+          <p className="mt-5 text-base lg:text-lg leading-relaxed max-w-2xl" style={{ color: "var(--w55)" }}>{v.sub}</p>
         </motion.div>
       </section>
 
-      {/* Mission + Video */}
+      {/* Our Story */}
       <section style={{ background: "var(--bg0)", padding: "80px 24px" }}>
         <div className="max-w-6xl mx-auto">
           <AnimatedSection>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+              {/* Image placeholder */}
+              <div className="rounded-2xl border overflow-hidden relative group" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
+                <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, var(--blue), var(--cyan))" }} />
+                <div className="flex flex-col items-center justify-center min-h-[300px] relative">
+                  <div className="absolute inset-0 grid-pattern opacity-50" />
+                  <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, rgba(15,144,255,0.06), transparent 60%)" }} />
+                  <button className="relative w-20 h-20 rounded-full flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110"
+                    style={{ background: "linear-gradient(135deg, rgba(15,144,255,0.2), rgba(0,220,230,0.15))", border: "2px solid rgba(15,144,255,0.3)", boxShadow: "0 0 40px rgba(15,144,255,0.15)" }}>
+                    <Play size={28} fill="var(--blue)" style={{ color: "var(--blue)", marginLeft: 3 }} />
+                  </button>
+                  <p className="relative text-sm font-medium" style={{ color: "var(--w55)" }}>{v.watchLabel}</p>
+                </div>
+              </div>
+
               <div>
-                <div className="text-[10px] font-semibold tracking-widest uppercase mb-3" style={{ color: "var(--blue)" }}>OUR MISSION</div>
+                <div className="text-[10px] font-semibold tracking-widest uppercase mb-3" style={{ color: "var(--blue)" }}>ABOUT</div>
                 <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 leading-tight" style={{ color: "var(--white)" }}>{v.missionTitle}</h2>
                 <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--w55)" }}>{v.mission1}</p>
                 <p className="text-sm leading-relaxed mb-8" style={{ color: "var(--w55)" }}>{v.mission2}</p>
                 <Link href="/contact">
                   <Button>Work With Us →</Button>
                 </Link>
-              </div>
-
-              {/* Video placeholder */}
-              <div className="rounded-2xl border overflow-hidden relative group" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
-                <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, var(--blue), var(--cyan))" }} />
-                <div className="flex flex-col items-center justify-center min-h-[380px] relative">
-                  {/* Background pattern */}
-                  <div className="absolute inset-0 grid-pattern opacity-50" />
-                  <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, rgba(15,144,255,0.06), transparent 60%)" }} />
-
-                  <button className="relative w-20 h-20 rounded-full flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110"
-                    style={{
-                      background: "linear-gradient(135deg, rgba(15,144,255,0.2), rgba(0,220,230,0.15))",
-                      border: "2px solid rgba(15,144,255,0.3)",
-                      boxShadow: "0 0 40px rgba(15,144,255,0.15)",
-                    }}>
-                    <Play size={28} fill="var(--blue)" style={{ color: "var(--blue)", marginLeft: 3 }} />
-                  </button>
-                  <p className="relative text-sm font-medium" style={{ color: "var(--w55)" }}>{v.watchLabel}</p>
-                </div>
               </div>
             </div>
           </AnimatedSection>
@@ -146,7 +140,6 @@ export default function VisionPage() {
             <div className="text-center mb-14">
               <div className="text-[10px] font-semibold tracking-widest uppercase mb-3" style={{ color: "var(--blue)" }}>INDUSTRIES</div>
               <h2 className="text-3xl sm:text-4xl font-extrabold" style={{ color: "var(--white)" }}>Industries We Serve</h2>
-              <p className="mt-4 text-sm max-w-lg mx-auto" style={{ color: "var(--w55)" }}>From pharmaceuticals to manufacturing, we bring deep IT expertise to the industries that need it most.</p>
             </div>
           </AnimatedSection>
 
@@ -163,7 +156,7 @@ export default function VisionPage() {
         </div>
       </section>
 
-      {/* Stats strip */}
+      {/* Stats */}
       <section className="section-glow border-t" style={{ background: "var(--bg1)", borderColor: "var(--border)", padding: "80px 24px" }}>
         <div className="max-w-6xl mx-auto">
           <AnimatedSection>
