@@ -34,13 +34,7 @@ function AnimatedSection({ children, className }: { children: React.ReactNode; c
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className={className}
-    >
+    <motion.div ref={ref} initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={className}>
       {children}
     </motion.div>
   );
@@ -55,40 +49,45 @@ export default function ProjectsPage() {
 
   return (
     <>
-      {/* Page Hero */}
-      <section className="relative overflow-hidden px-6 lg:px-8 py-20 border-b grid-pattern" style={{ background: "var(--bg0)", borderColor: "var(--border)" }}>
-        <div className="glow-orb w-[500px] h-[500px] opacity-[0.05]" style={{ background: "radial-gradient(circle, var(--green), transparent 70%)", right: -100, top: -100 }} />
+      {/* Hero */}
+      <section className="relative overflow-hidden" style={{ padding: "80px 24px 100px" }}>
+        <div className="absolute inset-0 hero-mesh" />
+        <div className="glow-orb w-[600px] h-[600px] opacity-[0.06]" style={{ background: "radial-gradient(circle, var(--green), transparent 70%)", right: -100, top: -100 }} />
+        <div className="absolute inset-0 dot-grid opacity-30 pointer-events-none" />
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="max-w-6xl mx-auto relative"
         >
-          <div className="inline-flex items-center gap-2 text-xs font-semibold border rounded-full px-4 py-1.5 mb-5" style={{ background: "rgba(15,144,255,0.08)", borderColor: "rgba(15,144,255,0.2)", color: "var(--blue)" }}>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--blue)" }} />
+          <div className="glow-badge mb-6" style={{ background: "rgba(30,221,128,0.06)", borderColor: "rgba(30,221,128,0.15)", color: "var(--green)" }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--green)" }} />
             {p.eyebrow}
           </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight" style={{ color: "var(--white)" }}>
+          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-extrabold leading-[1.1] tracking-tight" style={{ color: "var(--white)" }}>
             {p.h1[0]}<br /><span className="gradient-text">{p.h1[1]}</span>
           </h1>
-          <p className="mt-5 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{p.sub}</p>
+          <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{p.sub}</p>
+          <div className="accent-line w-24 mt-8" style={{ background: "linear-gradient(90deg, var(--green), var(--cyan), transparent)" }} />
         </motion.div>
       </section>
 
-      <section style={{ background: "var(--bg0)", padding: "64px 24px" }}>
+      <section className="relative section-mesh-1" style={{ padding: "64px 24px 100px" }}>
         <div className="max-w-6xl mx-auto">
-          {/* Filter Tabs */}
+          {/* Filter Pills */}
           <AnimatedSection>
-            <div className="flex flex-wrap gap-2 mb-10">
+            <div className="flex flex-wrap gap-2 mb-12">
               {CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveFilter(cat)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300"
                   style={{
-                    background: activeFilter === cat ? "var(--blue)" : "var(--bg2)",
+                    background: activeFilter === cat ? "var(--blue)" : "rgba(255,255,255,0.03)",
                     color: activeFilter === cat ? "#fff" : "var(--w55)",
-                    border: `1px solid ${activeFilter === cat ? "var(--blue)" : "var(--border)"}`,
+                    border: `1px solid ${activeFilter === cat ? "var(--blue)" : "rgba(255,255,255,0.06)"}`,
+                    boxShadow: activeFilter === cat ? "0 4px 20px rgba(15,144,255,0.25)" : "none",
                   }}
                 >
                   {cat}
@@ -98,9 +97,9 @@ export default function ProjectsPage() {
           </AnimatedSection>
 
           {/* Project grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <AnimatePresence mode="popLayout">
-              {filtered.map((proj, i) => {
+              {filtered.map((proj) => {
                 const c = colorMap[proj.color];
                 return (
                   <motion.div
@@ -109,16 +108,15 @@ export default function ProjectsPage() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.35 }}
                   >
-                    <div className="rounded-2xl border overflow-hidden card-hover h-full" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
-                      {/* Image area with gradient */}
-                      <div className="h-40 flex items-center justify-center text-5xl border-b relative overflow-hidden"
-                        style={{ borderColor: "var(--border)" }}>
+                    <div className="card-base overflow-hidden group h-full">
+                      {/* Image area */}
+                      <div className="h-44 flex items-center justify-center relative overflow-hidden">
                         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${c.bg}, var(--bg3))` }} />
-                        <div className="absolute inset-0 grid-pattern opacity-40" />
+                        <div className="absolute inset-0 dot-grid opacity-30" />
                         <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${c.accent}, transparent)` }} />
-                        <span className="relative text-4xl">{proj.icon}</span>
+                        <span className="relative text-5xl transition-transform duration-500 group-hover:scale-110">{proj.icon}</span>
                       </div>
 
                       {/* Body */}
@@ -130,21 +128,19 @@ export default function ProjectsPage() {
                           {proj.desc}
                         </p>
 
-                        {/* Tags */}
                         <div className="flex flex-wrap gap-1.5 mb-4">
                           {proj.tags.map((tag, j) => (
                             <span key={j} className="tag text-[10px]"
                               style={{
-                                background: j === 0 ? `${c.accent}0D` : "var(--bg3)",
+                                background: j === 0 ? `${c.accent}0D` : "rgba(255,255,255,0.03)",
                                 color: j === 0 ? c.accent : "var(--w55)",
-                                border: `1px solid ${j === 0 ? `${c.accent}22` : "var(--border)"}`,
+                                border: `1px solid ${j === 0 ? `${c.accent}22` : "rgba(255,255,255,0.05)"}`,
                               }}>
                               {tag}
                             </span>
                           ))}
                         </div>
 
-                        {/* Location */}
                         <div className="flex items-center gap-1.5 text-[11px] font-medium" style={{ color: "var(--w25)" }}>
                           <MapPin size={12} />
                           <span>{proj.location}</span>
@@ -157,29 +153,30 @@ export default function ProjectsPage() {
             </AnimatePresence>
           </div>
 
-          {/* Stats after projects */}
+          {/* Stats */}
           <AnimatedSection>
-            <div className="mt-16 rounded-2xl border p-8 lg:p-10 grid grid-cols-2 md:grid-cols-4 gap-8"
-              style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
-              <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl" style={{ background: "linear-gradient(90deg, var(--blue), var(--cyan))" }} />
-              {[
-                { val: "9", label: "Countries Served", icon: Globe },
-                { val: "60+", label: "Engineers Deployed", icon: Users },
-                { val: "9", label: "Nike Stores Migrated", icon: Monitor },
-                { val: "36", label: "Devices Migrated", icon: Server },
-              ].map((s, i) => (
-                <div key={i} className="text-center">
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: "rgba(15,144,255,0.1)" }}>
-                    <s.icon size={20} style={{ color: "var(--blue)" }} />
+            <div className="mt-20 card-glass rounded-2xl p-10 lg:p-12 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, var(--blue), var(--cyan), var(--green))" }} />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                {[
+                  { val: "9", label: "Countries Served", icon: Globe, color: "var(--blue)" },
+                  { val: "60+", label: "Engineers Deployed", icon: Users, color: "var(--cyan)" },
+                  { val: "9", label: "Nike Stores Migrated", icon: Monitor, color: "var(--green)" },
+                  { val: "36", label: "Devices Migrated", icon: Server, color: "var(--amber)" },
+                ].map((s, i) => (
+                  <div key={i} className="text-center group">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110" style={{ background: `${s.color}12`, border: `1px solid ${s.color}20` }}>
+                      <s.icon size={22} style={{ color: s.color }} />
+                    </div>
+                    <div className="text-3xl font-extrabold gradient-text mb-1">{s.val}</div>
+                    <div className="text-xs font-medium" style={{ color: "var(--w55)" }}>{s.label}</div>
                   </div>
-                  <div className="text-3xl font-extrabold gradient-text">{s.val}</div>
-                  <div className="text-xs mt-1 font-medium" style={{ color: "var(--w55)" }}>{s.label}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </AnimatedSection>
 
-          <AnimatedSection className="text-center mt-12">
+          <AnimatedSection className="text-center mt-14">
             <Link href="/contact"><Button size="lg">{p.cta}</Button></Link>
           </AnimatedSection>
         </div>
