@@ -22,9 +22,9 @@ export function Button({
   size = "md",
 }: ButtonProps) {
   const sizeClasses = {
-    sm: "px-4 py-2 text-xs",
-    md: "px-6 py-3 text-sm",
-    lg: "px-8 py-4 text-base",
+    sm: "px-5 py-2 text-xs",
+    md: "px-7 py-3 text-sm",
+    lg: "px-9 py-4 text-base",
   };
 
   if (variant === "primary") {
@@ -33,15 +33,15 @@ export function Button({
         type={type}
         onClick={onClick}
         className={cn(
-          "inline-flex items-center gap-2 rounded-xl font-bold text-white transition-all duration-200",
-          "hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.98]",
+          "inline-flex items-center gap-2 rounded-xl font-bold text-white transition-all duration-300",
+          "hover:-translate-y-0.5 active:scale-[0.98]",
           sizeClasses[size],
           fullWidth && "w-full justify-center",
           className
         )}
         style={{
-          background: "linear-gradient(135deg, var(--blue), #0066CC)",
-          boxShadow: "0 2px 16px rgba(15, 144, 255, 0.25)",
+          background: "var(--gradient-brand)",
+          boxShadow: "var(--shadow-blue)",
         }}
       >
         {children}
@@ -55,7 +55,7 @@ export function Button({
         type={type}
         onClick={onClick}
         className={cn(
-          "inline-flex items-center gap-2 rounded-xl font-medium transition-all duration-200",
+          "inline-flex items-center gap-2 rounded-xl font-semibold transition-all duration-200",
           "hover:-translate-y-0.5 active:scale-[0.98]",
           sizeClasses[size],
           fullWidth && "w-full justify-center",
@@ -73,13 +73,13 @@ export function Button({
       type={type}
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-2 rounded-xl font-bold border-2 transition-all duration-200",
+        "inline-flex items-center gap-2 rounded-xl font-bold border-2 transition-all duration-300",
         "hover:-translate-y-0.5 hover:border-[var(--blue)] hover:text-[var(--blue)] active:scale-[0.98]",
         sizeClasses[size],
         fullWidth && "w-full justify-center",
         className
       )}
-      style={{ borderColor: "var(--border)", color: "var(--w85)", background: "transparent" }}
+      style={{ borderColor: "var(--border-strong)", color: "var(--w85)", background: "transparent" }}
     >
       {children}
     </button>
