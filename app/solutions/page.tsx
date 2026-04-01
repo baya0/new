@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { translations } from "@/lib/i18n";
-import { Server, Zap, Shield, Headphones, CheckCircle2, ArrowRight, Layers, Settings, Rocket, HeartHandshake } from "lucide-react";
+import { Server, Zap, Shield, Headphones, CheckCircle2, Layers, Settings, Rocket, HeartHandshake } from "lucide-react";
 
 const t = translations.en;
 const s = t.solutions;
@@ -16,21 +16,30 @@ const colorMap: Record<string, string> = {
 const serviceIcons = [Server, Zap, Shield, Headphones];
 
 const processSteps = [
-  { icon: Layers, title: "Discovery & Assessment", desc: "We analyze your current infrastructure, identify gaps, and understand your business goals.", color: "blue" },
-  { icon: Settings, title: "Architecture & Planning", desc: "Custom solution design with detailed roadmap, timelines, and resource allocation.", color: "cyan" },
-  { icon: Rocket, title: "Implementation", desc: "Certified engineers deploy your solution with zero-downtime methodology.", color: "green" },
-  { icon: HeartHandshake, title: "Ongoing Support", desc: "24/7 monitoring, proactive maintenance, and continuous optimization.", color: "amber" },
+  { icon: Layers, title: "Discovery", desc: "We analyze your infrastructure and understand your goals.", color: "blue" },
+  { icon: Settings, title: "Architecture", desc: "Custom solution design with detailed roadmap and timelines.", color: "cyan" },
+  { icon: Rocket, title: "Implementation", desc: "Zero-downtime deployment by certified engineers.", color: "green" },
+  { icon: HeartHandshake, title: "Ongoing Support", desc: "24/7 monitoring and continuous optimization.", color: "amber" },
 ];
 
-const processColors: Record<string, string> = { blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)", amber: "var(--amber)" };
+function TextReveal({ text, className, as: Tag = "span" }: { text: string; className?: string; as?: any }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const words = text.split(" ");
+  return (
+    <Tag ref={ref} className={className}>
+      {words.map((word: string, i: number) => (
+        <motion.span key={i} initial={{ opacity: 0, y: 16, filter: "blur(4px)" }} animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}} transition={{ delay: i * 0.04, duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="inline-block mr-[0.28em]">{word}</motion.span>
+      ))}
+    </Tag>
+  );
+}
 
 function AnimatedSection({ children, className }: { children: React.ReactNode; className?: string }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <motion.div ref={ref} initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={className}>
-      {children}
-    </motion.div>
+    <motion.div ref={ref} initial={{ opacity: 0, y: 32 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
   );
 }
 
@@ -38,9 +47,7 @@ function StaggerChild({ children, className, i }: { children: React.ReactNode; c
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
-    <motion.div ref={ref} initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }} className={className}>
-      {children}
-    </motion.div>
+    <motion.div ref={ref} initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
   );
 }
 
@@ -48,21 +55,11 @@ export default function SolutionsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden hero-mesh" style={{ padding: "80px 24px 100px" }}>
-        <div className="glow-orb w-[600px] h-[600px] opacity-[0.06]" style={{ background: "radial-gradient(circle, var(--blue), transparent 70%)", right: -100, top: -100 }} />
-        <div className="absolute inset-0 dot-grid opacity-30 pointer-events-none" />
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-6xl mx-auto relative"
-        >
-          <div className="glow-badge mb-6">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--blue)" }} />
-            {s.eyebrow}
-          </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-extrabold leading-[1.1] tracking-tight max-w-3xl" style={{ color: "var(--white)" }}>
+      <section className="relative overflow-hidden hero-bg" style={{ padding: "80px 24px 100px" }}>
+        <div className="absolute inset-0 dot-grid opacity-25 pointer-events-none" />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative">
+          <div className="badge mb-6">{s.eyebrow}</div>
+          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black leading-[1.08] tracking-tight max-w-3xl" style={{ color: "var(--white)" }}>
             Empowering Your Business with<br /><span className="gradient-text">Data-Driven Solutions</span>
           </h1>
           <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{s.sub}</p>
@@ -70,12 +67,10 @@ export default function SolutionsPage() {
         </motion.div>
       </section>
 
-      {/* Services Grid — Alternating layout */}
-      <section className="relative section-mesh-1" style={{ padding: "100px 24px" }}>
+      {/* Services — Alternating horizontal cards */}
+      <section className="section-alt" style={{ padding: "120px 24px" }}>
         <div className="max-w-6xl mx-auto">
-          <AnimatedSection>
-            <div className="glow-badge mb-12">{s.label}</div>
-          </AnimatedSection>
+          <AnimatedSection><div className="badge mb-14">{s.label}</div></AnimatedSection>
 
           <div className="space-y-6">
             {s.services.map((svc, i) => {
@@ -83,24 +78,18 @@ export default function SolutionsPage() {
               const isReversed = i % 2 !== 0;
               return (
                 <StaggerChild key={i} i={i}>
-                  <div className="card-base p-0 overflow-hidden group">
-                    <div className={`grid grid-cols-1 md:grid-cols-12 items-stretch`}>
-                      {/* Colored side panel */}
+                  <div className="glass-card p-0 overflow-hidden group !transform-none">
+                    <div className="grid grid-cols-1 md:grid-cols-12 items-stretch">
                       <div className={`md:col-span-4 relative overflow-hidden min-h-[200px] flex items-center justify-center ${isReversed ? "md:order-2" : ""}`}
-                        style={{ background: `linear-gradient(135deg, ${colorMap[svc.color]}10, ${colorMap[svc.color]}05)` }}>
+                        style={{ background: `${colorMap[svc.color]}08` }}>
                         <div className="absolute inset-0 dot-grid opacity-20" />
-                        <div className="absolute top-0 left-0 right-0 h-[3px] md:h-auto md:w-[3px] md:top-0 md:bottom-0 md:left-auto md:right-0" style={{ background: `linear-gradient(${isReversed ? "180deg" : "180deg"}, ${colorMap[svc.color]}, transparent)` }} />
-                        <div className="relative w-20 h-20 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3" style={{ background: `${colorMap[svc.color]}18`, border: `1px solid ${colorMap[svc.color]}25`, boxShadow: `0 0 40px ${colorMap[svc.color]}10` }}>
+                        <div className="relative w-20 h-20 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3" style={{ background: `${colorMap[svc.color]}15`, border: `1px solid ${colorMap[svc.color]}25` }}>
                           <Icon size={32} style={{ color: colorMap[svc.color] }} />
                         </div>
                       </div>
-
-                      {/* Content */}
                       <div className={`md:col-span-8 p-8 lg:p-10 ${isReversed ? "md:order-1" : ""}`}>
-                        <div className="tag mb-4 w-fit" style={{ background: `${colorMap[svc.color]}0D`, border: `1px solid ${colorMap[svc.color]}22`, color: colorMap[svc.color] }}>
-                          {svc.tag}
-                        </div>
-                        <h3 className="text-xl lg:text-2xl font-extrabold mb-3 leading-tight" style={{ color: "var(--white)" }}>{svc.title}</h3>
+                        <div className="tag mb-4 w-fit" style={{ background: `${colorMap[svc.color]}0D`, border: `1px solid ${colorMap[svc.color]}20`, color: colorMap[svc.color] }}>{svc.tag}</div>
+                        <h3 className="text-xl lg:text-2xl font-black mb-3 leading-tight" style={{ color: "var(--white)" }}>{svc.title}</h3>
                         <p className="text-sm leading-[1.8]" style={{ color: "var(--w55)" }}>{svc.desc}</p>
                       </div>
                     </div>
@@ -112,32 +101,28 @@ export default function SolutionsPage() {
         </div>
       </section>
 
-      {/* Our Process — Connected steps */}
-      <section className="relative section-mesh-2 section-glow" style={{ padding: "100px 24px" }}>
+      {/* Process Steps */}
+      <section className="section-alt-2" style={{ padding: "120px 24px" }}>
         <div className="max-w-6xl mx-auto">
           <AnimatedSection>
             <div className="text-center mb-16">
-              <div className="glow-badge mx-auto mb-4">OUR PROCESS</div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold" style={{ color: "var(--white)" }}>How We Deliver Results</h2>
-              <p className="mt-4 text-sm max-w-lg mx-auto leading-relaxed" style={{ color: "var(--w55)" }}>A proven methodology that ensures every project is delivered on time, on budget, and exceeds expectations.</p>
+              <div className="badge mx-auto mb-5">OUR PROCESS</div>
+              <TextReveal text="How We Deliver Results" className="text-3xl sm:text-4xl font-black block" as="h2" />
             </div>
           </AnimatedSection>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 relative">
-            {/* Connection line */}
-            <div className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-px" style={{ background: "linear-gradient(90deg, var(--blue), var(--cyan), var(--green), var(--amber))" }} />
+            <div className="hidden lg:block absolute top-20 left-[12.5%] right-[12.5%] h-px" style={{ background: "var(--gradient-brand)" }} />
 
             {processSteps.map((step, i) => (
               <StaggerChild key={i} i={i}>
-                <div className="relative card-glass rounded-2xl p-7 h-full group">
-                  {/* Step number circle — sits on connection line */}
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold mb-5 relative z-10"
-                    style={{ background: processColors[step.color], color: "#fff", boxShadow: `0 0 20px ${processColors[step.color]}40` }}>
+                <div className="relative glass-card rounded-2xl p-7 h-full group !transform-none">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-black mb-6 text-white relative z-10"
+                    style={{ background: colorMap[step.color], boxShadow: `0 0 20px ${colorMap[step.color]}40` }}>
                     {String(i + 1).padStart(2, "0")}
                   </div>
-
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110" style={{ background: `${processColors[step.color]}12`, border: `1px solid ${processColors[step.color]}20` }}>
-                    <step.icon size={22} style={{ color: processColors[step.color] }} />
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110" style={{ background: `${colorMap[step.color]}10`, border: `1px solid ${colorMap[step.color]}20` }}>
+                    <step.icon size={22} style={{ color: colorMap[step.color] }} />
                   </div>
                   <h3 className="text-sm font-bold mb-2" style={{ color: "var(--white)" }}>{step.title}</h3>
                   <p className="text-xs leading-relaxed" style={{ color: "var(--w55)" }}>{step.desc}</p>
@@ -148,23 +133,21 @@ export default function SolutionsPage() {
         </div>
       </section>
 
-      {/* Why Choose Supportiva */}
-      <section className="relative section-mesh-3" style={{ padding: "100px 24px" }}>
+      {/* Why Choose */}
+      <section className="section-alt" style={{ padding: "120px 24px" }}>
         <div className="max-w-6xl mx-auto">
           <AnimatedSection>
-            <div className="card-glass rounded-2xl p-8 lg:p-12 relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, var(--blue), var(--cyan), var(--green))" }} />
-              <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(15,144,255,0.06), transparent 70%)" }} />
-
-              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="glass-card rounded-3xl p-8 lg:p-12 relative overflow-hidden !transform-none">
+              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative">
                 <div>
-                  <div className="glow-badge mb-4" style={{ background: "rgba(30,221,128,0.06)", borderColor: "rgba(30,221,128,0.15)", color: "var(--green)" }}>WHY US</div>
-                  <h3 className="text-2xl lg:text-3xl font-extrabold mb-5 leading-tight" style={{ color: "var(--white)" }}>{s.whyTitle}</h3>
+                  <div className="badge mb-5" style={{ background: "rgba(5,150,105,0.08)", borderColor: "rgba(5,150,105,0.15)", color: "var(--green)" }}>WHY US</div>
+                  <h3 className="text-2xl lg:text-3xl font-black mb-5 leading-tight" style={{ color: "var(--white)" }}>{s.whyTitle}</h3>
                   <p className="text-sm leading-[1.8]" style={{ color: "var(--w55)" }}>{s.whyDesc}</p>
                 </div>
-                <div className="grid grid-cols-1 gap-3">
+                <div className="space-y-3">
                   {s.whyPoints.map((point, i) => (
-                    <div key={i} className="flex gap-3 items-start p-4 rounded-xl transition-all duration-300 hover:translate-x-1" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                    <div key={i} className="flex gap-3 items-start p-4 rounded-xl transition-all duration-300 hover:translate-x-1" style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}>
                       <CheckCircle2 size={18} className="shrink-0 mt-0.5" style={{ color: "var(--green)" }} />
                       <span className="text-sm font-medium" style={{ color: "var(--w85)" }}>{point}</span>
                     </div>

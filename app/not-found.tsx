@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-6 text-center relative overflow-hidden" style={{ background: "var(--bg0)" }}>
       {/* Background effects */}
-      <div className="absolute inset-0 grid-pattern opacity-50" />
+      <div className="absolute inset-0 dot-grid opacity-30" />
       <div className="glow-orb w-[400px] h-[400px] opacity-[0.05]" style={{ background: "radial-gradient(circle, var(--blue), transparent 70%)", left: "50%", top: "30%", transform: "translate(-50%, -50%)" }} />
 
       <motion.div
