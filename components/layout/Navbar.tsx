@@ -73,7 +73,10 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               <Link
                 key={p.key}
                 href={p.href}
-                className="relative px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200"
+                className={cn(
+                  "nav-link relative px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200",
+                  isActive && "nav-link-active"
+                )}
                 style={{ color: isActive ? "var(--blue)" : "var(--w55)" }}
               >
                 {isActive && (

@@ -35,6 +35,7 @@ export default function BlogPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 120px" }}>
+        <div className="aurora" />
         {/* Floating blobs */}
         <div className="blob blob-purple w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
         <div className="blob blob-blue w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
@@ -52,7 +53,9 @@ export default function BlogPage() {
         </motion.div>
       </section>
 
-      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 140px" }}>
+      <div className="section-divider" />
+
+      <section className="relative overflow-hidden section-deep" style={{ padding: "100px 24px 140px" }}>
         {/* Background blobs */}
         <div className="blob blob-blue w-[450px] h-[450px] top-60 -right-48 animate-blob" style={{ animationDelay: "2s" }} />
         <div className="blob blob-purple w-[350px] h-[350px] bottom-40 -left-40 animate-blob" style={{ animationDelay: "6s" }} />
@@ -60,7 +63,7 @@ export default function BlogPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Featured post */}
           <AnimatedSection>
-            <div className="float-panel rounded-3xl overflow-hidden mb-12 group cursor-pointer">
+            <div className="float-panel glow-border rounded-3xl overflow-hidden mb-12 group cursor-pointer">
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(29,107,196,0.08), rgba(124,58,237,0.04), var(--glass-card))` }}>
                   {/* <Image src="/images/blog/featured.jpg" alt="Featured post" fill className="object-cover" /> */}
@@ -125,7 +128,7 @@ export default function BlogPage() {
 
           {/* Newsletter */}
           <AnimatedSection>
-            <div className="mt-24 float-panel rounded-3xl p-8 lg:p-10 relative overflow-hidden">
+            <div className="mt-24 float-panel glow-border rounded-3xl p-8 lg:p-10 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
               <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-start gap-4">

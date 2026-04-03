@@ -56,11 +56,12 @@ export default function SolutionsPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden hero-bg" style={{ padding: "120px 24px 140px" }}>
+        <div className="aurora" />
         <div className="absolute inset-0 dot-grid opacity-25 pointer-events-none" />
         <div className="blob blob-blue absolute -top-40 -left-40 w-[520px] h-[520px] animate-blob" style={{ animationDelay: "0s" }} />
         <div className="blob blob-purple absolute -bottom-40 -right-40 w-[440px] h-[440px] animate-blob" style={{ animationDelay: "4s" }} />
         <div className="blob blob-cyan absolute top-1/2 right-1/4 w-[300px] h-[300px] animate-blob" style={{ animationDelay: "2s" }} />
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
           <div className="badge mb-6">{s.eyebrow}</div>
           <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-black leading-[1.08] tracking-tight max-w-3xl" style={{ color: "var(--white)" }}>
             Empowering Your Business with<br /><span className="gradient-text">Data-Driven Solutions</span>
@@ -70,12 +71,14 @@ export default function SolutionsPage() {
         </motion.div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Services — Alternating horizontal cards */}
-      <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
+      <section className="section-deep relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-cyan absolute top-20 -right-60 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "2s" }} />
         <div className="blob blob-blue absolute bottom-20 -left-40 w-[400px] h-[400px] animate-blob" style={{ animationDelay: "6s" }} />
         <div className="blob blob-purple absolute top-1/2 left-1/3 w-[350px] h-[350px] animate-blob" style={{ animationDelay: "4s" }} />
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <AnimatedSection><div className="badge mb-14">{s.label}</div></AnimatedSection>
 
           <div className="space-y-6">
@@ -89,7 +92,7 @@ export default function SolutionsPage() {
                       <div className={`md:col-span-4 relative overflow-hidden min-h-[200px] flex items-center justify-center ${isReversed ? "md:order-2" : ""}`}
                         style={{ background: `${colorMap[svc.color]}08` }}>
                         <div className="absolute inset-0 dot-grid opacity-20" />
-                        <div className="relative w-20 h-20 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3" style={{ background: `${colorMap[svc.color]}15`, border: `1px solid ${colorMap[svc.color]}25` }}>
+                        <div className="relative w-20 h-20 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 icon-box" style={{ background: `${colorMap[svc.color]}15`, border: `1px solid ${colorMap[svc.color]}25` }}>
                           <Icon size={32} style={{ color: colorMap[svc.color] }} />
                         </div>
                       </div>
@@ -107,12 +110,14 @@ export default function SolutionsPage() {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Process Steps */}
       <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-purple absolute top-10 -left-40 w-[450px] h-[450px] animate-blob" style={{ animationDelay: "1s" }} />
         <div className="blob blob-cyan absolute bottom-10 -right-60 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "5s" }} />
         <div className="blob blob-blue absolute top-1/3 right-1/4 w-[300px] h-[300px] animate-blob" style={{ animationDelay: "3s" }} />
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <AnimatedSection>
             <div className="text-center mb-16">
               <div className="badge mx-auto mb-5">OUR PROCESS</div>
@@ -130,7 +135,7 @@ export default function SolutionsPage() {
                     style={{ background: colorMap[step.color], boxShadow: `0 0 20px ${colorMap[step.color]}40` }}>
                     {String(i + 1).padStart(2, "0")}
                   </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110" style={{ background: `${colorMap[step.color]}10`, border: `1px solid ${colorMap[step.color]}20` }}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 icon-box" style={{ background: `${colorMap[step.color]}10`, border: `1px solid ${colorMap[step.color]}20` }}>
                     <step.icon size={22} style={{ color: colorMap[step.color] }} />
                   </div>
                   <h3 className="text-base font-bold mb-2" style={{ color: "var(--white)" }}>{step.title}</h3>
@@ -142,14 +147,16 @@ export default function SolutionsPage() {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Why Choose */}
-      <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
+      <section className="section-deep relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-blue absolute -top-20 right-0 w-[400px] h-[400px] animate-blob" style={{ animationDelay: "3s" }} />
         <div className="blob blob-purple absolute bottom-0 -left-20 w-[350px] h-[350px] animate-blob" style={{ animationDelay: "7s" }} />
         <div className="blob blob-cyan absolute top-1/2 left-1/2 w-[300px] h-[300px] animate-blob" style={{ animationDelay: "5s" }} />
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <AnimatedSection>
-            <div className="float-panel rounded-[28px] p-8 lg:p-12 relative overflow-hidden" style={{ transform: "none" }}>
+            <div className="float-panel glow-border rounded-[28px] p-8 lg:p-12 relative overflow-hidden" style={{ transform: "none" }}>
               <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative">
                 <div>
