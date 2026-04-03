@@ -30,10 +30,15 @@ export default function Footer({ t, lang, setLang }: FooterProps) {
   const isAR = lang === "ar";
 
   return (
-    <footer className="relative" style={{ background: "var(--bg1)", borderTop: "1px solid var(--border)" }}>
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, var(--blue), transparent)" }} />
+    <footer className="relative overflow-hidden" style={{ background: "var(--glass-card)", backdropFilter: "blur(24px)", borderTop: "1px solid var(--glass-card-border)" }}>
+      {/* Decorative top gradient line */}
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, var(--blue), var(--cyan), transparent)" }} />
 
-      <div className={`max-w-6xl mx-auto px-6 lg:px-8 pt-16 pb-8 ${isAR ? "text-right" : ""}`}>
+      {/* Subtle background blobs */}
+      <div className="blob blob-blue w-[400px] h-[400px] -bottom-40 -left-40 animate-blob" style={{ opacity: 0.15 }} />
+      <div className="blob blob-purple w-[300px] h-[300px] -top-20 -right-32 animate-blob" style={{ animationDelay: "5s", opacity: 0.1 }} />
+
+      <div className={`max-w-6xl mx-auto px-6 lg:px-8 pt-16 pb-8 relative z-10 ${isAR ? "text-right" : ""}`}>
         <div className={`grid gap-10 mb-14 ${isAR ? "grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1.4fr]" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr]"}`}>
           {/* Brand */}
           <div className="sm:col-span-2 md:col-span-1">
@@ -48,7 +53,7 @@ export default function Footer({ t, lang, setLang }: FooterProps) {
               {SOCIALS.map((s) => (
                 <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
                   className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
-                  style={{ background: "var(--bg2)", border: "1px solid var(--border)", color: "var(--w55)" }}
+                  style={{ background: "var(--glass-card)", backdropFilter: "blur(12px)", border: "1px solid var(--glass-card-border)", color: "var(--w55)" }}
                   aria-label={s.label}
                 >
                   <s.icon size={15} />
@@ -80,9 +85,9 @@ export default function Footer({ t, lang, setLang }: FooterProps) {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex justify-between items-center pt-6 border-t flex-wrap gap-4" style={{ borderColor: "var(--border)" }}>
+        <div className="flex justify-between items-center pt-6 border-t flex-wrap gap-4" style={{ borderColor: "var(--glass-card-border)" }}>
           <span className="text-xs font-medium" style={{ color: "var(--w25)" }}>{t.footer.copy}</span>
-          <div className="flex gap-1 p-1 rounded-xl" style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}>
+          <div className="flex gap-1 p-1 rounded-xl" style={{ background: "var(--glass-card)", backdropFilter: "blur(12px)", border: "1px solid var(--glass-card-border)" }}>
             {(["en", "ar", "tr"] as Lang[]).map((l) => (
               <button key={l} onClick={() => setLang(l)}
                 className="px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200"

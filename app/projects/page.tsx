@@ -48,12 +48,15 @@ export default function ProjectsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden hero-bg" style={{ padding: "80px 24px 100px" }}>
-        <div className="absolute inset-0 dot-grid opacity-25 pointer-events-none" />
-        <div className="glow-orb w-[600px] h-[600px] opacity-[0.05]" style={{ background: "radial-gradient(circle, var(--green), transparent 70%)", right: -100, top: -100 }} />
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative">
+      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 120px" }}>
+        {/* Floating blobs */}
+        <div className="blob blob-blue w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
+        <div className="blob blob-cyan w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
+        <div className="blob blob-purple w-[300px] h-[300px] top-20 left-1/3 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
           <div className="badge mb-6" style={{ background: "rgba(5,150,105,0.08)", borderColor: "rgba(5,150,105,0.15)", color: "var(--green)" }}>{p.eyebrow}</div>
-          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
+          <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
             {p.h1[0]}<br /><span className="gradient-text">{p.h1[1]}</span>
           </h1>
           <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{p.sub}</p>
@@ -61,18 +64,23 @@ export default function ProjectsPage() {
         </motion.div>
       </section>
 
-      <section className="section-alt" style={{ padding: "80px 24px 120px" }}>
-        <div className="max-w-6xl mx-auto">
+      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 140px" }}>
+        {/* Background blobs */}
+        <div className="blob blob-cyan w-[450px] h-[450px] top-40 -right-48 animate-blob" style={{ animationDelay: "2s" }} />
+        <div className="blob blob-purple w-[350px] h-[350px] bottom-60 -left-40 animate-blob" style={{ animationDelay: "6s" }} />
+
+        <div className="max-w-6xl mx-auto relative z-10">
           {/* Filter Pills */}
           <AnimatedSection>
-            <div className="flex flex-wrap gap-2 mb-12">
+            <div className="flex flex-wrap gap-2 mb-14">
               {CATEGORIES.map(cat => (
                 <button key={cat} onClick={() => setActiveFilter(cat)}
                   className="px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300"
                   style={{
-                    background: activeFilter === cat ? "var(--blue)" : "var(--bg2)",
+                    background: activeFilter === cat ? "var(--blue)" : "var(--glass-card)",
+                    backdropFilter: activeFilter === cat ? "none" : "blur(12px)",
                     color: activeFilter === cat ? "#fff" : "var(--w55)",
-                    border: `1px solid ${activeFilter === cat ? "var(--blue)" : "var(--border)"}`,
+                    border: `1px solid ${activeFilter === cat ? "var(--blue)" : "var(--glass-card-border)"}`,
                     boxShadow: activeFilter === cat ? "var(--shadow-blue)" : "none",
                   }}>
                   {cat}
@@ -82,7 +90,7 @@ export default function ProjectsPage() {
           </AnimatedSection>
 
           {/* Project Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
             <AnimatePresence mode="popLayout">
               {filtered.map((proj) => {
                 const c = colorMap[proj.color];
@@ -90,8 +98,7 @@ export default function ProjectsPage() {
                   <motion.div key={proj.title} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.35 }}>
                     <div className="glass-card overflow-hidden group h-full">
                       {/* Image area */}
-                      <div className="h-48 flex items-center justify-center relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${c.bg}, var(--bg2))` }}>
-                        <div className="absolute inset-0 dot-grid opacity-20" />
+                      <div className="h-48 flex items-center justify-center relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${c.bg}, var(--glass-card))` }}>
                         <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${c.accent}, transparent)` }} />
                         {/* To add project images: <Image src="/images/projects/project-name.jpg" alt="..." fill className="object-cover" /> */}
                         <span className="relative text-5xl transition-transform duration-500 group-hover:scale-110">{proj.icon}</span>
@@ -104,9 +111,10 @@ export default function ProjectsPage() {
                           {proj.tags.map((tag, j) => (
                             <span key={j} className="tag text-[10px]"
                               style={{
-                                background: j === 0 ? `${c.accent}0D` : "var(--bg2)",
+                                background: j === 0 ? `${c.accent}0D` : "var(--glass-card)",
+                                backdropFilter: "blur(8px)",
                                 color: j === 0 ? c.accent : "var(--w55)",
-                                border: `1px solid ${j === 0 ? `${c.accent}20` : "var(--border)"}`,
+                                border: `1px solid ${j === 0 ? `${c.accent}20` : "var(--glass-card-border)"}`,
                               }}>{tag}</span>
                           ))}
                         </div>
@@ -123,7 +131,7 @@ export default function ProjectsPage() {
 
           {/* Stats */}
           <AnimatedSection>
-            <div className="mt-20 glass-card rounded-3xl p-10 lg:p-12 relative overflow-hidden !transform-none">
+            <div className="mt-24 float-panel rounded-3xl p-10 lg:p-12 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {[

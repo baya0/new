@@ -41,11 +41,13 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
     <nav
       className={cn(
         "sticky top-0 z-50 transition-all duration-400",
-        scrolled ? "glass shadow-sm" : ""
       )}
       style={{
-        background: scrolled ? "var(--glass)" : "var(--bg1)",
-        borderBottom: `1px solid ${scrolled ? "var(--glass-border)" : "var(--border)"}`,
+        background: scrolled ? "var(--glass-card)" : "transparent",
+        backdropFilter: scrolled ? "blur(24px) saturate(1.4)" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.4)" : "none",
+        borderBottom: `1px solid ${scrolled ? "var(--glass-card-border)" : "transparent"}`,
+        boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.06)" : "none",
         height: 72,
       }}
     >
@@ -75,7 +77,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                 style={{ color: isActive ? "var(--blue)" : "var(--w55)" }}
               >
                 {isActive && (
-                  <span className="absolute inset-0 rounded-xl" style={{ background: "rgba(29,107,196,0.08)" }} />
+                  <span className="absolute inset-0 rounded-xl" style={{ background: "rgba(29,107,196,0.08)", backdropFilter: "blur(8px)" }} />
                 )}
                 <span className="relative hover:text-[var(--blue)] transition-colors">{(t.nav as any)[p.key]}</span>
               </Link>
@@ -86,7 +88,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
         {/* Right Controls */}
         <div className="hidden md:flex items-center gap-3 ml-auto">
           {/* Language pills */}
-          <div className="flex gap-1 p-1 rounded-xl" style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}>
+          <div className="flex gap-1 p-1 rounded-xl" style={{ background: "var(--glass-card)", backdropFilter: "blur(12px)", border: "1px solid var(--glass-card-border)" }}>
             {(["en", "ar", "tr"] as Lang[]).map((l) => (
               <button
                 key={l}
@@ -107,7 +109,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
           <button
             onClick={() => setDark(!dark)}
             className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105"
-            style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}
+            style={{ background: "var(--glass-card)", backdropFilter: "blur(12px)", border: "1px solid var(--glass-card-border)" }}
           >
             {dark ? <Sun size={15} color="var(--amber)" /> : <Moon size={15} color="var(--blue)" />}
           </button>
@@ -129,7 +131,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
         <button
           className="md:hidden ml-auto w-10 h-10 rounded-xl flex items-center justify-center transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
-          style={{ color: "var(--w55)", background: "var(--bg2)", border: "1px solid var(--border)" }}
+          style={{ color: "var(--w55)", background: "var(--glass-card)", backdropFilter: "blur(12px)", border: "1px solid var(--glass-card-border)" }}
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -143,8 +145,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden absolute top-full left-0 right-0 z-50 py-3 px-4 glass"
-            style={{ borderBottom: "1px solid var(--border)" }}
+            className="md:hidden absolute top-full left-0 right-0 z-50 py-3 px-4"
+            style={{ background: "var(--glass-card)", backdropFilter: "blur(24px)", borderBottom: "1px solid var(--glass-card-border)" }}
           >
             {PAGES.map((p) => {
               const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
@@ -165,8 +167,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               );
             })}
 
-            <div className="flex items-center gap-2 mt-3 pt-3 border-t px-1" style={{ borderColor: "var(--border)" }}>
-              <div className="flex gap-1 p-1 rounded-xl flex-1" style={{ background: "var(--bg2)" }}>
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t px-1" style={{ borderColor: "var(--glass-card-border)" }}>
+              <div className="flex gap-1 p-1 rounded-xl flex-1" style={{ background: "var(--glass-card)" }}>
                 {(["en", "ar", "tr"] as Lang[]).map((l) => (
                   <button
                     key={l}
@@ -184,7 +186,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               <button
                 onClick={() => { setDark(!dark); setMobileOpen(false); }}
                 className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}
+                style={{ background: "var(--glass-card)", border: "1px solid var(--glass-card-border)" }}
               >
                 {dark ? <Sun size={14} color="var(--amber)" /> : <Moon size={14} color="var(--blue)" />}
               </button>
