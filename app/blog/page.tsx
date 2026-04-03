@@ -34,14 +34,17 @@ export default function BlogPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden hero-bg" style={{ padding: "80px 24px 100px" }}>
-        <div className="absolute inset-0 dot-grid opacity-25 pointer-events-none" />
-        <div className="glow-orb w-[600px] h-[600px] opacity-[0.05]" style={{ background: "radial-gradient(circle, var(--purple), transparent 70%)", right: -100, top: -100 }} />
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative">
+      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 120px" }}>
+        {/* Floating blobs */}
+        <div className="blob blob-purple w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
+        <div className="blob blob-blue w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
+        <div className="blob blob-cyan w-[300px] h-[300px] top-20 left-1/4 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
           <div className="badge mb-6" style={{ background: "rgba(124,58,237,0.08)", borderColor: "rgba(124,58,237,0.15)", color: "var(--purple)" }}>
             <BookOpen size={12} />{b.eyebrow}
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
+          <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
             {b.h1[0]}<br /><span className="gradient-text">{b.h1[1]}</span>
           </h1>
           <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{b.sub}</p>
@@ -49,14 +52,17 @@ export default function BlogPage() {
         </motion.div>
       </section>
 
-      <section className="section-alt" style={{ padding: "80px 24px 120px" }}>
-        <div className="max-w-6xl mx-auto">
+      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 140px" }}>
+        {/* Background blobs */}
+        <div className="blob blob-blue w-[450px] h-[450px] top-60 -right-48 animate-blob" style={{ animationDelay: "2s" }} />
+        <div className="blob blob-purple w-[350px] h-[350px] bottom-40 -left-40 animate-blob" style={{ animationDelay: "6s" }} />
+
+        <div className="max-w-6xl mx-auto relative z-10">
           {/* Featured post */}
           <AnimatedSection>
-            <div className="glass-card rounded-3xl overflow-hidden mb-10 group cursor-pointer">
+            <div className="float-panel rounded-3xl overflow-hidden mb-12 group cursor-pointer">
               <div className="grid grid-cols-1 md:grid-cols-2">
-                <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(29,107,196,0.08), rgba(124,58,237,0.04), var(--bg2))` }}>
-                  <div className="absolute inset-0 dot-grid opacity-20" />
+                <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(29,107,196,0.08), rgba(124,58,237,0.04), var(--glass-card))` }}>
                   {/* <Image src="/images/blog/featured.jpg" alt="Featured post" fill className="object-cover" /> */}
                   <div className="absolute top-5 left-5"><div className="badge text-[10px]">FEATURED</div></div>
                 </div>
@@ -85,7 +91,7 @@ export default function BlogPage() {
           </AnimatedSection>
 
           {/* Posts grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
             {b.posts.slice(1).map((post, i) => {
               const cfg = catConfig[post.cat];
               const cc = cfg?.color ?? "var(--blue)";
@@ -93,8 +99,7 @@ export default function BlogPage() {
               return (
                 <StaggerChild key={i} i={i}>
                   <div className="glass-card overflow-hidden cursor-pointer group h-full">
-                    <div className="h-44 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${cc}0A, var(--bg2))` }}>
-                      <div className="absolute inset-0 dot-grid opacity-15" />
+                    <div className="h-44 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${cc}0A, var(--glass-card))` }}>
                       <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${cc}, transparent)` }} />
                       {/* <Image src={`/images/blog/post-${i + 2}.jpg`} alt={post.title} fill className="object-cover" /> */}
                     </div>
@@ -120,7 +125,7 @@ export default function BlogPage() {
 
           {/* Newsletter */}
           <AnimatedSection>
-            <div className="mt-20 glass-card rounded-3xl p-8 lg:p-10 relative overflow-hidden !transform-none">
+            <div className="mt-24 float-panel rounded-3xl p-8 lg:p-10 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
               <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-start gap-4">
