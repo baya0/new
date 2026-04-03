@@ -39,6 +39,7 @@ export default function ContactPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 120px" }}>
+        <div className="aurora" />
         {/* Floating blobs */}
         <div className="blob blob-blue w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
         <div className="blob blob-cyan w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
@@ -54,7 +55,9 @@ export default function ContactPage() {
         </motion.div>
       </section>
 
-      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 140px" }}>
+      <div className="section-divider" />
+
+      <section className="relative overflow-hidden section-deep" style={{ padding: "100px 24px 140px" }}>
         {/* Background blobs */}
         <div className="blob blob-cyan w-[400px] h-[400px] top-40 -right-48 animate-blob" style={{ animationDelay: "3s" }} />
         <div className="blob blob-blue w-[350px] h-[350px] bottom-60 -left-40 animate-blob" style={{ animationDelay: "7s" }} />
@@ -65,7 +68,7 @@ export default function ContactPage() {
             <AnimatedSection className="lg:col-span-3">
               {submitted ? (
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                  className="float-panel rounded-3xl p-12 text-center relative overflow-hidden">
+                  className="float-panel glow-border rounded-3xl p-12 text-center relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, var(--green), var(--cyan))" }} />
                   <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: "rgba(5,150,105,0.1)", border: "1px solid rgba(5,150,105,0.2)" }}>
                     <CheckCircle2 size={36} style={{ color: "var(--green)" }} />
@@ -74,7 +77,7 @@ export default function ContactPage() {
                   <p className="text-sm" style={{ color: "var(--w55)" }}>We typically respond within 4 business hours.</p>
                 </motion.div>
               ) : (
-                <div className="float-panel rounded-3xl p-8 lg:p-10 relative overflow-hidden">
+                <div className="float-panel glow-border rounded-3xl p-8 lg:p-10 relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
                   <div className="relative">
                     <h3 className="text-lg font-black mb-6" style={{ color: "var(--white)" }}>Send us a message</h3>

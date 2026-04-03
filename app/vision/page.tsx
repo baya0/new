@@ -61,6 +61,7 @@ export default function VisionPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden hero-bg" style={{ padding: "100px 24px 120px" }}>
+        <div className="aurora" />
         <div className="absolute inset-0 dot-grid opacity-25 pointer-events-none" />
         <div className="blob blob-cyan absolute -top-40 -left-40 w-[600px] h-[600px] animate-blob" style={{ animationDelay: "0s" }} />
         <div className="blob blob-purple absolute -bottom-40 -right-40 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "4s" }} />
@@ -72,11 +73,13 @@ export default function VisionPage() {
         </motion.div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Our Story */}
-      <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
+      <section className="section-deep relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-blue absolute top-10 -right-40 w-[450px] h-[450px] animate-blob" style={{ animationDelay: "2s" }} />
         <div className="blob blob-purple absolute bottom-10 -left-40 w-[400px] h-[400px] animate-blob" style={{ animationDelay: "6s" }} />
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <AnimatedSection>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
               <div className="md:col-span-5">
@@ -103,6 +106,8 @@ export default function VisionPage() {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Values */}
       <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-cyan absolute -top-20 -left-40 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "1s" }} />
@@ -122,7 +127,7 @@ export default function VisionPage() {
                 <StaggerChild key={i} i={i}>
                   <div className="glass-card p-8 relative overflow-hidden group h-full">
                     <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${colorMap[val.color]}, transparent)` }} />
-                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ background: `${colorMap[val.color]}12`, border: `1px solid ${colorMap[val.color]}20` }}>
+                    <div className="w-16 h-16 rounded-2xl icon-box flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ background: `${colorMap[val.color]}12`, border: `1px solid ${colorMap[val.color]}20` }}>
                       <Icon size={28} style={{ color: colorMap[val.color] }} />
                     </div>
                     <h3 className="text-lg font-black mb-3" style={{ color: "var(--white)" }}>{val.title}</h3>
@@ -135,11 +140,13 @@ export default function VisionPage() {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Industries */}
-      <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
+      <section className="section-deep relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-purple absolute top-20 -right-40 w-[400px] h-[400px] animate-blob" style={{ animationDelay: "3s" }} />
         <div className="blob blob-cyan absolute -bottom-20 -left-40 w-[350px] h-[350px] animate-blob" style={{ animationDelay: "7s" }} />
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <AnimatedSection>
             <div className="text-center mb-14">
               <div className="badge mx-auto mb-5" style={{ background: "rgba(124,58,237,0.08)", borderColor: "rgba(124,58,237,0.15)", color: "var(--purple)" }}>INDUSTRIES</div>
@@ -159,18 +166,20 @@ export default function VisionPage() {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Stats */}
       <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-blue absolute -top-40 left-1/4 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "0s" }} />
         <div className="blob blob-purple absolute bottom-0 right-1/4 w-[400px] h-[400px] animate-blob" style={{ animationDelay: "4s" }} />
         <div className="max-w-6xl mx-auto relative">
           <AnimatedSection>
-            <div className="float-panel rounded-3xl p-10 lg:p-14 relative overflow-hidden" style={{ transform: "none" }}>
+            <div className="float-panel glow-border rounded-3xl p-10 lg:p-14 relative overflow-hidden" style={{ transform: "none" }}>
               <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
               <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
                 {stats.map((s, i) => (
                   <div key={i} className="text-center group relative">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform duration-300 group-hover:scale-110" style={{ background: `${s.color}10`, border: `1px solid ${s.color}20` }}>
+                    <div className="w-14 h-14 rounded-2xl icon-box flex items-center justify-center mx-auto mb-5 transition-transform duration-300 group-hover:scale-110" style={{ background: `${s.color}10`, border: `1px solid ${s.color}20` }}>
                       <s.icon size={24} style={{ color: s.color }} />
                     </div>
                     <div className="text-3xl sm:text-4xl font-black gradient-text mb-1">{s.val}</div>

@@ -49,6 +49,7 @@ export default function ProjectsPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 120px" }}>
+        <div className="aurora" />
         {/* Floating blobs */}
         <div className="blob blob-blue w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
         <div className="blob blob-cyan w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
@@ -64,7 +65,9 @@ export default function ProjectsPage() {
         </motion.div>
       </section>
 
-      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 140px" }}>
+      <div className="section-divider" />
+
+      <section className="relative overflow-hidden section-deep" style={{ padding: "100px 24px 140px" }}>
         {/* Background blobs */}
         <div className="blob blob-cyan w-[450px] h-[450px] top-40 -right-48 animate-blob" style={{ animationDelay: "2s" }} />
         <div className="blob blob-purple w-[350px] h-[350px] bottom-60 -left-40 animate-blob" style={{ animationDelay: "6s" }} />
@@ -131,7 +134,7 @@ export default function ProjectsPage() {
 
           {/* Stats */}
           <AnimatedSection>
-            <div className="mt-24 float-panel rounded-3xl p-10 lg:p-12 relative overflow-hidden">
+            <div className="mt-24 float-panel glow-border rounded-3xl p-10 lg:p-12 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {[
@@ -141,7 +144,7 @@ export default function ProjectsPage() {
                   { val: "36", label: "Devices Migrated", icon: Server, color: "var(--amber)" },
                 ].map((s, i) => (
                   <div key={i} className="text-center group">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110" style={{ background: `${s.color}10`, border: `1px solid ${s.color}20` }}>
+                    <div className="w-12 h-12 rounded-xl icon-box flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110" style={{ background: `${s.color}10`, border: `1px solid ${s.color}20` }}>
                       <s.icon size={22} style={{ color: s.color }} />
                     </div>
                     <div className="text-3xl font-black gradient-text mb-1">{s.val}</div>
