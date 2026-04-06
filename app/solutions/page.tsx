@@ -112,12 +112,11 @@ export default function SolutionsPage() {
 
       <div className="section-divider" />
 
-      {/* Process Steps */}
+      {/* Process Steps — vertical timeline */}
       <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-purple absolute top-10 -left-40 w-[450px] h-[450px] animate-blob" style={{ animationDelay: "1s" }} />
         <div className="blob blob-cyan absolute bottom-10 -right-60 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "5s" }} />
-        <div className="blob blob-blue absolute top-1/3 right-1/4 w-[300px] h-[300px] animate-blob" style={{ animationDelay: "3s" }} />
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="max-w-4xl mx-auto relative z-10">
           <AnimatedSection>
             <div className="text-center mb-16">
               <div className="badge mx-auto mb-5">OUR PROCESS</div>
@@ -125,24 +124,43 @@ export default function SolutionsPage() {
             </div>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 relative">
-            <div className="hidden lg:block absolute top-20 left-[12.5%] right-[12.5%] h-px" style={{ background: "var(--gradient-brand)" }} />
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px md:-translate-x-px"
+              style={{ background: "linear-gradient(to bottom, var(--blue), var(--cyan), var(--green), var(--amber))" }} />
 
-            {processSteps.map((step, i) => (
-              <StaggerChild key={i} i={i}>
-                <div className="relative glass-card rounded-[28px] p-7 h-full group" style={{ transform: "none" }}>
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-black mb-6 text-white relative z-10"
-                    style={{ background: colorMap[step.color], boxShadow: `0 0 20px ${colorMap[step.color]}40` }}>
-                    {String(i + 1).padStart(2, "0")}
+            {processSteps.map((step, i) => {
+              const isLeft = i % 2 === 0;
+              return (
+                <StaggerChild key={i} i={i}>
+                  <div className={`relative flex items-start gap-6 md:gap-0 group ${i < processSteps.length - 1 ? "mb-16" : ""}`}>
+                    {/* Dot on timeline */}
+                    <div className="absolute left-6 md:left-1/2 -translate-x-1/2 z-10">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-xs font-black text-white transition-transform duration-300 group-hover:scale-110"
+                        style={{ background: colorMap[step.color], boxShadow: `0 0 24px ${colorMap[step.color]}30` }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </div>
+                    </div>
+
+                    {/* Content — alternating sides on desktop */}
+                    <div className={`ml-16 md:ml-0 md:w-[calc(50%-40px)] ${isLeft ? "md:pr-4" : "md:ml-auto md:pl-4"}`}>
+                      <div className="group-hover:translate-y-[-4px] transition-transform duration-400">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center icon-box transition-all duration-300 group-hover:scale-110"
+                            style={{ background: `${colorMap[step.color]}10`, border: `1px solid ${colorMap[step.color]}20` }}>
+                            <step.icon size={18} style={{ color: colorMap[step.color] }} />
+                          </div>
+                          <h3 className="text-lg font-black" style={{ color: "var(--white)" }}>{step.title}</h3>
+                        </div>
+                        <p className="text-sm leading-[1.8]" style={{ color: "var(--w55)" }}>{step.desc}</p>
+                        <div className="h-[2px] w-12 mt-4 rounded-full transition-all duration-500 group-hover:w-20"
+                          style={{ background: `linear-gradient(90deg, ${colorMap[step.color]}, transparent)` }} />
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 icon-box" style={{ background: `${colorMap[step.color]}10`, border: `1px solid ${colorMap[step.color]}20` }}>
-                    <step.icon size={22} style={{ color: colorMap[step.color] }} />
-                  </div>
-                  <h3 className="text-base font-bold mb-2" style={{ color: "var(--white)" }}>{step.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "var(--w55)" }}>{step.desc}</p>
-                </div>
-              </StaggerChild>
-            ))}
+                </StaggerChild>
+              );
+            })}
           </div>
         </div>
       </section>
