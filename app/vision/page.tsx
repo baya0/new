@@ -22,11 +22,6 @@ const stats = [
   { val: "100%", label: "Client Retention", icon: Users, color: "var(--amber)" },
 ];
 
-const industries = [
-  { name: "Pharmaceuticals", icon: "💊" }, { name: "Automotive", icon: "🚗" },
-  { name: "Manufacturing", icon: "🏭" }, { name: "Chemical", icon: "🧪" },
-  { name: "Retail", icon: "🏪" }, { name: "Technology", icon: "💻" },
-];
 
 function TextReveal({ text, className, as: Tag = "span" }: { text: string; className?: string; as?: any }) {
   const ref = useRef(null);
@@ -108,61 +103,58 @@ export default function VisionPage() {
 
       <div className="section-divider" />
 
-      {/* Values */}
+      {/* Values — horizontal side-by-side layout */}
       <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
         <div className="blob blob-cyan absolute -top-20 -left-40 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "1s" }} />
         <div className="blob blob-blue absolute bottom-0 -right-60 w-[450px] h-[450px] animate-blob" style={{ animationDelay: "5s" }} />
         <div className="max-w-6xl mx-auto relative">
           <AnimatedSection>
-            <div className="text-center mb-16">
-              <div className="badge mx-auto mb-5">{v.valuesLabel}</div>
+            <div className="mb-16">
+              <div className="badge mb-5">{v.valuesLabel}</div>
               <TextReveal text="What Drives Us Forward" className="text-3xl sm:text-[40px] font-black block" as="h2" />
             </div>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-0 relative">
+            {/* Vertical connecting line */}
+            <div className="hidden md:block absolute left-8 top-12 bottom-12 w-px" style={{ background: "linear-gradient(to bottom, var(--blue), var(--cyan), var(--green))", opacity: 0.3 }} />
+
             {v.values.map((val, i) => {
               const Icon = valueIcons[i];
+              const isEven = i % 2 === 0;
               return (
                 <StaggerChild key={i} i={i}>
-                  <div className="glass-card p-8 relative overflow-hidden group h-full">
-                    <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${colorMap[val.color]}, transparent)` }} />
-                    <div className="w-16 h-16 rounded-2xl icon-box flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ background: `${colorMap[val.color]}12`, border: `1px solid ${colorMap[val.color]}20` }}>
-                      <Icon size={28} style={{ color: colorMap[val.color] }} />
+                  <div className="relative group" style={{ padding: "28px 0" }}>
+                    <div className={`flex flex-col md:flex-row items-start gap-8 ${!isEven ? "md:flex-row-reverse md:text-right" : ""}`}>
+                      {/* Icon node */}
+                      <div className="relative shrink-0">
+                        <div className="w-16 h-16 rounded-2xl icon-box flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
+                          style={{ background: `${colorMap[val.color]}12`, border: `1px solid ${colorMap[val.color]}25`, boxShadow: `0 0 30px ${colorMap[val.color]}08` }}>
+                          <Icon size={28} style={{ color: colorMap[val.color] }} />
+                        </div>
+                        {/* Pulse ring on hover */}
+                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                          style={{ boxShadow: `0 0 0 8px ${colorMap[val.color]}08, 0 0 0 16px ${colorMap[val.color]}04` }} />
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 max-w-xl">
+                        <div className="inline-block text-[10px] font-bold tracking-widest uppercase mb-3 px-3 py-1 rounded-full"
+                          style={{ background: `${colorMap[val.color]}0A`, color: colorMap[val.color], border: `1px solid ${colorMap[val.color]}15` }}>
+                          0{i + 1}
+                        </div>
+                        <h3 className="text-xl font-black mb-3 leading-tight" style={{ color: "var(--white)" }}>{val.title}</h3>
+                        <p className="text-sm leading-[1.9]" style={{ color: "var(--w55)" }}>{val.desc}</p>
+                        {/* Accent underline */}
+                        <div className="h-[2px] w-16 mt-5 rounded-full transition-all duration-500 group-hover:w-24"
+                          style={{ background: `linear-gradient(90deg, ${colorMap[val.color]}, transparent)` }} />
+                      </div>
                     </div>
-                    <h3 className="text-lg font-black mb-3" style={{ color: "var(--white)" }}>{val.title}</h3>
-                    <p className="text-sm leading-[1.8]" style={{ color: "var(--w55)" }}>{val.desc}</p>
                   </div>
                 </StaggerChild>
               );
             })}
           </div>
-        </div>
-      </section>
-
-      <div className="section-divider" />
-
-      {/* Industries */}
-      <section className="section-deep relative overflow-hidden" style={{ padding: "140px 24px" }}>
-        <div className="blob blob-purple absolute top-20 -right-40 w-[400px] h-[400px] animate-blob" style={{ animationDelay: "3s" }} />
-        <div className="blob blob-cyan absolute -bottom-20 -left-40 w-[350px] h-[350px] animate-blob" style={{ animationDelay: "7s" }} />
-        <div className="max-w-6xl mx-auto relative z-10">
-          <AnimatedSection>
-            <div className="text-center mb-14">
-              <div className="badge mx-auto mb-5" style={{ background: "rgba(124,58,237,0.08)", borderColor: "rgba(124,58,237,0.15)", color: "var(--purple)" }}>INDUSTRIES</div>
-              <h2 className="text-3xl sm:text-[40px] font-black" style={{ color: "var(--white)" }}>Industries We Serve</h2>
-            </div>
-          </AnimatedSection>
-          <AnimatedSection>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {industries.map((ind, i) => (
-                <div key={i} className="glass-card rounded-2xl p-6 text-center group cursor-default transition-all duration-300" style={{ transform: "none" }}>
-                  <div className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-110">{ind.icon}</div>
-                  <div className="text-xs font-bold" style={{ color: "var(--white)" }}>{ind.name}</div>
-                </div>
-              ))}
-            </div>
-          </AnimatedSection>
         </div>
       </section>
 

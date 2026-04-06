@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, use } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { translations } from "@/lib/i18n";
@@ -24,8 +24,9 @@ function AnimatedSection({ children, className }: { children: React.ReactNode; c
   );
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = b.posts.find((p) => p.slug === params.slug);
+export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
+  const post = b.posts.find((p) => p.slug === slug);
   if (!post) return notFound();
 
   const cfg = catConfig[post.cat];
