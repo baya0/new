@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { translations } from "@/lib/i18n";
-import { Clock, ArrowRight, BookOpen, Cloud, Server, Truck, Leaf, Send } from "lucide-react";
+import { Clock, ArrowRight, BookOpen, Cloud, Server, Truck, Leaf, Send, User } from "lucide-react";
 
 const t = translations.en;
 const b = t.blog;
@@ -36,7 +36,6 @@ export default function BlogPage() {
       {/* Hero */}
       <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 120px" }}>
         <div className="aurora" />
-        {/* Floating blobs */}
         <div className="blob blob-purple w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
         <div className="blob blob-blue w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
         <div className="blob blob-cyan w-[300px] h-[300px] top-20 left-1/4 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
@@ -56,7 +55,6 @@ export default function BlogPage() {
       <div className="section-divider" />
 
       <section className="relative overflow-hidden section-deep" style={{ padding: "100px 24px 140px" }}>
-        {/* Background blobs */}
         <div className="blob blob-blue w-[450px] h-[450px] top-60 -right-48 animate-blob" style={{ animationDelay: "2s" }} />
         <div className="blob blob-purple w-[350px] h-[350px] bottom-40 -left-40 animate-blob" style={{ animationDelay: "6s" }} />
 
@@ -66,7 +64,7 @@ export default function BlogPage() {
             <div className="float-panel glow-border rounded-3xl overflow-hidden mb-12 group cursor-pointer">
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(29,107,196,0.08), rgba(124,58,237,0.04), var(--glass-card))` }}>
-                  {/* <Image src="/images/blog/featured.jpg" alt="Featured post" fill className="object-cover" /> */}
+                  {/* To add featured image: <Image src="/images/blog/featured.jpg" alt="Featured post" fill className="object-cover" /> */}
                   <div className="absolute top-5 left-5"><div className="badge text-[10px]">FEATURED</div></div>
                 </div>
                 <div className="p-8 lg:p-10 flex flex-col justify-center">
@@ -79,13 +77,21 @@ export default function BlogPage() {
                       </div>
                     );
                   })()}
-                  <h2 className="text-2xl font-black mb-3 leading-tight" style={{ color: "var(--white)" }}>{b.posts[0].title}</h2>
-                  <p className="text-sm leading-[1.8] mb-5" style={{ color: "var(--w55)" }}>{b.posts[0].desc}</p>
+                  <h2 className="text-2xl font-black mb-3 leading-tight relative z-10" style={{ color: "var(--white)" }}>{b.posts[0].title}</h2>
+                  <p className="text-sm leading-[1.8] mb-5 relative z-10" style={{ color: "var(--w55)" }}>{b.posts[0].desc}</p>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}>
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "rgba(29,107,196,0.1)", border: "1px solid rgba(29,107,196,0.15)" }}>
+                        <User size={10} style={{ color: "var(--blue)" }} />
+                      </div>
+                      {b.author}
+                    </span>
+                  </div>
                   <div className="flex items-center gap-4">
                     <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}><Clock size={12} />{b.posts[0].date}</span>
                     <span className="text-xs font-medium" style={{ color: "var(--w25)" }}>{b.posts[0].read}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 mt-6 text-sm font-bold transition-all duration-300 group-hover:gap-3" style={{ color: "var(--blue)" }}>
+                  <div className="flex items-center gap-1.5 mt-6 text-sm font-bold transition-all duration-300 group-hover:gap-3 relative z-10" style={{ color: "var(--blue)" }}>
                     Read article <ArrowRight size={14} />
                   </div>
                 </div>
@@ -104,14 +110,20 @@ export default function BlogPage() {
                   <div className="glass-card overflow-hidden cursor-pointer group h-full">
                     <div className="h-44 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${cc}0A, var(--glass-card))` }}>
                       <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${cc}, transparent)` }} />
-                      {/* <Image src={`/images/blog/post-${i + 2}.jpg`} alt={post.title} fill className="object-cover" /> */}
+                      {/* To add post image: <Image src={`/images/blog/post-${i + 2}.jpg`} alt={post.title} fill className="object-cover" /> */}
                     </div>
                     <div className="p-6">
                       <div className="tag mb-3 w-fit" style={{ background: `${cc}0D`, color: cc, border: `1px solid ${cc}20` }}>
                         <Icon size={10} />{post.cat}
                       </div>
-                      <h3 className="text-sm font-bold leading-snug mb-2" style={{ color: "var(--white)" }}>{post.title}</h3>
-                      <p className="text-xs leading-relaxed mb-4" style={{ color: "var(--w55)" }}>{post.desc}</p>
+                      <h3 className="text-sm font-bold leading-snug mb-2 relative z-10" style={{ color: "var(--white)" }}>{post.title}</h3>
+                      <p className="text-xs leading-relaxed mb-4 relative z-10" style={{ color: "var(--w55)" }}>{post.desc}</p>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "rgba(29,107,196,0.1)" }}>
+                          <User size={8} style={{ color: "var(--blue)" }} />
+                        </div>
+                        <span className="text-[10px] font-medium" style={{ color: "var(--w25)" }}>{b.author}</span>
+                      </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--w25)" }}><Clock size={10} />{post.date}</span>
