@@ -77,10 +77,29 @@ function ProjectCard({ proj, i }: { proj: any; i: number }) {
               ))}
             </div>
 
-            <h3 className="text-lg lg:text-xl font-black leading-snug mb-3 relative z-10" style={{ color: "var(--white)" }}>{proj.title}</h3>
+            <h3 className="text-lg lg:text-xl font-black leading-snug mb-3 relative z-10" style={{ color: "var(--white)" }}>
+              {proj.title.includes("Nike") ? (
+                <>
+                  <a href="https://www.linkedin.com/company/nike/" target="_blank" rel="noopener noreferrer" className="underline decoration-1 underline-offset-2 transition-colors duration-200 hover:text-[var(--blue)]">Nike</a>
+                  {proj.title.replace("Nike", "").replace(/^ /, " ")}
+                </>
+              ) : proj.title}
+            </h3>
 
             <p className="text-sm leading-[1.8] relative z-10" style={{ color: "var(--w55)" }}>
-              {expanded ? proj.fullDesc : proj.desc}
+              {(() => {
+                const text = expanded ? proj.fullDesc : proj.desc;
+                if (!proj.title.includes("Nike")) return text;
+                const parts = text.split("Nike");
+                return parts.map((part: string, pi: number) => (
+                  <span key={pi}>
+                    {part}
+                    {pi < parts.length - 1 && (
+                      <a href="https://www.linkedin.com/company/nike/" target="_blank" rel="noopener noreferrer" className="underline decoration-1 underline-offset-2 font-semibold transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--white)" }}>Nike</a>
+                    )}
+                  </span>
+                ));
+              })()}
             </p>
 
             {/* Bullet points (when expanded and available) */}

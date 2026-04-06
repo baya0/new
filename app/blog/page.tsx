@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { translations } from "@/lib/i18n";
+import Link from "next/link";
 import { Clock, ArrowRight, BookOpen, Cloud, Server, Truck, Leaf, Send, User } from "lucide-react";
 
 const t = translations.en;
@@ -61,6 +62,7 @@ export default function BlogPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Featured post */}
           <AnimatedSection>
+            <Link href={`/post/${b.posts[0].slug}`}>
             <div className="float-panel glow-border rounded-3xl overflow-hidden mb-12 group cursor-pointer">
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(29,107,196,0.08), rgba(124,58,237,0.04), var(--glass-card))` }}>
@@ -97,6 +99,7 @@ export default function BlogPage() {
                 </div>
               </div>
             </div>
+            </Link>
           </AnimatedSection>
 
           {/* Posts grid */}
@@ -107,6 +110,7 @@ export default function BlogPage() {
               const Icon = cfg?.icon ?? Cloud;
               return (
                 <StaggerChild key={i} i={i}>
+                  <Link href={`/post/${post.slug}`}>
                   <div className="glass-card overflow-hidden cursor-pointer group h-full">
                     <div className="h-44 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${cc}0A, var(--glass-card))` }}>
                       <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${cc}, transparent)` }} />
@@ -133,6 +137,7 @@ export default function BlogPage() {
                       </div>
                     </div>
                   </div>
+                  </Link>
                 </StaggerChild>
               );
             })}
