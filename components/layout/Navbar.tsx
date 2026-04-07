@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type Lang } from "@/lib/i18n";
-import { Menu, X, Sun, Moon, ChevronRight } from "lucide-react";
+import { Menu, X, Sun, Moon, ChevronRight, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -28,175 +28,290 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
+  useEffect(() => { setMobileOpen(false); setLangOpen(false); }, [pathname]);
 
   return (
-    <nav
-      className={cn(
-        "sticky top-0 z-50 transition-all duration-400",
-      )}
-      style={{
-        background: scrolled ? "var(--glass-card)" : "transparent",
-        backdropFilter: scrolled ? "blur(24px) saturate(1.4)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.4)" : "none",
-        borderBottom: `1px solid ${scrolled ? "var(--glass-card-border)" : "transparent"}`,
-        boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.06)" : "none",
-        height: 72,
-      }}
-    >
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 h-full flex items-center">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 font-extrabold text-[17px] shrink-0 group" style={{ color: "var(--white)" }}>
-          <span
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-black text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
-            style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-blue)" }}
-          >
-            S
-          </span>
-          <span>
-            supportiva<span style={{ color: "var(--blue)" }}>.net</span>
-          </span>
-        </Link>
-
-        {/* Desktop Nav */}
-        <div className="hidden md:flex gap-1 ml-10 flex-1">
-          {PAGES.map((p) => {
-            const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
-            return (
-              <Link
-                key={p.key}
-                href={p.href}
-                className={cn(
-                  "nav-link relative px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200",
-                  isActive && "nav-link-active"
-                )}
-                style={{ color: isActive ? "var(--blue)" : "var(--w55)" }}
-              >
-                {isActive && (
-                  <span className="absolute inset-0 rounded-xl" style={{ background: "rgba(29,107,196,0.08)", backdropFilter: "blur(8px)" }} />
-                )}
-                <span className="relative hover:text-[var(--blue)] transition-colors">{(t.nav as any)[p.key]}</span>
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Right Controls */}
-        <div className="hidden md:flex items-center gap-3 ml-auto">
-          {/* Language pills */}
-          <div className="flex gap-1 p-1 rounded-xl" style={{ background: "var(--glass-card)", backdropFilter: "blur(12px)", border: "1px solid var(--glass-card-border)" }}>
-            {(["en", "ar", "tr"] as Lang[]).map((l) => (
-              <button
-                key={l}
-                onClick={() => setLang(l)}
-                className="px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200"
-                style={{
-                  background: lang === l ? "var(--blue)" : "transparent",
-                  color: lang === l ? "#fff" : "var(--w55)",
-                  boxShadow: lang === l ? "var(--shadow-blue)" : "none",
-                }}
-              >
-                {l === "en" ? "EN" : l === "ar" ? "عر" : "TR"}
-              </button>
-            ))}
-          </div>
-
-          {/* Theme toggle */}
-          <button
-            onClick={() => setDark(!dark)}
-            className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105"
-            style={{ background: "var(--glass-card)", backdropFilter: "blur(12px)", border: "1px solid var(--glass-card-border)" }}
-          >
-            {dark ? <Sun size={15} color="var(--amber)" /> : <Moon size={15} color="var(--blue)" />}
-          </button>
-
-          {/* CTA */}
-          <Link
-            href="/contact"
-            className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-all duration-300 hover:-translate-y-0.5"
-            style={{
-              background: "var(--gradient-brand)",
-              boxShadow: "var(--shadow-blue)",
-            }}
-          >
-            {t.nav.cta}
-          </Link>
-        </div>
-
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden ml-auto w-10 h-10 rounded-xl flex items-center justify-center transition-colors"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          style={{ color: "var(--w55)", background: "var(--glass-card)", backdropFilter: "blur(12px)", border: "1px solid var(--glass-card-border)" }}
+    <>
+      {/* ── Floating Island Navbar ── */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none" style={{ paddingTop: scrolled ? 12 : 16, transition: "padding 0.4s cubic-bezier(0.22,1,0.36,1)" }}>
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="pointer-events-auto relative"
+          style={{
+            background: scrolled ? "var(--glass)" : "var(--glass-card)",
+            backdropFilter: "blur(28px) saturate(1.6)",
+            WebkitBackdropFilter: "blur(28px) saturate(1.6)",
+            border: `1px solid ${scrolled ? "var(--glass-border)" : "var(--glass-card-border)"}`,
+            borderRadius: 22,
+            boxShadow: scrolled
+              ? "0 8px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.1) inset"
+              : "0 4px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.08) inset",
+            padding: "0 8px",
+            height: 56,
+            transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
+            maxWidth: "calc(100vw - 32px)",
+          }}
         >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
+          <div className="h-full flex items-center gap-1">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 px-3 shrink-0 group" style={{ color: "var(--white)" }}>
+              <span
+                className="w-8 h-8 rounded-[10px] flex items-center justify-center text-[11px] font-black text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-blue)" }}
+              >
+                S
+              </span>
+              <span className="font-extrabold text-[15px] hidden lg:inline">
+                supportiva<span style={{ color: "var(--blue)" }}>.net</span>
+              </span>
+            </Link>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden absolute top-full left-0 right-0 z-50 py-3 px-4"
-            style={{ background: "var(--glass-card)", backdropFilter: "blur(24px)", borderBottom: "1px solid var(--glass-card-border)" }}
-          >
-            {PAGES.map((p) => {
-              const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
-              return (
-                <Link
-                  key={p.key}
-                  href={p.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between py-3.5 px-3 rounded-xl text-sm font-semibold transition-colors mb-0.5"
+            {/* Divider */}
+            <div className="hidden md:block w-px h-6 mx-1" style={{ background: "var(--border)" }} />
+
+            {/* Desktop Nav Links */}
+            <div className="hidden md:flex items-center gap-0.5">
+              {PAGES.map((p) => {
+                const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
+                return (
+                  <Link
+                    key={p.key}
+                    href={p.href}
+                    className="relative px-3.5 py-1.5 text-[12.5px] font-semibold transition-all duration-250 rounded-xl hover:text-[var(--blue)]"
+                    style={{ color: isActive ? "var(--blue)" : "var(--w55)" }}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-active"
+                        className="absolute inset-0 rounded-xl"
+                        style={{
+                          background: "rgba(29,107,196,0.1)",
+                          border: "1px solid rgba(29,107,196,0.12)",
+                        }}
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{(t.nav as any)[p.key]}</span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Divider */}
+            <div className="hidden md:block w-px h-6 mx-1" style={{ background: "var(--border)" }} />
+
+            {/* Right Controls */}
+            <div className="hidden md:flex items-center gap-1.5 px-1">
+              {/* Language dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setLangOpen(!langOpen)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition-all duration-200 hover:scale-105"
                   style={{
-                    color: isActive ? "var(--blue)" : "var(--w85)",
-                    background: isActive ? "rgba(29,107,196,0.08)" : "transparent",
+                    background: langOpen ? "rgba(29,107,196,0.1)" : "transparent",
+                    color: "var(--w55)",
+                    border: langOpen ? "1px solid rgba(29,107,196,0.15)" : "1px solid transparent",
                   }}
                 >
-                  <span>{(t.nav as any)[p.key]}</span>
-                  <ChevronRight size={14} style={{ opacity: 0.4 }} />
-                </Link>
-              );
-            })}
-
-            <div className="flex items-center gap-2 mt-3 pt-3 border-t px-1" style={{ borderColor: "var(--glass-card-border)" }}>
-              <div className="flex gap-1 p-1 rounded-xl flex-1" style={{ background: "var(--glass-card)" }}>
-                {(["en", "ar", "tr"] as Lang[]).map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => { setLang(l); setMobileOpen(false); }}
-                    className="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all"
-                    style={{
-                      background: lang === l ? "var(--blue)" : "transparent",
-                      color: lang === l ? "#fff" : "var(--w55)",
-                    }}
-                  >
-                    {l === "en" ? "EN" : l === "ar" ? "عر" : "TR"}
-                  </button>
-                ))}
+                  <Globe size={13} />
+                  {lang.toUpperCase()}
+                </button>
+                <AnimatePresence>
+                  {langOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 4, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full right-0 mt-2 p-1.5 rounded-xl"
+                      style={{
+                        background: "var(--glass)",
+                        backdropFilter: "blur(24px)",
+                        border: "1px solid var(--glass-border)",
+                        boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
+                        minWidth: 80,
+                      }}
+                    >
+                      {(["en", "ar", "tr"] as Lang[]).map((l) => (
+                        <button
+                          key={l}
+                          onClick={() => { setLang(l); setLangOpen(false); }}
+                          className="w-full px-3 py-2 rounded-lg text-[11px] font-bold text-left transition-all duration-150"
+                          style={{
+                            background: lang === l ? "rgba(29,107,196,0.1)" : "transparent",
+                            color: lang === l ? "var(--blue)" : "var(--w55)",
+                          }}
+                        >
+                          {l === "en" ? "English" : l === "ar" ? "العربية" : "Türkçe"}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+
+              {/* Theme toggle — pill with sliding indicator */}
               <button
-                onClick={() => { setDark(!dark); setMobileOpen(false); }}
-                className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: "var(--glass-card)", border: "1px solid var(--glass-card-border)" }}
+                onClick={() => setDark(!dark)}
+                className="relative w-[52px] h-7 rounded-full flex items-center transition-all duration-300"
+                style={{
+                  background: dark ? "rgba(91,147,245,0.12)" : "rgba(29,107,196,0.08)",
+                  border: `1px solid ${dark ? "rgba(91,147,245,0.2)" : "rgba(29,107,196,0.12)"}`,
+                }}
               >
-                {dark ? <Sun size={14} color="var(--amber)" /> : <Moon size={14} color="var(--blue)" />}
+                <motion.div
+                  className="absolute w-5 h-5 rounded-full"
+                  animate={{ x: dark ? 26 : 4 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  style={{
+                    background: dark ? "var(--amber)" : "var(--blue)",
+                    boxShadow: dark ? "0 0 12px rgba(240,168,48,0.3)" : "0 0 12px rgba(26,94,199,0.2)",
+                  }}
+                />
+                <Sun size={10} className="absolute" style={{ left: 7, color: dark ? "var(--w25)" : "white", zIndex: 1 }} />
+                <Moon size={10} className="absolute" style={{ right: 7, color: dark ? "white" : "var(--w25)", zIndex: 1 }} />
               </button>
             </div>
-          </motion.div>
+
+            {/* Mobile toggle */}
+            <button
+              className="md:hidden ml-auto w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              style={{ color: "var(--w55)" }}
+            >
+              <AnimatePresence mode="wait">
+                {mobileOpen ? (
+                  <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                    <X size={20} />
+                  </motion.div>
+                ) : (
+                  <motion.div key="m" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                    <Menu size={20} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
+          </div>
+        </motion.div>
+      </nav>
+
+      {/* ── Mobile Drawer ── */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40"
+              style={{ background: "rgba(0,0,0,0.3)", backdropFilter: "blur(4px)" }}
+              onClick={() => setMobileOpen(false)}
+            />
+            {/* Panel */}
+            <motion.div
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 bottom-0 z-50 w-[280px]"
+              style={{
+                background: "var(--glass)",
+                backdropFilter: "blur(40px) saturate(1.5)",
+                WebkitBackdropFilter: "blur(40px) saturate(1.5)",
+                borderLeft: "1px solid var(--glass-border)",
+                boxShadow: "-20px 0 60px rgba(0,0,0,0.1)",
+              }}
+            >
+              <div className="p-6 pt-8">
+                {/* Close */}
+                <div className="flex items-center justify-between mb-8">
+                  <span className="font-extrabold text-[15px]" style={{ color: "var(--white)" }}>
+                    supportiva<span style={{ color: "var(--blue)" }}>.net</span>
+                  </span>
+                  <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ color: "var(--w55)", background: "var(--glass-card)" }}>
+                    <X size={16} />
+                  </button>
+                </div>
+
+                {/* Nav links */}
+                <div className="space-y-1">
+                  {PAGES.map((p, i) => {
+                    const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
+                    return (
+                      <motion.div key={p.key} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
+                        <Link
+                          href={p.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="flex items-center justify-between py-3 px-4 rounded-xl text-[13px] font-semibold transition-all duration-200"
+                          style={{
+                            color: isActive ? "var(--blue)" : "var(--w85)",
+                            background: isActive ? "rgba(29,107,196,0.08)" : "transparent",
+                          }}
+                        >
+                          <span>{(t.nav as any)[p.key]}</span>
+                          <ChevronRight size={14} style={{ opacity: isActive ? 1 : 0.3, color: isActive ? "var(--blue)" : "var(--w25)" }} />
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* Bottom controls */}
+                <div className="mt-8 pt-6" style={{ borderTop: "1px solid var(--border)" }}>
+                  {/* Language */}
+                  <div className="flex gap-1 p-1 rounded-xl mb-4" style={{ background: "var(--glass-card)", border: "1px solid var(--glass-card-border)" }}>
+                    {(["en", "ar", "tr"] as Lang[]).map((l) => (
+                      <button
+                        key={l}
+                        onClick={() => { setLang(l); setMobileOpen(false); }}
+                        className="flex-1 py-2 rounded-lg text-[11px] font-bold transition-all"
+                        style={{
+                          background: lang === l ? "var(--blue)" : "transparent",
+                          color: lang === l ? "#fff" : "var(--w55)",
+                          boxShadow: lang === l ? "var(--shadow-blue)" : "none",
+                        }}
+                      >
+                        {l === "en" ? "EN" : l === "ar" ? "عر" : "TR"}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Theme toggle */}
+                  <button
+                    onClick={() => { setDark(!dark); setMobileOpen(false); }}
+                    className="w-full flex items-center gap-3 py-3 px-4 rounded-xl text-[13px] font-semibold transition-all"
+                    style={{ color: "var(--w85)", background: "var(--glass-card)", border: "1px solid var(--glass-card-border)" }}
+                  >
+                    {dark ? <Sun size={15} color="var(--amber)" /> : <Moon size={15} color="var(--blue)" />}
+                    {dark ? "Light Mode" : "Dark Mode"}
+                  </button>
+
+                  {/* CTA */}
+                  <Link
+                    href="/contact"
+                    onClick={() => setMobileOpen(false)}
+                    className="mt-4 flex items-center justify-center py-3 rounded-xl text-[13px] font-bold text-white transition-all"
+                    style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-blue)" }}
+                  >
+                    {t.nav.cta}
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 }
