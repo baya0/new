@@ -48,14 +48,12 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="pointer-events-auto relative"
           style={{
-            background: scrolled ? "var(--glass)" : "var(--glass-card)",
-            backdropFilter: "blur(28px) saturate(1.6)",
-            WebkitBackdropFilter: "blur(28px) saturate(1.6)",
-            border: `1px solid ${scrolled ? "var(--glass-border)" : "var(--glass-card-border)"}`,
-            borderRadius: 22,
+            background: "var(--glass)",
+            border: "1px solid var(--glass-border)",
+            borderRadius: 16,
             boxShadow: scrolled
-              ? "0 8px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.1) inset"
-              : "0 4px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.08) inset",
+              ? "var(--shadow-lg)"
+              : "var(--shadow)",
             padding: "0 8px",
             height: 56,
             transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
@@ -66,8 +64,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 px-3 shrink-0 group" style={{ color: "var(--white)" }}>
               <span
-                className="w-8 h-8 rounded-[10px] flex items-center justify-center text-[11px] font-black text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
-                style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-blue)" }}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-black text-white transition-all duration-300 group-hover:scale-110"
+                style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-sm)" }}
               >
                 S
               </span>
@@ -87,16 +85,16 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                   <Link
                     key={p.key}
                     href={p.href}
-                    className="relative px-3.5 py-1.5 text-[12.5px] font-semibold transition-all duration-250 rounded-xl hover:text-[var(--blue)]"
+                    className="relative px-3.5 py-1.5 text-[12.5px] font-semibold transition-all duration-250 rounded-lg hover:text-[var(--blue)]"
                     style={{ color: isActive ? "var(--blue)" : "var(--w55)" }}
                   >
                     {isActive && (
                       <motion.span
                         layoutId="nav-active"
-                        className="absolute inset-0 rounded-xl"
+                        className="absolute inset-0 rounded-lg"
                         style={{
-                          background: "rgba(29,107,196,0.1)",
-                          border: "1px solid rgba(29,107,196,0.12)",
+                          background: "var(--tint-blue)",
+                          border: "1px solid var(--tint-blue-border)",
                         }}
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       />
@@ -116,11 +114,11 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               <div className="relative">
                 <button
                   onClick={() => setLangOpen(!langOpen)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition-all duration-200 hover:scale-105"
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200 hover:scale-105"
                   style={{
-                    background: langOpen ? "rgba(29,107,196,0.1)" : "transparent",
+                    background: langOpen ? "var(--tint-blue)" : "transparent",
                     color: "var(--w55)",
-                    border: langOpen ? "1px solid rgba(29,107,196,0.15)" : "1px solid transparent",
+                    border: langOpen ? "1px solid var(--tint-blue-border)" : "1px solid transparent",
                   }}
                 >
                   <Globe size={13} />
@@ -136,9 +134,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                       className="absolute top-full right-0 mt-2 p-1.5 rounded-xl"
                       style={{
                         background: "var(--glass)",
-                        backdropFilter: "blur(24px)",
                         border: "1px solid var(--glass-border)",
-                        boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
+                        boxShadow: "var(--shadow-lg)",
                         minWidth: 80,
                       }}
                     >
@@ -148,7 +145,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                           onClick={() => { setLang(l); setLangOpen(false); }}
                           className="w-full px-3 py-2 rounded-lg text-[11px] font-bold text-left transition-all duration-150"
                           style={{
-                            background: lang === l ? "rgba(29,107,196,0.1)" : "transparent",
+                            background: lang === l ? "var(--tint-blue)" : "transparent",
                             color: lang === l ? "var(--blue)" : "var(--w55)",
                           }}
                         >
@@ -165,8 +162,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                 onClick={() => setDark(!dark)}
                 className="relative w-[52px] h-7 rounded-full flex items-center transition-all duration-300"
                 style={{
-                  background: dark ? "rgba(91,147,245,0.12)" : "rgba(29,107,196,0.08)",
-                  border: `1px solid ${dark ? "rgba(91,147,245,0.2)" : "rgba(29,107,196,0.12)"}`,
+                  background: "var(--tint-blue)",
+                  border: "1px solid var(--tint-blue-border)",
                 }}
               >
                 <motion.div
@@ -175,7 +172,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   style={{
                     background: dark ? "var(--amber)" : "var(--blue)",
-                    boxShadow: dark ? "0 0 12px rgba(240,168,48,0.3)" : "0 0 12px rgba(26,94,199,0.2)",
+                    boxShadow: "var(--shadow-sm)",
                   }}
                 />
                 <Sun size={10} className="absolute" style={{ left: 7, color: dark ? "var(--w25)" : "white", zIndex: 1 }} />
@@ -185,7 +182,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
 
             {/* Mobile toggle */}
             <button
-              className="md:hidden ml-auto w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105"
+              className="md:hidden ml-auto w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
               onClick={() => setMobileOpen(!mobileOpen)}
               style={{ color: "var(--w55)" }}
             >
@@ -215,7 +212,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-40"
-              style={{ background: "rgba(0,0,0,0.3)", backdropFilter: "blur(4px)" }}
+              style={{ background: "rgba(0,0,0,0.25)" }}
               onClick={() => setMobileOpen(false)}
             />
             {/* Panel */}
@@ -227,10 +224,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               className="fixed top-0 right-0 bottom-0 z-50 w-[280px]"
               style={{
                 background: "var(--glass)",
-                backdropFilter: "blur(40px) saturate(1.5)",
-                WebkitBackdropFilter: "blur(40px) saturate(1.5)",
                 borderLeft: "1px solid var(--glass-border)",
-                boxShadow: "-20px 0 60px rgba(0,0,0,0.1)",
+                boxShadow: "var(--shadow-xl)",
               }}
             >
               <div className="p-6 pt-8">
@@ -239,7 +234,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                   <span className="font-extrabold text-[15px]" style={{ color: "var(--white)" }}>
                     supportiva<span style={{ color: "var(--blue)" }}>.net</span>
                   </span>
-                  <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ color: "var(--w55)", background: "var(--glass-card)" }}>
+                  <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ color: "var(--w55)", background: "var(--bg3)" }}>
                     <X size={16} />
                   </button>
                 </div>
@@ -253,10 +248,10 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                         <Link
                           href={p.href}
                           onClick={() => setMobileOpen(false)}
-                          className="flex items-center justify-between py-3 px-4 rounded-xl text-[13px] font-semibold transition-all duration-200"
+                          className="flex items-center justify-between py-3 px-4 rounded-lg text-[13px] font-semibold transition-all duration-200"
                           style={{
                             color: isActive ? "var(--blue)" : "var(--w85)",
-                            background: isActive ? "rgba(29,107,196,0.08)" : "transparent",
+                            background: isActive ? "var(--tint-blue)" : "transparent",
                           }}
                         >
                           <span>{(t.nav as any)[p.key]}</span>
@@ -270,16 +265,16 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                 {/* Bottom controls */}
                 <div className="mt-8 pt-6" style={{ borderTop: "1px solid var(--border)" }}>
                   {/* Language */}
-                  <div className="flex gap-1 p-1 rounded-xl mb-4" style={{ background: "var(--glass-card)", border: "1px solid var(--glass-card-border)" }}>
+                  <div className="flex gap-1 p-1 rounded-lg mb-4" style={{ background: "var(--bg3)", border: "1px solid var(--border)" }}>
                     {(["en", "ar", "tr"] as Lang[]).map((l) => (
                       <button
                         key={l}
                         onClick={() => { setLang(l); setMobileOpen(false); }}
-                        className="flex-1 py-2 rounded-lg text-[11px] font-bold transition-all"
+                        className="flex-1 py-2 rounded-md text-[11px] font-bold transition-all"
                         style={{
                           background: lang === l ? "var(--blue)" : "transparent",
                           color: lang === l ? "#fff" : "var(--w55)",
-                          boxShadow: lang === l ? "var(--shadow-blue)" : "none",
+                          boxShadow: lang === l ? "var(--shadow-sm)" : "none",
                         }}
                       >
                         {l === "en" ? "EN" : l === "ar" ? "عر" : "TR"}
@@ -290,8 +285,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                   {/* Theme toggle */}
                   <button
                     onClick={() => { setDark(!dark); setMobileOpen(false); }}
-                    className="w-full flex items-center gap-3 py-3 px-4 rounded-xl text-[13px] font-semibold transition-all"
-                    style={{ color: "var(--w85)", background: "var(--glass-card)", border: "1px solid var(--glass-card-border)" }}
+                    className="w-full flex items-center gap-3 py-3 px-4 rounded-lg text-[13px] font-semibold transition-all"
+                    style={{ color: "var(--w85)", background: "var(--bg3)", border: "1px solid var(--border)" }}
                   >
                     {dark ? <Sun size={15} color="var(--amber)" /> : <Moon size={15} color="var(--blue)" />}
                     {dark ? "Light Mode" : "Dark Mode"}
@@ -302,7 +297,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                     href="/contact"
                     onClick={() => setMobileOpen(false)}
                     className="mt-4 flex items-center justify-center py-3 rounded-xl text-[13px] font-bold text-white transition-all"
-                    style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-blue)" }}
+                    style={{ background: "var(--gradient-brand)", boxShadow: "0 2px 0 rgba(0,0,0,0.15), 0 4px 12px rgba(28,78,138,0.18)" }}
                   >
                     {t.nav.cta}
                   </Link>

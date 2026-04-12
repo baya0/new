@@ -42,7 +42,7 @@ export default function BlogPage() {
         <div className="blob blob-cyan w-[300px] h-[300px] top-20 left-1/4 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
-          <div className="badge mb-6" style={{ background: "rgba(124,58,237,0.08)", borderColor: "rgba(124,58,237,0.15)", color: "var(--purple)" }}>
+          <div className="badge mb-6" style={{ background: "rgba(94,74,158,0.07)", borderColor: "rgba(94,74,158,0.12)", color: "var(--purple)" }}>
             <BookOpen size={12} />{b.eyebrow}
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
@@ -65,7 +65,7 @@ export default function BlogPage() {
             <Link href={`/post/${b.posts[0].slug}`}>
             <div className="float-panel glow-border rounded-3xl overflow-hidden mb-12 group cursor-pointer">
               <div className="grid grid-cols-1 md:grid-cols-2">
-                <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(29,107,196,0.08), rgba(124,58,237,0.04), var(--glass-card))` }}>
+                <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(28,78,138,0.06), rgba(94,74,158,0.03), var(--glass-card))` }}>
                   {/* To add featured image: <Image src="/images/blog/featured.jpg" alt="Featured post" fill className="object-cover" /> */}
                   <div className="absolute top-5 left-5"><div className="badge text-[10px]">FEATURED</div></div>
                 </div>
@@ -83,7 +83,7 @@ export default function BlogPage() {
                   <p className="text-sm leading-[1.8] mb-5 relative z-10" style={{ color: "var(--w55)" }}>{b.posts[0].desc}</p>
                   <div className="flex items-center gap-4 mb-4">
                     <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}>
-                      <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "rgba(29,107,196,0.1)", border: "1px solid rgba(29,107,196,0.15)" }}>
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
                         <User size={10} style={{ color: "var(--blue)" }} />
                       </div>
                       {b.author}
@@ -123,7 +123,7 @@ export default function BlogPage() {
                       <h3 className="text-sm font-bold leading-snug mb-2 relative z-10" style={{ color: "var(--white)" }}>{post.title}</h3>
                       <p className="text-xs leading-relaxed mb-4 relative z-10" style={{ color: "var(--w55)" }}>{post.desc}</p>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "rgba(29,107,196,0.1)" }}>
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)" }}>
                           <User size={8} style={{ color: "var(--blue)" }} />
                         </div>
                         <span className="text-[10px] font-medium" style={{ color: "var(--w25)" }}>{b.author}</span>
@@ -149,7 +149,7 @@ export default function BlogPage() {
               <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
               <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "rgba(29,107,196,0.1)", border: "1px solid rgba(29,107,196,0.15)" }}>
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
                     <Send size={22} style={{ color: "var(--blue)" }} />
                   </div>
                   <div>
@@ -160,7 +160,7 @@ export default function BlogPage() {
                 <div className="flex gap-3 w-full md:w-auto">
                   <input type="email" placeholder="your@company.com" className="form-input flex-1 md:w-60" />
                   <button className="px-6 py-3 rounded-xl text-sm font-bold text-white shrink-0 transition-all duration-300 hover:-translate-y-0.5"
-                    style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-blue)" }}>
+                    style={{ background: "var(--gradient-brand)", boxShadow: "0 2px 0 rgba(0,0,0,0.15), 0 4px 12px rgba(28,78,138,0.18)" }}>
                     Subscribe
                   </button>
                 </div>

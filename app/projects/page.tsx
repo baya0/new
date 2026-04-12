@@ -10,11 +10,11 @@ const t = translations.en;
 const p = t.projects;
 
 const colorMap: Record<string, { accent: string; bg: string }> = {
-  blue:   { accent: "var(--blue)",   bg: "rgba(29,107,196,0.06)" },
-  green:  { accent: "var(--green)",  bg: "rgba(5,150,101,0.06)" },
-  amber:  { accent: "var(--amber)",  bg: "rgba(217,119,6,0.06)" },
-  cyan:   { accent: "var(--cyan)",   bg: "rgba(8,145,178,0.06)" },
-  purple: { accent: "var(--purple)", bg: "rgba(124,58,237,0.06)" },
+  blue:   { accent: "var(--blue)",   bg: "rgba(28,78,138,0.05)" },
+  green:  { accent: "var(--green)",  bg: "rgba(26,122,84,0.05)" },
+  amber:  { accent: "var(--amber)",  bg: "rgba(184,135,62,0.05)" },
+  cyan:   { accent: "var(--cyan)",   bg: "rgba(42,126,158,0.05)" },
+  purple: { accent: "var(--purple)", bg: "rgba(94,74,158,0.05)" },
 };
 
 const CATEGORIES = ["All", "Migration", "Datacenter", "Support", "Network", "Sustainability"];
@@ -70,7 +70,6 @@ function ProjectCard({ proj, i }: { proj: any; i: number }) {
                 <span key={j} className="tag text-[10px]"
                   style={{
                     background: j === 0 ? `${c.accent}0D` : "var(--glass-card)",
-                    backdropFilter: "blur(8px)",
                     color: j === 0 ? c.accent : "var(--w55)",
                     border: `1px solid ${j === 0 ? `${c.accent}20` : "var(--glass-card-border)"}`,
                   }}>{tag}</span>
@@ -151,7 +150,7 @@ export default function ProjectsPage() {
         <div className="blob blob-purple w-[300px] h-[300px] top-20 left-1/3 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
-          <div className="badge mb-6" style={{ background: "rgba(5,150,105,0.08)", borderColor: "rgba(5,150,105,0.15)", color: "var(--green)" }}>{p.eyebrow}</div>
+          <div className="badge mb-6" style={{ background: "rgba(26,122,84,0.07)", borderColor: "rgba(26,122,84,0.12)", color: "var(--green)" }}>{p.eyebrow}</div>
           <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
             {p.h1[0]}<br /><span className="gradient-text">{p.h1[1]}</span>
           </h1>
@@ -175,10 +174,9 @@ export default function ProjectsPage() {
                   className="px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300"
                   style={{
                     background: activeFilter === cat ? "var(--blue)" : "var(--glass-card)",
-                    backdropFilter: activeFilter === cat ? "none" : "blur(12px)",
                     color: activeFilter === cat ? "#fff" : "var(--w55)",
                     border: `1px solid ${activeFilter === cat ? "var(--blue)" : "var(--glass-card-border)"}`,
-                    boxShadow: activeFilter === cat ? "var(--shadow-blue)" : "none",
+                    boxShadow: activeFilter === cat ? "var(--shadow-sm)" : "none",
                   }}>
                   {cat}
                 </button>

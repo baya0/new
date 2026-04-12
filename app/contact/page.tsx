@@ -67,7 +67,7 @@ export default function ContactPage() {
               return (
                 <div key={i} className="flex items-center gap-3 group cursor-default">
                   <div className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                    style={{ background: "rgba(29,107,196,0.08)", border: "1px solid rgba(29,107,196,0.12)" }}>
+                    style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
                     <Icon size={16} style={{ color: "var(--blue)" }} />
                   </div>
                   <div>
@@ -104,7 +104,7 @@ export default function ContactPage() {
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.2 }}
                     className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
-                    style={{ background: "rgba(5,150,105,0.1)", border: "1px solid rgba(5,150,105,0.2)" }}
+                    style={{ background: "rgba(26,122,84,0.08)", border: "1px solid rgba(26,122,84,0.15)" }}
                   >
                     <CheckCircle2 size={36} style={{ color: "var(--green)" }} />
                   </motion.div>
@@ -193,7 +193,7 @@ export default function ContactPage() {
                       className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl text-[14px] font-bold text-white transition-all duration-300"
                       style={{
                         background: "var(--gradient-brand)",
-                        boxShadow: "var(--shadow-blue-lg)",
+                        boxShadow: "0 2px 0 rgba(0,0,0,0.15), 0 4px 12px rgba(28,78,138,0.18)",
                       }}
                     >
                       <Send size={16} />
@@ -211,7 +211,7 @@ export default function ContactPage() {
                 {/* Response time badge */}
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <div className="w-3 h-3 rounded-full" style={{ background: "var(--green)", boxShadow: "0 0 12px var(--green)" }} />
+                    <div className="w-3 h-3 rounded-full" style={{ background: "var(--green)" }} />
                     <div className="absolute inset-0 w-3 h-3 rounded-full animate-ping" style={{ background: "var(--green)", opacity: 0.3 }} />
                   </div>
                   <span className="text-sm font-semibold" style={{ color: "var(--w85)" }}>{c.resp}</span>
@@ -265,7 +265,6 @@ export default function ContactPage() {
                         className="group flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-semibold transition-all duration-300 hover:-translate-y-1"
                         style={{
                           background: "var(--glass-card)",
-                          backdropFilter: "blur(12px)",
                           border: "1px solid var(--glass-card-border)",
                           color: "var(--w55)",
                         }}

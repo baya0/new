@@ -60,7 +60,7 @@ export default function HomePage() {
           <div>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <div className="badge mb-8">
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--blue)", boxShadow: "0 0 8px var(--blue)" }} />
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--blue)" }} />
                 {th.eyebrow}
               </div>
             </motion.div>
@@ -160,9 +160,9 @@ export default function HomePage() {
               return (
                 <StaggerChild key={i} i={i}>
                   <div className="glass-card p-9 relative group h-full">
-                    <div className="absolute top-0 left-0 right-0 h-[4px] rounded-t-[28px]" style={{ background: `linear-gradient(90deg, ${colorMap[svc.color]}, transparent)`, boxShadow: `0 2px 20px ${colorMap[svc.color]}20` }} />
+                    <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[20px]" style={{ background: `linear-gradient(90deg, ${colorMap[svc.color]}, transparent)` }} />
 
-                    <div className="icon-box w-[72px] h-[72px] rounded-2xl flex items-center justify-center mb-7" style={{ background: `${colorMap[svc.color]}12`, border: `1px solid ${colorMap[svc.color]}25`, boxShadow: `0 4px 16px ${colorMap[svc.color]}10`, color: colorMap[svc.color] }}>
+                    <div className="icon-box w-[72px] h-[72px] rounded-2xl flex items-center justify-center mb-7" style={{ background: `${colorMap[svc.color]}0A`, border: `1px solid ${colorMap[svc.color]}18`, color: colorMap[svc.color] }}>
                       <Icon size={30} style={{ color: colorMap[svc.color] }} />
                     </div>
                     <h3 className="text-xl font-bold mb-3 leading-snug relative z-10" style={{ color: "var(--white)" }}>{svc.title}</h3>
@@ -193,7 +193,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="md:col-span-6 md:order-1">
-                <div className="badge mb-6" style={{ background: "rgba(14,126,163,0.1)", borderColor: "rgba(14,126,163,0.2)", color: "var(--cyan)" }}>WHAT WE DO</div>
+                <div className="badge mb-6" style={{ background: "rgba(42,126,158,0.08)", borderColor: "rgba(42,126,158,0.12)", color: "var(--cyan)" }}>WHAT WE DO</div>
                 <TextReveal text={th.ourServicesTitle} className="text-3xl sm:text-4xl lg:text-[42px] font-black mb-7 leading-[1.1] block" as="h2" />
                 <p className="text-[15px] leading-[1.9] mb-9" style={{ color: "var(--w55)" }}>{th.ourServicesText}</p>
                 <Link href="/vision"><Button>{th.ourServicesBtn}</Button></Link>
@@ -278,16 +278,16 @@ export default function HomePage() {
 
         <AnimatedSection className="max-w-3xl mx-auto relative z-10">
           <div className="float-panel p-10 lg:p-14 relative overflow-hidden glow-border">
-            <div className="absolute top-0 left-0 right-0 h-[4px] rounded-t-[32px]" style={{ background: "linear-gradient(90deg, var(--amber), var(--green), transparent)", boxShadow: "0 2px 20px rgba(192,107,8,0.15)" }} />
+            <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[24px]" style={{ background: "linear-gradient(90deg, var(--amber), var(--green), transparent)" }} />
             <div className="absolute -top-6 -left-3 text-[160px] font-black leading-none pointer-events-none select-none" style={{ color: "var(--amber)", opacity: 0.06 }}>&ldquo;</div>
 
             <div className="relative">
               <div className="flex gap-1.5 mb-7">
-                {[1,2,3,4,5].map(i => <Star key={i} size={22} fill="var(--amber)" style={{ color: "var(--amber)", filter: "drop-shadow(0 2px 4px rgba(192,107,8,0.3))" }} />)}
+                {[1,2,3,4,5].map(i => <Star key={i} size={22} fill="var(--amber)" style={{ color: "var(--amber)" }} />)}
               </div>
               <p className="text-xl sm:text-2xl font-bold leading-[1.6] mb-9" style={{ color: "var(--white)" }}>{th.testimonial.quote}</p>
               <div className="flex items-center gap-5">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-base font-black shrink-0" style={{ background: "rgba(192,107,8,0.1)", border: "1px solid rgba(192,107,8,0.2)", color: "var(--amber)", boxShadow: "0 4px 16px rgba(192,107,8,0.1)" }}>
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-base font-black shrink-0" style={{ background: "rgba(184,135,62,0.08)", border: "1px solid rgba(184,135,62,0.15)", color: "var(--amber)" }}>
                   NK
                 </div>
                 <div>
