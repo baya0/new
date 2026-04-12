@@ -33,15 +33,15 @@ export function Button({
         type={type}
         onClick={onClick}
         className={cn(
-          "inline-flex items-center gap-2 rounded-2xl font-bold text-white transition-all duration-300",
-          "hover:-translate-y-1 hover:shadow-2xl active:scale-[0.98]",
+          "inline-flex items-center gap-2 rounded-xl font-bold text-white transition-all duration-250",
+          "hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
           sizeClasses[size],
           fullWidth && "w-full justify-center",
           className
         )}
         style={{
           background: "var(--gradient-brand)",
-          boxShadow: "0 8px 32px rgba(26,94,199,0.35), 0 2px 8px rgba(26,94,199,0.2)",
+          boxShadow: "0 2px 0 rgba(0,0,0,0.15), 0 4px 12px rgba(28,78,138,0.18)",
         }}
       >
         {children}
@@ -55,8 +55,8 @@ export function Button({
         type={type}
         onClick={onClick}
         className={cn(
-          "inline-flex items-center gap-2 rounded-2xl font-semibold transition-all duration-200",
-          "hover:-translate-y-0.5 active:scale-[0.98]",
+          "inline-flex items-center gap-2 rounded-xl font-semibold transition-all duration-200",
+          "hover:underline hover:underline-offset-4 active:scale-[0.98]",
           sizeClasses[size],
           fullWidth && "w-full justify-center",
           className
@@ -73,18 +73,17 @@ export function Button({
       type={type}
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-2 rounded-2xl font-bold transition-all duration-300",
-        "hover:-translate-y-1 active:scale-[0.98]",
+        "inline-flex items-center gap-2 rounded-xl font-bold transition-all duration-250",
+        "hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
         sizeClasses[size],
         fullWidth && "w-full justify-center",
         className
       )}
       style={{
         background: "var(--glass-card)",
-        backdropFilter: "blur(16px)",
-        border: "1px solid var(--glass-card-border)",
+        border: "1.5px solid var(--border)",
         color: "var(--w85)",
-        boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+        boxShadow: "var(--shadow-sm)",
       }}
     >
       {children}

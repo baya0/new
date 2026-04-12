@@ -61,7 +61,7 @@ export default function VisionPage() {
         <div className="blob blob-cyan absolute -top-40 -left-40 w-[600px] h-[600px] animate-blob" style={{ animationDelay: "0s" }} />
         <div className="blob blob-purple absolute -bottom-40 -right-40 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "4s" }} />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative">
-          <div className="badge mb-6" style={{ background: "rgba(8,145,178,0.08)", borderColor: "rgba(8,145,178,0.15)", color: "var(--cyan)" }}>{v.eyebrow}</div>
+          <div className="badge mb-6" style={{ background: "rgba(42,126,158,0.07)", borderColor: "rgba(42,126,158,0.12)", color: "var(--cyan)" }}>{v.eyebrow}</div>
           <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight max-w-3xl" style={{ color: "var(--white)" }}>{v.h1}</h1>
           <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-2xl" style={{ color: "var(--w55)" }}>{v.sub}</p>
           <div className="accent-line w-24 mt-8" style={{ background: "linear-gradient(90deg, var(--cyan), var(--blue), transparent)" }} />
@@ -82,7 +82,7 @@ export default function VisionPage() {
                   {/* <Image src="/images/our-story.jpg" alt="Our Story" fill className="object-cover rounded-[20px]" /> */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ zIndex: 3 }}>
                     <button className="w-20 h-20 rounded-full flex items-center justify-center mb-3 transition-all duration-500 group-hover:scale-110"
-                      style={{ background: "rgba(29,107,196,0.12)", border: "2px solid rgba(29,107,196,0.25)", boxShadow: "0 0 40px rgba(29,107,196,0.1)" }}>
+                      style={{ background: "var(--tint-blue-hover)", border: "2px solid var(--tint-blue-border)" }}>
                       <Play size={28} fill="var(--blue)" style={{ color: "var(--blue)", marginLeft: 3 }} />
                     </button>
                     <p className="text-sm font-semibold" style={{ color: "var(--w55)" }}>{v.watchLabel}</p>
@@ -129,12 +129,11 @@ export default function VisionPage() {
                       {/* Icon node */}
                       <div className="relative shrink-0">
                         <div className="w-16 h-16 rounded-2xl icon-box flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
-                          style={{ background: `${colorMap[val.color]}12`, border: `1px solid ${colorMap[val.color]}25`, boxShadow: `0 0 30px ${colorMap[val.color]}08` }}>
+                          style={{ background: `${colorMap[val.color]}0A`, border: `1px solid ${colorMap[val.color]}18` }}>
                           <Icon size={28} style={{ color: colorMap[val.color] }} />
                         </div>
                         {/* Pulse ring on hover */}
-                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                          style={{ boxShadow: `0 0 0 8px ${colorMap[val.color]}08, 0 0 0 16px ${colorMap[val.color]}04` }} />
+                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       </div>
 
                       {/* Content */}

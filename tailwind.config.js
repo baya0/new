@@ -9,35 +9,35 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          blue:   "#0F90FF",
-          cyan:   "#00DCE6",
-          green:  "#1EDD80",
-          amber:  "#FFA600",
-          purple: "#9B6DFF",
+          blue:   "#1C4E8A",
+          steel:  "#3A7CC0",
+          cyan:   "#2A7E9E",
+          green:  "#1A7A54",
+          amber:  "#B8873E",
+          purple: "#5E4A9E",
         },
         dark: {
-          0: "#090A0F",
-          1: "#0E1018",
-          2: "#151821",
-          3: "#1C2029",
+          0: "#0E1720",
+          1: "#131E2C",
+          2: "#182638",
+          3: "#1B2A3C",
         },
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       animation: {
-        "float":     "float 5s ease-in-out infinite",
+        "float":     "float 6s ease-in-out infinite",
         "marquee":   "marquee 22s linear infinite",
         "pulse-dot": "pulse-dot 1.8s ease-in-out infinite",
         "fade-up":   "fadeUp 0.6s ease both",
         "scale-in":  "scaleIn 0.5s ease both",
         "slide-in":  "slideInRight 0.5s ease both",
-        "glow":      "glow 2s ease-in-out infinite",
       },
       keyframes: {
         float: {
           "0%,100%": { transform: "translateY(0px)" },
-          "50%":     { transform: "translateY(-8px)" },
+          "50%":     { transform: "translateY(-6px)" },
         },
         marquee: {
           from: { transform: "translateX(0)" },
@@ -58,10 +58,6 @@ module.exports = {
         slideInRight: {
           from: { opacity: 0, transform: "translateX(30px)" },
           to:   { opacity: 1, transform: "translateX(0)" },
-        },
-        glow: {
-          "0%,100%": { opacity: 0.5 },
-          "50%":     { opacity: 1 },
         },
       },
     },

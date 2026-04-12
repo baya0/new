@@ -59,7 +59,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
 
             <div className="flex items-center gap-5 flex-wrap">
               <span className="flex items-center gap-2 text-sm font-medium" style={{ color: "var(--w55)" }}>
-                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(29,107,196,0.1)", border: "1px solid rgba(29,107,196,0.15)" }}>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
                   <User size={12} style={{ color: "var(--blue)" }} />
                 </div>
                 {b.author}

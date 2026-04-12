@@ -137,7 +137,7 @@ export default function SolutionsPage() {
                     {/* Dot on timeline */}
                     <div className="absolute left-6 md:left-1/2 -translate-x-1/2 z-10">
                       <div className="w-12 h-12 rounded-full flex items-center justify-center text-xs font-black text-white transition-transform duration-300 group-hover:scale-110"
-                        style={{ background: colorMap[step.color], boxShadow: `0 0 24px ${colorMap[step.color]}30` }}>
+                        style={{ background: colorMap[step.color], boxShadow: "var(--shadow-sm)" }}>
                         {String(i + 1).padStart(2, "0")}
                       </div>
                     </div>
@@ -178,7 +178,7 @@ export default function SolutionsPage() {
               <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative">
                 <div>
-                  <div className="badge mb-5" style={{ background: "rgba(5,150,105,0.08)", borderColor: "rgba(5,150,105,0.15)", color: "var(--green)" }}>WHY US</div>
+                  <div className="badge mb-5" style={{ background: "rgba(26,122,84,0.07)", borderColor: "rgba(26,122,84,0.12)", color: "var(--green)" }}>WHY US</div>
                   <h3 className="text-2xl lg:text-[34px] font-black mb-5 leading-tight" style={{ color: "var(--white)" }}>{s.whyTitle}</h3>
                   <p className="text-sm lg:text-base leading-[1.8]" style={{ color: "var(--w55)" }}>{s.whyDesc}</p>
                 </div>
