@@ -8,13 +8,13 @@
    ══════════════════════════════════════════════════════════ */
 
 :root {
-  /* Clean backgrounds — warm, not blue-drenched */
-  --bg0: #F3F5F8;
-  --bg0-solid: #F3F5F8;
-  --bg1: #EBEEF3;
-  --bg1-solid: #EBEEF3;
-  --bg2: #FFFFFF;
-  --bg3: #F8F9FB;
+  /* Backgrounds — soft, easy on the eyes, no glare */
+  --bg0: #ECEDF1;
+  --bg0-solid: #ECEDF1;
+  --bg1: #E4E5EB;
+  --bg1-solid: #E4E5EB;
+  --bg2: #F5F5F8;
+  --bg3: #F0F0F4;
 
   /* Brand — deep muted blues from logo + warm accent */
   --blue: #1C4E8A;
@@ -24,32 +24,32 @@
   --amber: #B8873E;
   --purple: #5E4A9E;
 
-  /* Text — warm navy, not cold */
-  --white: #1A2540;
-  --w95: #243050;
-  --w85: #3A4A64;
-  --w55: #687588;
-  --w25: #9CA5B4;
+  /* Text — high contrast, comfortable reading */
+  --white: #171E2E;
+  --w95: #212A3C;
+  --w85: #323E52;
+  --w55: #4A5568;
+  --w25: #6B7788;
 
-  /* Borders — clean, visible structure */
-  --border: #E0E4EB;
-  --border-strong: #CED3DD;
+  /* Borders — clearly visible structure */
+  --border: #D0D3DB;
+  --border-strong: #BCC0CA;
 
-  /* Surfaces — solid, no glass blur */
-  --glass: #FFFFFF;
-  --glass-border: #E0E4EB;
-  --glass-card: #FFFFFF;
-  --glass-card-border: #E0E4EB;
-  --glass-card-hover: #F8F9FB;
+  /* Surfaces — off-white, never pure white */
+  --glass: #F5F5F8;
+  --glass-border: #D0D3DB;
+  --glass-card: #F9F9FB;
+  --glass-card-border: #D0D3DB;
+  --glass-card-hover: #F0F0F4;
 
-  --glass-deep: #ECF0F5;
-  --glass-deep-border: #DEE2EA;
+  --glass-deep: #E3E4EA;
+  --glass-deep-border: #CDD0D8;
 
-  /* Shadows — neutral, no blue glow */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 14px rgba(0,0,0,0.03);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.07), 0 12px 32px rgba(0,0,0,0.04);
-  --shadow-xl: 0 8px 24px rgba(0,0,0,0.08), 0 20px 48px rgba(0,0,0,0.05);
+  /* Shadows — slightly stronger for visibility on softer bg */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.05);
+  --shadow-xl: 0 8px 24px rgba(0,0,0,0.10), 0 20px 48px rgba(0,0,0,0.06);
   --shadow-blue: 0 2px 8px rgba(28,78,138,0.1);
   --shadow-blue-lg: 0 4px 16px rgba(28,78,138,0.12);
   --shadow-float: 0 6px 24px rgba(0,0,0,0.06);
@@ -63,9 +63,9 @@
     radial-gradient(ellipse 50% 50% at 50% 80%, rgba(184,135,62,0.02), transparent);
 
   /* Subtle background tint tokens */
-  --tint-blue: rgba(28,78,138,0.06);
-  --tint-blue-hover: rgba(28,78,138,0.10);
-  --tint-blue-border: rgba(28,78,138,0.10);
+  --tint-blue: rgba(28,78,138,0.07);
+  --tint-blue-hover: rgba(28,78,138,0.12);
+  --tint-blue-border: rgba(28,78,138,0.12);
 
   --noise-opacity: 0;
 }
