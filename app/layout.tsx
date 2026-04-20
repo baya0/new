@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { translations, type Lang } from "@/lib/i18n";
+import { LanguageContext } from "@/lib/language-context";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Lang>("en");
@@ -23,9 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased">
-        <Navbar t={t} lang={lang} setLang={setLang} dark={dark} setDark={setDark} />
-        <main>{children}</main>
-        <Footer t={t} lang={lang} setLang={setLang} />
+        <LanguageContext.Provider value={{ lang, setLang, t }}>
+          <Navbar t={t} lang={lang} setLang={setLang} dark={dark} setDark={setDark} />
+          <main>{children}</main>
+          <Footer t={t} lang={lang} setLang={setLang} />
+        </LanguageContext.Provider>
       </body>
     </html>
   );

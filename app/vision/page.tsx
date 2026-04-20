@@ -3,22 +3,12 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { translations } from "@/lib/i18n";
+import { useLang } from "@/lib/language-context";
 import { Play } from "lucide-react";
-
-const t = translations.en;
-const v = t.vision;
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)",
 };
-
-const stats = [
-  { val: "11+", label: "Years in Business" },
-  { val: "9", label: "Global Locations" },
-  { val: "27+", label: "Projects Delivered" },
-  { val: "100%", label: "Client Retention" },
-];
 
 function WordReveal({ text, className, as: Tag = "span", delay = 0 }: { text: string; className?: string; as?: any; delay?: number }) {
   const ref = useRef(null);
@@ -50,6 +40,9 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 }
 
 export default function VisionPage() {
+  const { t } = useLang();
+  const v = t.vision;
+  const stats = v.stats;
   const year = new Date().getFullYear();
 
   return (
@@ -92,11 +85,19 @@ export default function VisionPage() {
                 </div>
               </FadeIn>
               <h1 className="headline-xl mb-8">
-                <WordReveal text="IT services" />
-                <br />
-                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--cyan)" }}>
-                  for your business.
-                </motion.span>
+                {(() => {
+                  const words = v.h1.split(" ");
+                  const mid = Math.ceil(words.length / 2);
+                  return (
+                    <>
+                      <WordReveal text={words.slice(0, mid).join(" ")} />
+                      <br />
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--cyan)" }}>
+                        {words.slice(mid).join(" ").toLowerCase()}
+                      </motion.span>
+                    </>
+                  );
+                })()}
               </h1>
               <FadeIn delay={0.6} className="max-w-2xl">
                 <p className="text-base lg:text-lg leading-[1.8]" style={{ color: "var(--w55)" }}>{v.sub}</p>
@@ -159,10 +160,7 @@ export default function VisionPage() {
             <div className="mb-16">
               <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Values</div>
               <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight" style={{ color: "var(--white)" }}>
-                What drives us{" "}
-                <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
-                  forward.
-                </span>
+                {v.valuesLabel.toLowerCase()}.
               </h2>
             </div>
           </FadeIn>

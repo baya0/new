@@ -3,11 +3,8 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { translations } from "@/lib/i18n";
+import { useLang } from "@/lib/language-context";
 import { ArrowUpRight, Plus } from "lucide-react";
-
-const t = translations.en;
-const th = t.home;
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)", amber: "var(--amber)",
@@ -55,6 +52,8 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 /* ─────────── Page ─────────── */
 
 export default function HomePage() {
+  const { t } = useLang();
+  const th = t.home;
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroBgY = useTransform(scrollYProgress, [0, 1], [0, 120]);

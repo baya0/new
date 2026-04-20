@@ -3,11 +3,8 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { translations } from "@/lib/i18n";
+import { useLang } from "@/lib/language-context";
 import { MapPin, ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
-
-const t = translations.en;
-const p = t.projects;
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)",
@@ -61,6 +58,7 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 
 function ProjectCase({ proj, i }: { proj: any; i: number }) {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useLang();
   const color = colorMap[proj.color];
 
   return (
@@ -129,7 +127,7 @@ function ProjectCase({ proj, i }: { proj: any; i: number }) {
           className="mt-6 inline-flex items-center gap-2 text-sm font-bold"
           style={{ color }}
         >
-          <span className="swept-underline">{expanded ? "Show less" : "Read the full case"}</span>
+          <span className="swept-underline">{expanded ? t.projects.showLess : t.projects.readMore}</span>
           {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </button>
       </div>
@@ -154,6 +152,8 @@ function ProjectCase({ proj, i }: { proj: any; i: number }) {
 }
 
 export default function ProjectsPage() {
+  const { t } = useLang();
+  const p = t.projects;
   const [activeFilter, setActiveFilter] = useState("All");
   const year = new Date().getFullYear();
 

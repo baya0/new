@@ -1,18 +1,25 @@
 "use client";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { translations } from "@/lib/i18n";
+import { useLang } from "@/lib/language-context";
 import Link from "next/link";
 import { Clock, ArrowRight, BookOpen, Cloud, Server, Truck, Leaf, Send, User } from "lucide-react";
-
-const t = translations.en;
-const b = t.blog;
 
 const catConfig: Record<string, { color: string; icon: typeof Cloud }> = {
   Cloud: { color: "var(--blue)", icon: Cloud },
   Infrastructure: { color: "var(--cyan)", icon: Server },
   Migration: { color: "var(--amber)", icon: Truck },
   Sustainability: { color: "var(--green)", icon: Leaf },
+  // Arabic category names
+  "السحابة": { color: "var(--blue)", icon: Cloud },
+  "البنية التحتية": { color: "var(--cyan)", icon: Server },
+  "الهجرة": { color: "var(--amber)", icon: Truck },
+  "الاستدامة": { color: "var(--green)", icon: Leaf },
+  // Turkish category names
+  "Bulut": { color: "var(--blue)", icon: Cloud },
+  "Altyapı": { color: "var(--cyan)", icon: Server },
+  "Göç": { color: "var(--amber)", icon: Truck },
+  "Sürdürülebilirlik": { color: "var(--green)", icon: Leaf },
 };
 
 function AnimatedSection({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -32,6 +39,9 @@ function StaggerChild({ children, className, i }: { children: React.ReactNode; c
 }
 
 export default function BlogPage() {
+  const { t } = useLang();
+  const b = t.blog;
+  const posts = b.posts as unknown as any[];
   return (
     <>
       {/* Hero */}
@@ -62,7 +72,7 @@ export default function BlogPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Featured post */}
           <AnimatedSection>
-            <Link href={`/post/${b.posts[0].slug}`}>
+            <Link href={`/post/${posts[0].slug}`}>
             <div className="float-panel glow-border rounded-3xl overflow-hidden mb-12 group cursor-pointer">
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(28,78,138,0.06), rgba(94,74,158,0.03), var(--glass-card))` }}>
@@ -71,16 +81,16 @@ export default function BlogPage() {
                 </div>
                 <div className="p-8 lg:p-10 flex flex-col justify-center">
                   {(() => {
-                    const cfg = catConfig[b.posts[0].cat];
+                    const cfg = catConfig[posts[0].cat];
                     const Icon = cfg?.icon ?? Cloud;
                     return (
                       <div className="tag mb-4 w-fit" style={{ background: `${cfg?.color ?? "var(--blue)"}0D`, color: cfg?.color ?? "var(--blue)", border: `1px solid ${cfg?.color ?? "var(--blue)"}20` }}>
-                        <Icon size={11} />{b.posts[0].cat}
+                        <Icon size={11} />{posts[0].cat}
                       </div>
                     );
                   })()}
-                  <h2 className="text-2xl font-black mb-3 leading-tight relative z-10" style={{ color: "var(--white)" }}>{b.posts[0].title}</h2>
-                  <p className="text-sm leading-[1.8] mb-5 relative z-10" style={{ color: "var(--w55)" }}>{b.posts[0].desc}</p>
+                  <h2 className="text-2xl font-black mb-3 leading-tight relative z-10" style={{ color: "var(--white)" }}>{posts[0].title}</h2>
+                  <p className="text-sm leading-[1.8] mb-5 relative z-10" style={{ color: "var(--w55)" }}>{posts[0].desc}</p>
                   <div className="flex items-center gap-4 mb-4">
                     <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}>
                       <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
@@ -90,8 +100,8 @@ export default function BlogPage() {
                     </span>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}><Clock size={12} />{b.posts[0].date}</span>
-                    <span className="text-xs font-medium" style={{ color: "var(--w25)" }}>{b.posts[0].read}</span>
+                    <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}><Clock size={12} />{posts[0].date}</span>
+                    <span className="text-xs font-medium" style={{ color: "var(--w25)" }}>{posts[0].read}</span>
                   </div>
                   <div className="flex items-center gap-1.5 mt-6 text-sm font-bold transition-all duration-300 group-hover:gap-3 relative z-10" style={{ color: "var(--blue)" }}>
                     Read article <ArrowRight size={14} />
@@ -104,7 +114,7 @@ export default function BlogPage() {
 
           {/* Posts grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
-            {b.posts.slice(1).map((post, i) => {
+            {posts.slice(1).map((post, i) => {
               const cfg = catConfig[post.cat];
               const cc = cfg?.color ?? "var(--blue)";
               const Icon = cfg?.icon ?? Cloud;

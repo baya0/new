@@ -3,22 +3,13 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { translations } from "@/lib/i18n";
+import { useLang } from "@/lib/language-context";
 import { CheckCircle2 } from "lucide-react";
-
-const t = translations.en;
-const s = t.solutions;
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)", amber: "var(--amber)",
 };
 
-const processSteps = [
-  { title: "Discovery", desc: "We analyze your infrastructure and understand your goals.", color: "blue" },
-  { title: "Architecture", desc: "Custom solution design with detailed roadmap and timelines.", color: "cyan" },
-  { title: "Implementation", desc: "Zero-downtime deployment by certified engineers.", color: "green" },
-  { title: "Ongoing Support", desc: "24/7 monitoring and continuous optimization.", color: "amber" },
-];
 
 function WordReveal({ text, className, as: Tag = "span", delay = 0 }: { text: string; className?: string; as?: any; delay?: number }) {
   const ref = useRef(null);
@@ -50,6 +41,9 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 }
 
 export default function SolutionsPage() {
+  const { t } = useLang();
+  const s = t.solutions;
+  const processSteps = s.processSteps;
   return (
     <>
       {/* HERO */}
@@ -79,13 +73,21 @@ export default function SolutionsPage() {
                 </div>
               </FadeIn>
               <h1 className="headline-xl mb-8">
-                <WordReveal text="Empowering your" />
-                <br />
-                <WordReveal text="business with" delay={0.1} />
-                <br />
-                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--blue)" }}>
-                  data-driven solutions.
-                </motion.span>
+                {(() => {
+                  const words = s.h1.split(" ");
+                  const mid = Math.ceil(words.length / 2);
+                  const line1 = words.slice(0, mid).join(" ");
+                  const line2 = words.slice(mid).join(" ");
+                  return (
+                    <>
+                      <WordReveal text={line1} />
+                      <br />
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--blue)" }}>
+                        {line2.toLowerCase()}.
+                      </motion.span>
+                    </>
+                  );
+                })()}
               </h1>
               <FadeIn delay={0.6} className="max-w-xl">
                 <p className="text-base lg:text-lg leading-[1.8]" style={{ color: "var(--w55)" }}>{s.sub}</p>
@@ -165,10 +167,9 @@ export default function SolutionsPage() {
               <FadeIn>
                 <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Method</div>
                 <h2 className="text-[44px] lg:text-[56px] font-black leading-[0.98] tracking-tight mb-8" style={{ color: "var(--white)" }}>
-                  How we
-                  <br />
+                  {s.processTitle.split(".")[0]}
                   <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
-                    deliver results.
+                    {s.processTitle.includes(".") ? "." : ""}
                   </span>
                 </h2>
                 <div className="brush-line w-20" />
