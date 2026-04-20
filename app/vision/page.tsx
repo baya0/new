@@ -3,187 +3,242 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { translations } from "@/lib/i18n";
-import { Play, Target, Handshake, Leaf, Globe, Users, Award, TrendingUp } from "lucide-react";
-
-const t = translations.en;
-const v = t.vision;
+import { useLang } from "@/lib/language-context";
+import { Play } from "lucide-react";
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)",
 };
 
-const valueIcons = [Target, Handshake, Leaf];
-
-const stats = [
-  { val: "11+", label: "Years in Business", icon: Award, color: "var(--blue)" },
-  { val: "9", label: "Global Locations", icon: Globe, color: "var(--cyan)" },
-  { val: "27+", label: "Projects Delivered", icon: TrendingUp, color: "var(--green)" },
-  { val: "100%", label: "Client Retention", icon: Users, color: "var(--amber)" },
-];
-
-
-function TextReveal({ text, className, as: Tag = "span" }: { text: string; className?: string; as?: any }) {
+function WordReveal({ text, className, as: Tag = "span", delay = 0 }: { text: string; className?: string; as?: any; delay?: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
     <Tag ref={ref} className={className}>
       {text.split(" ").map((word: string, i: number) => (
-        <motion.span key={i} initial={{ opacity: 0, y: 16, filter: "blur(4px)" }} animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}} transition={{ delay: i * 0.04, duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="inline-block mr-[0.28em]">{word}</motion.span>
+        <span key={i} className="inline-block overflow-hidden align-baseline mr-[0.26em]">
+          <motion.span
+            initial={{ y: "110%", rotate: 4 }}
+            animate={inView ? { y: "0%", rotate: 0 } : {}}
+            transition={{ delay: delay + i * 0.055, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-block"
+          >
+            {word}
+          </motion.span>
+        </span>
       ))}
     </Tag>
   );
 }
 
-function AnimatedSection({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.ReactNode; className?: string; delay?: number; y?: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <motion.div ref={ref} initial={{ opacity: 0, y: 32 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
-  );
-}
-
-function StaggerChild({ children, className, i }: { children: React.ReactNode; className?: string; i: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <motion.div ref={ref} initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}} transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
+    <motion.div ref={ref} initial={{ opacity: 0, y }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
   );
 }
 
 export default function VisionPage() {
+  const { t } = useLang();
+  const v = t.vision;
+  const stats = v.stats;
+  const year = new Date().getFullYear();
+
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden hero-bg" style={{ padding: "100px 24px 120px" }}>
-        <div className="aurora" />
-        <div className="absolute inset-0 dot-grid opacity-25 pointer-events-none" />
-        <div className="blob blob-cyan absolute -top-40 -left-40 w-[600px] h-[600px] animate-blob" style={{ animationDelay: "0s" }} />
-        <div className="blob blob-purple absolute -bottom-40 -right-40 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "4s" }} />
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative">
-          <div className="badge mb-6" style={{ background: "rgba(42,126,158,0.07)", borderColor: "rgba(42,126,158,0.12)", color: "var(--cyan)" }}>{v.eyebrow}</div>
-          <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight max-w-3xl" style={{ color: "var(--white)" }}>{v.h1}</h1>
-          <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-2xl" style={{ color: "var(--w55)" }}>{v.sub}</p>
-          <div className="accent-line w-24 mt-8" style={{ background: "linear-gradient(90deg, var(--cyan), var(--blue), transparent)" }} />
-        </motion.div>
+      {/* HERO */}
+      <section className="relative overflow-hidden hero-bg" style={{ padding: "32px 0 120px" }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="aurora" />
+          <div className="blob blob-cyan w-[600px] h-[600px] animate-blob" style={{ left: -180, top: -120 }} />
+          <div className="blob blob-purple w-[420px] h-[420px] animate-blob" style={{ right: -120, bottom: 40, animationDelay: "-4s" }} />
+          <div className="absolute inset-0 dot-grid opacity-30" />
+        </div>
+
+        {/* Rotating orbit */}
+        <div className="hidden lg:block absolute left-[-140px] bottom-[-140px] pointer-events-none">
+          <div className="orbit w-[460px] h-[460px]" />
+        </div>
+
+        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
+          <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.2em] uppercase py-4 mb-20" style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}>
+            <span className="flex items-center gap-3">
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--cyan)" }} />
+              SECTION III — VISION
+            </span>
+            <span className="hidden sm:block">EST. 2013 — VOL. {year - 2013}</span>
+          </div>
+
+          <div className="grid grid-cols-12 gap-6">
+            <div className="hidden lg:flex col-span-1 items-start pt-8">
+              <FadeIn delay={0.5}>
+                <div className="vertical-label">{v.eyebrow} — Manifesto</div>
+              </FadeIn>
+            </div>
+
+            <div className="col-span-12 lg:col-span-8">
+              <FadeIn>
+                <div className="mono-label mb-6 flex items-center gap-3" style={{ color: "var(--cyan)" }}>
+                  <span className="w-8 h-px" style={{ background: "var(--cyan)" }} />
+                  The Manifesto
+                </div>
+              </FadeIn>
+              <h1 className="headline-xl mb-8">
+                {(() => {
+                  const words = v.h1.split(" ");
+                  const mid = Math.ceil(words.length / 2);
+                  return (
+                    <>
+                      <WordReveal text={words.slice(0, mid).join(" ")} />
+                      <br />
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--cyan)" }}>
+                        {words.slice(mid).join(" ").toLowerCase()}
+                      </motion.span>
+                    </>
+                  );
+                })()}
+              </h1>
+              <FadeIn delay={0.6} className="max-w-2xl">
+                <p className="text-base lg:text-lg leading-[1.8]" style={{ color: "var(--w55)" }}>{v.sub}</p>
+              </FadeIn>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <div className="section-divider" />
+      {/* OUR STORY */}
+      <section className="relative section-deep overflow-hidden" style={{ padding: "160px 0" }}>
+        <div className="blob blob-blue w-[450px] h-[450px] animate-blob" style={{ right: -180, top: 60 }} />
+        <div className="blob blob-purple w-[350px] h-[350px] animate-blob" style={{ left: -80, bottom: 80, animationDelay: "-5s" }} />
 
-      {/* Our Story */}
-      <section className="section-deep relative overflow-hidden" style={{ padding: "140px 24px" }}>
-        <div className="blob blob-blue absolute top-10 -right-40 w-[450px] h-[450px] animate-blob" style={{ animationDelay: "2s" }} />
-        <div className="blob blob-purple absolute bottom-10 -left-40 w-[400px] h-[400px] animate-blob" style={{ animationDelay: "6s" }} />
-        <div className="max-w-6xl mx-auto relative z-10">
-          <AnimatedSection>
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
-              <div className="md:col-span-5">
-                <div className="img-placeholder min-h-[360px] relative group cursor-pointer">
-                  {/* <Image src="/images/our-story.jpg" alt="Our Story" fill className="object-cover rounded-[20px]" /> */}
+        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12 lg:col-span-5">
+              <FadeIn>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 01 — The Origin</div>
+                <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight mb-8" style={{ color: "var(--white)" }}>
+                  {v.missionTitle.split(" ")[0]}
+                  <br />
+                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                    {v.missionTitle.split(" ").slice(1).join(" ")}.
+                  </span>
+                </h2>
+                <div className="brush-line w-20 mb-10" />
+
+                <div className="img-placeholder min-h-[320px] relative group cursor-pointer">
                   <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ zIndex: 3 }}>
-                    <button className="w-20 h-20 rounded-full flex items-center justify-center mb-3 transition-all duration-500 group-hover:scale-110"
-                      style={{ background: "var(--tint-blue-hover)", border: "2px solid var(--tint-blue-border)" }}>
+                    <button className="w-20 h-20 rounded-full flex items-center justify-center mb-3 transition-all duration-500 group-hover:scale-110" style={{ background: "var(--tint-blue-hover)", border: "2px solid var(--tint-blue-border)" }}>
                       <Play size={28} fill="var(--blue)" style={{ color: "var(--blue)", marginLeft: 3 }} />
                     </button>
                     <p className="text-sm font-semibold" style={{ color: "var(--w55)" }}>{v.watchLabel}</p>
                   </div>
                 </div>
-              </div>
-              <div className="md:col-span-7 md:pl-6">
-                <div className="badge mb-5">ABOUT</div>
-                <TextReveal text={v.missionTitle} className="text-3xl sm:text-[40px] font-black mb-6 leading-tight block" as="h2" />
-                <p className="text-sm leading-[1.9] mb-4" style={{ color: "var(--w55)" }}>{v.mission1}</p>
-                <p className="text-sm leading-[1.9] mb-8" style={{ color: "var(--w55)" }}>{v.mission2}</p>
+              </FadeIn>
+            </div>
+
+            <div className="col-span-12 lg:col-span-6 lg:col-start-7">
+              <FadeIn delay={0.2}>
+                <p className="pull-quote text-2xl lg:text-[32px] leading-[1.4] mb-8" style={{ color: "var(--white)" }}>
+                  &ldquo;{v.mission1}&rdquo;
+                </p>
+                <p className="text-[15px] leading-[1.9] mb-10" style={{ color: "var(--w55)" }}>{v.mission2}</p>
                 <Link href="/contact"><Button>Work With Us →</Button></Link>
-              </div>
+              </FadeIn>
             </div>
-          </AnimatedSection>
-        </div>
-      </section>
-
-      <div className="section-divider" />
-
-      {/* Values — horizontal side-by-side layout */}
-      <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
-        <div className="blob blob-cyan absolute -top-20 -left-40 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "1s" }} />
-        <div className="blob blob-blue absolute bottom-0 -right-60 w-[450px] h-[450px] animate-blob" style={{ animationDelay: "5s" }} />
-        <div className="max-w-6xl mx-auto relative">
-          <AnimatedSection>
-            <div className="mb-16">
-              <div className="badge mb-5">{v.valuesLabel}</div>
-              <TextReveal text="What Drives Us Forward" className="text-3xl sm:text-[40px] font-black block" as="h2" />
-            </div>
-          </AnimatedSection>
-
-          <div className="space-y-0 relative">
-            {/* Vertical connecting line */}
-            <div className="hidden md:block absolute left-8 top-12 bottom-12 w-px" style={{ background: "linear-gradient(to bottom, var(--blue), var(--cyan), var(--green))", opacity: 0.3 }} />
-
-            {v.values.map((val, i) => {
-              const Icon = valueIcons[i];
-              const isEven = i % 2 === 0;
-              return (
-                <StaggerChild key={i} i={i}>
-                  <div className="relative group" style={{ padding: "28px 0" }}>
-                    <div className={`flex flex-col md:flex-row items-start gap-8 ${!isEven ? "md:flex-row-reverse md:text-right" : ""}`}>
-                      {/* Icon node */}
-                      <div className="relative shrink-0">
-                        <div className="w-16 h-16 rounded-2xl icon-box flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
-                          style={{ background: `${colorMap[val.color]}0A`, border: `1px solid ${colorMap[val.color]}18` }}>
-                          <Icon size={28} style={{ color: colorMap[val.color] }} />
-                        </div>
-                        {/* Pulse ring on hover */}
-                        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 max-w-xl">
-                        <div className="inline-block text-[10px] font-bold tracking-widest uppercase mb-3 px-3 py-1 rounded-full"
-                          style={{ background: `${colorMap[val.color]}0A`, color: colorMap[val.color], border: `1px solid ${colorMap[val.color]}15` }}>
-                          0{i + 1}
-                        </div>
-                        <h3 className="text-xl font-black mb-3 leading-tight" style={{ color: "var(--white)" }}>{val.title}</h3>
-                        <p className="text-sm leading-[1.9]" style={{ color: "var(--w55)" }}>{val.desc}</p>
-                        {/* Accent underline */}
-                        <div className="h-[2px] w-16 mt-5 rounded-full transition-all duration-500 group-hover:w-24"
-                          style={{ background: `linear-gradient(90deg, ${colorMap[val.color]}, transparent)` }} />
-                      </div>
-                    </div>
-                  </div>
-                </StaggerChild>
-              );
-            })}
           </div>
         </div>
       </section>
 
-      <div className="section-divider" />
+      {/* VALUES — numbered editorial list */}
+      <section className="relative section-depth overflow-hidden" style={{ padding: "160px 0" }}>
+        <div className="blob blob-cyan w-[500px] h-[500px] animate-blob" style={{ left: -140, top: 40 }} />
+        <div className="blob blob-blue w-[400px] h-[400px] animate-blob" style={{ right: -120, bottom: 60, animationDelay: "-4s" }} />
 
-      {/* Stats */}
-      <section className="section-depth relative overflow-hidden" style={{ padding: "140px 24px" }}>
-        <div className="blob blob-blue absolute -top-40 left-1/4 w-[500px] h-[500px] animate-blob" style={{ animationDelay: "0s" }} />
-        <div className="blob blob-purple absolute bottom-0 right-1/4 w-[400px] h-[400px] animate-blob" style={{ animationDelay: "4s" }} />
-        <div className="max-w-6xl mx-auto relative">
-          <AnimatedSection>
-            <div className="float-panel glow-border rounded-3xl p-10 lg:p-14 relative overflow-hidden" style={{ transform: "none" }}>
-              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-                {stats.map((s, i) => (
-                  <div key={i} className="text-center group relative">
-                    <div className="w-14 h-14 rounded-2xl icon-box flex items-center justify-center mx-auto mb-5 transition-transform duration-300 group-hover:scale-110" style={{ background: `${s.color}10`, border: `1px solid ${s.color}20` }}>
-                      <s.icon size={24} style={{ color: s.color }} />
-                    </div>
-                    <div className="text-3xl sm:text-4xl font-black gradient-text mb-1">{s.val}</div>
-                    <div className="text-xs font-medium" style={{ color: "var(--w55)" }}>{s.label}</div>
-                    {i < stats.length - 1 && <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-px h-16" style={{ background: "var(--border)" }} />}
-                  </div>
-                ))}
+        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
+          <FadeIn>
+            <div className="mb-16">
+              <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Values</div>
+              <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight" style={{ color: "var(--white)" }}>
+                {v.valuesLabel.toLowerCase()}.
+              </h2>
+            </div>
+          </FadeIn>
+
+          <div style={{ borderTop: "1px solid var(--border)" }}>
+            {v.values.map((val, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative grid grid-cols-12 gap-6 py-14"
+                style={{ borderBottom: "1px solid var(--border)" }}
+              >
+                <div className="col-span-12 md:col-span-2">
+                  <span className="display-num" style={{ color: colorMap[val.color] }}>0{i + 1}</span>
+                </div>
+                <div className="col-span-12 md:col-span-4">
+                  <div className="mono-label mb-3" style={{ color: colorMap[val.color] }}>Principle</div>
+                  <h3 className="text-3xl lg:text-4xl font-black leading-tight tracking-tight" style={{ color: "var(--white)" }}>
+                    {val.title}
+                  </h3>
+                </div>
+                <div className="col-span-12 md:col-span-6">
+                  <p className="text-base lg:text-lg leading-[1.8] max-w-lg" style={{ color: "var(--w55)" }}>
+                    {val.desc}
+                  </p>
+                  <div className="h-px w-0 group-hover:w-24 mt-6 transition-all duration-700" style={{ background: colorMap[val.color] }} />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* STATS — editorial figures */}
+      <section className="relative section-deep overflow-hidden" style={{ padding: "160px 0" }}>
+        <div className="blob blob-amber w-[400px] h-[400px] animate-blob" style={{ right: -100, top: 40 }} />
+        <div className="blob blob-purple w-[350px] h-[350px] animate-blob" style={{ left: -80, bottom: 40, animationDelay: "-4s" }} />
+
+        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
+          <FadeIn>
+            <div className="mb-16 grid grid-cols-12 gap-6">
+              <div className="col-span-12 lg:col-span-5">
+                <div className="mono-label mb-4" style={{ color: "var(--amber)" }}>Chapter 03 — The Numbers</div>
+                <h2 className="text-[44px] lg:text-[56px] font-black leading-[0.98] tracking-tight" style={{ color: "var(--white)" }}>
+                  By the{" "}
+                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--amber)" }}>
+                    figures.
+                  </span>
+                </h2>
               </div>
             </div>
-          </AnimatedSection>
-          <AnimatedSection className="text-center mt-14">
+          </FadeIn>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6" style={{ borderTop: "1px solid var(--border)" }}>
+            {stats.map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12, duration: 0.6 }}
+                className="py-10 md:py-14 border-r last:border-r-0 md:pr-4"
+                style={{ borderColor: "var(--border)" }}
+              >
+                <div className="display-num !text-[64px] md:!text-[88px] mb-3" style={{ color: "var(--white)" }}>
+                  {stat.val}
+                </div>
+                <div className="mono-label" style={{ color: "var(--w55)" }}>{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+
+          <FadeIn delay={0.3} className="text-center mt-16">
             <Link href="/contact"><Button size="lg">Start a Conversation →</Button></Link>
-          </AnimatedSection>
+          </FadeIn>
         </div>
       </section>
     </>

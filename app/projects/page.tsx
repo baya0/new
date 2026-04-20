@@ -3,18 +3,15 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { translations } from "@/lib/i18n";
-import { MapPin, Globe, Users, Monitor, Server, ChevronDown, ChevronUp } from "lucide-react";
+import { useLang } from "@/lib/language-context";
+import { MapPin, ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 
-const t = translations.en;
-const p = t.projects;
-
-const colorMap: Record<string, { accent: string; bg: string }> = {
-  blue:   { accent: "var(--blue)",   bg: "rgba(28,78,138,0.05)" },
-  green:  { accent: "var(--green)",  bg: "rgba(26,122,84,0.05)" },
-  amber:  { accent: "var(--amber)",  bg: "rgba(184,135,62,0.05)" },
-  cyan:   { accent: "var(--cyan)",   bg: "rgba(42,126,158,0.05)" },
-  purple: { accent: "var(--purple)", bg: "rgba(94,74,158,0.05)" },
+const colorMap: Record<string, string> = {
+  blue: "var(--blue)",
+  green: "var(--green)",
+  amber: "var(--amber)",
+  cyan: "var(--cyan)",
+  purple: "var(--purple)",
 };
 
 const CATEGORIES = ["All", "Migration", "Datacenter", "Support", "Network", "Sustainability"];
@@ -30,111 +27,135 @@ function getCategories(tags: readonly string[]) {
   return cats;
 }
 
-function AnimatedSection({ children, className }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div ref={ref} initial={{ opacity: 0, y: 32 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
-  );
-}
-
-function StaggerChild({ children, className, i }: { children: React.ReactNode; className?: string; i: number }) {
+function WordReveal({ text, className, as: Tag = "span", delay = 0 }: { text: string; className?: string; as?: any; delay?: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
-    <motion.div ref={ref} initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
+    <Tag ref={ref} className={className}>
+      {text.split(" ").map((word: string, i: number) => (
+        <span key={i} className="inline-block overflow-hidden align-baseline mr-[0.26em]">
+          <motion.span
+            initial={{ y: "110%", rotate: 4 }}
+            animate={inView ? { y: "0%", rotate: 0 } : {}}
+            transition={{ delay: delay + i * 0.055, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-block"
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </Tag>
   );
 }
 
-function ProjectCard({ proj, i }: { proj: any; i: number }) {
+function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.ReactNode; className?: string; delay?: number; y?: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div ref={ref} initial={{ opacity: 0, y }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
+  );
+}
+
+function ProjectCase({ proj, i }: { proj: any; i: number }) {
   const [expanded, setExpanded] = useState(false);
-  const c = colorMap[proj.color];
-  const isReversed = i % 2 !== 0;
+  const { t } = useLang();
+  const color = colorMap[proj.color];
 
   return (
-    <StaggerChild i={i}>
-      <div className="glass-card overflow-hidden group" style={{ transform: "none" }}>
-        <div className={`grid grid-cols-1 md:grid-cols-12 items-stretch`}>
-          {/* Image area */}
-          <div className={`md:col-span-4 relative overflow-hidden min-h-[220px] flex items-center justify-center ${isReversed ? "md:order-2" : ""}`}
-            style={{ background: `linear-gradient(135deg, ${c.bg}, var(--glass-card))` }}>
-            <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${c.accent}, transparent)` }} />
-            {/* To add project image: replace the emoji below with <Image src="/images/projects/project-name.jpg" alt="..." fill className="object-cover" /> */}
-            <span className="relative text-6xl transition-transform duration-500 group-hover:scale-110">{proj.icon}</span>
-          </div>
-
-          {/* Content */}
-          <div className={`md:col-span-8 p-7 lg:p-9 ${isReversed ? "md:order-1" : ""}`}>
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {proj.tags.map((tag: string, j: number) => (
-                <span key={j} className="tag text-[10px]"
-                  style={{
-                    background: j === 0 ? `${c.accent}0D` : "var(--glass-card)",
-                    color: j === 0 ? c.accent : "var(--w55)",
-                    border: `1px solid ${j === 0 ? `${c.accent}20` : "var(--glass-card-border)"}`,
-                  }}>{tag}</span>
-              ))}
-            </div>
-
-            <h3 className="text-lg lg:text-xl font-black leading-snug mb-3 relative z-10" style={{ color: "var(--white)" }}>
-              {proj.title.includes("Nike") ? (
-                <>
-                  <a href="https://www.linkedin.com/company/nike/" target="_blank" rel="noopener noreferrer" className="underline decoration-1 underline-offset-2 transition-colors duration-200 hover:text-[var(--blue)]">Nike</a>
-                  {proj.title.replace("Nike", "").replace(/^ /, " ")}
-                </>
-              ) : proj.title}
-            </h3>
-
-            <p className="text-sm leading-[1.8] relative z-10" style={{ color: "var(--w55)" }}>
-              {(() => {
-                const text = expanded ? proj.fullDesc : proj.desc;
-                if (!proj.title.includes("Nike")) return text;
-                const parts = text.split("Nike");
-                return parts.map((part: string, pi: number) => (
-                  <span key={pi}>
-                    {part}
-                    {pi < parts.length - 1 && (
-                      <a href="https://www.linkedin.com/company/nike/" target="_blank" rel="noopener noreferrer" className="underline decoration-1 underline-offset-2 font-semibold transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--white)" }}>Nike</a>
-                    )}
-                  </span>
-                ));
-              })()}
-            </p>
-
-            {/* Bullet points (when expanded and available) */}
-            {expanded && proj.bullets && (
-              <motion.ul initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 space-y-2 relative z-10">
-                {proj.bullets.map((b: string, bi: number) => (
-                  <li key={bi} className="flex gap-2.5 items-start text-sm leading-relaxed" style={{ color: "var(--w55)" }}>
-                    <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: c.accent }} />
-                    {b}
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-
-            <div className="flex items-center justify-between mt-5 pt-4 relative z-10" style={{ borderTop: "1px solid var(--glass-card-border)" }}>
-              <div className="flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: "var(--w25)" }}>
-                <MapPin size={12} /><span>{proj.location}</span>
-              </div>
-              <button
-                onClick={() => setExpanded(!expanded)}
-                className="flex items-center gap-1 text-xs font-bold transition-colors duration-200"
-                style={{ color: c.accent }}
-              >
-                {expanded ? "Less" : "Read More"}
-                {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-              </button>
-            </div>
-          </div>
+    <motion.article
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ delay: i * 0.06, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="relative group grid grid-cols-12 gap-6 py-16"
+      style={{ borderTop: "1px solid var(--border)" }}
+    >
+      {/* Left: case number + location */}
+      <div className="col-span-12 md:col-span-2">
+        <div className="display-num !text-[56px]" style={{ color }}>
+          {String(i + 1).padStart(2, "0")}
+        </div>
+        <div className="mono-label mt-4 flex items-center gap-1.5" style={{ color: "var(--w55)" }}>
+          <MapPin size={11} /> {proj.location}
         </div>
       </div>
-    </StaggerChild>
+
+      {/* Middle: title + description */}
+      <div className="col-span-12 md:col-span-7">
+        <div className="flex flex-wrap gap-2 mb-5">
+          {proj.tags.map((tag: string, j: number) => (
+            <span
+              key={j}
+              className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded"
+              style={{
+                color: j === 0 ? color : "var(--w55)",
+                background: j === 0 ? `${color}0E` : "transparent",
+                border: j === 0 ? `1px solid ${color}22` : "1px solid var(--border)",
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <h3 className="text-2xl lg:text-[32px] font-black leading-[1.1] tracking-tight mb-5" style={{ color: "var(--white)" }}>
+          {proj.title.includes("Nike") ? (
+            <>
+              <a href="https://www.linkedin.com/company/nike/" target="_blank" rel="noopener noreferrer" className="swept-underline">Nike</a>
+              {proj.title.replace("Nike", "")}
+            </>
+          ) : proj.title}
+        </h3>
+
+        <p className="text-[15px] leading-[1.9] max-w-2xl" style={{ color: "var(--w55)" }}>
+          {expanded ? proj.fullDesc : proj.desc}
+        </p>
+
+        {expanded && proj.bullets && (
+          <motion.ul initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-6 space-y-2.5 max-w-2xl">
+            {proj.bullets.map((b: string, bi: number) => (
+              <li key={bi} className="flex gap-3 items-start text-[14px] leading-relaxed" style={{ color: "var(--w55)" }}>
+                <span className="mono-label shrink-0 mt-0.5" style={{ color }}>0{bi + 1}</span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </motion.ul>
+        )}
+
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="mt-6 inline-flex items-center gap-2 text-sm font-bold"
+          style={{ color }}
+        >
+          <span className="swept-underline">{expanded ? t.projects.showLess : t.projects.readMore}</span>
+          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </button>
+      </div>
+
+      {/* Right: decorative circle with icon */}
+      <div className="hidden md:flex col-span-3 items-start justify-end">
+        <motion.div
+          whileHover={{ rotate: 8, scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 200 }}
+          className="relative w-36 h-36 rounded-full flex items-center justify-center"
+          style={{
+            background: `radial-gradient(circle at 30% 30%, ${color}18, transparent 70%)`,
+            border: `1px dashed ${color}40`,
+          }}
+        >
+          <span className="text-5xl">{proj.icon}</span>
+          <div className="absolute -inset-4 rounded-full border border-dashed animate-spin-slow opacity-30" style={{ borderColor: color }} />
+        </motion.div>
+      </div>
+    </motion.article>
   );
 }
 
 export default function ProjectsPage() {
+  const { t } = useLang();
+  const p = t.projects;
   const [activeFilter, setActiveFilter] = useState("All");
+  const year = new Date().getFullYear();
 
   const filtered = activeFilter === "All"
     ? p.items
@@ -142,85 +163,119 @@ export default function ProjectsPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 120px" }}>
-        <div className="aurora" />
-        <div className="blob blob-blue w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
-        <div className="blob blob-cyan w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
-        <div className="blob blob-purple w-[300px] h-[300px] top-20 left-1/3 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
+      {/* HERO */}
+      <section className="relative overflow-hidden hero-bg" style={{ padding: "32px 0 120px" }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="aurora" />
+          <div className="blob blob-blue w-[600px] h-[600px] animate-blob" style={{ right: -180, top: -120 }} />
+          <div className="blob blob-cyan w-[420px] h-[420px] animate-blob" style={{ left: -120, bottom: 40, animationDelay: "-4s" }} />
+          <div className="absolute inset-0 dot-grid opacity-30" />
+        </div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
-          <div className="badge mb-6" style={{ background: "rgba(26,122,84,0.07)", borderColor: "rgba(26,122,84,0.12)", color: "var(--green)" }}>{p.eyebrow}</div>
-          <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
-            {p.h1[0]}<br /><span className="gradient-text">{p.h1[1]}</span>
-          </h1>
-          <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{p.sub}</p>
-          <div className="accent-line w-24 mt-8" style={{ background: "linear-gradient(90deg, var(--green), var(--cyan), transparent)" }} />
-        </motion.div>
+        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
+          <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.2em] uppercase py-4 mb-20" style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}>
+            <span className="flex items-center gap-3">
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--green)" }} />
+              SECTION IV — PROJECTS
+            </span>
+            <span className="hidden sm:block">CASE ARCHIVE — {year}</span>
+          </div>
+
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12 lg:col-span-8">
+              <FadeIn>
+                <div className="mono-label mb-6 flex items-center gap-3" style={{ color: "var(--green)" }}>
+                  <span className="w-8 h-px" style={{ background: "var(--green)" }} />
+                  The Archive
+                </div>
+              </FadeIn>
+              <h1 className="headline-xl mb-8">
+                <WordReveal text="Field" />{" "}
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--blue)" }}>
+                  notes
+                </motion.span>
+                <br />
+                <WordReveal text="from the work." delay={0.2} />
+              </h1>
+              <FadeIn delay={0.6} className="max-w-xl">
+                <p className="text-base lg:text-lg leading-[1.8]" style={{ color: "var(--w55)" }}>{p.sub}</p>
+              </FadeIn>
+            </div>
+
+            <div className="hidden lg:block col-span-3 col-start-10 self-end">
+              <FadeIn delay={0.4}>
+                <div className="mono-label mb-4">Summary</div>
+                <div className="pt-4" style={{ borderTop: "1px solid var(--border)" }}>
+                  <div className="flex items-baseline justify-between py-3">
+                    <span className="mono-label">Total Cases</span>
+                    <span className="display-num !text-[32px]" style={{ color: "var(--blue)" }}>{p.items.length}</span>
+                  </div>
+                  <div className="flex items-baseline justify-between py-3" style={{ borderTop: "1px solid var(--border)" }}>
+                    <span className="mono-label">Countries</span>
+                    <span className="display-num !text-[32px]" style={{ color: "var(--cyan)" }}>9</span>
+                  </div>
+                  <div className="flex items-baseline justify-between py-3" style={{ borderTop: "1px solid var(--border)" }}>
+                    <span className="mono-label">Since</span>
+                    <span className="display-num !text-[32px]" style={{ color: "var(--amber)" }}>2013</span>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <div className="section-divider" />
+      {/* FILTER + CASES */}
+      <section className="relative section-deep overflow-hidden" style={{ padding: "120px 0 160px" }}>
+        <div className="blob blob-cyan w-[500px] h-[500px] animate-blob" style={{ right: -160, top: 100 }} />
+        <div className="blob blob-purple w-[400px] h-[400px] animate-blob" style={{ left: -120, bottom: 60, animationDelay: "-4s" }} />
 
-      <section className="relative overflow-hidden section-deep" style={{ padding: "100px 24px 140px" }}>
-        <div className="blob blob-cyan w-[450px] h-[450px] top-40 -right-48 animate-blob" style={{ animationDelay: "2s" }} />
-        <div className="blob blob-purple w-[350px] h-[350px] bottom-60 -left-40 animate-blob" style={{ animationDelay: "6s" }} />
+        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
+          <FadeIn>
+            <div className="flex items-end justify-between flex-wrap gap-8 mb-16">
+              <div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 01 — The Cases</div>
+                <h2 className="text-[40px] lg:text-[56px] font-black leading-[0.98] tracking-tight" style={{ color: "var(--white)" }}>
+                  Filter the{" "}
+                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                    archive.
+                  </span>
+                </h2>
+              </div>
 
-        <div className="max-w-6xl mx-auto relative z-10">
-          {/* Filter Pills */}
-          <AnimatedSection>
-            <div className="flex flex-wrap gap-2 mb-14">
-              {CATEGORIES.map(cat => (
-                <button key={cat} onClick={() => setActiveFilter(cat)}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300"
-                  style={{
-                    background: activeFilter === cat ? "var(--blue)" : "var(--glass-card)",
-                    color: activeFilter === cat ? "#fff" : "var(--w55)",
-                    border: `1px solid ${activeFilter === cat ? "var(--blue)" : "var(--glass-card-border)"}`,
-                    boxShadow: activeFilter === cat ? "var(--shadow-sm)" : "none",
-                  }}>
-                  {cat}
-                </button>
-              ))}
+              <div className="flex flex-wrap gap-3">
+                {CATEGORIES.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveFilter(cat)}
+                    className="px-4 py-2 text-[11px] font-bold tracking-wider uppercase transition-all duration-300"
+                    style={{
+                      color: activeFilter === cat ? "var(--white)" : "var(--w55)",
+                      background: activeFilter === cat ? "var(--blue)" : "transparent",
+                      border: `1px solid ${activeFilter === cat ? "var(--blue)" : "var(--border)"}`,
+                      borderRadius: 999,
+                    }}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
-          </AnimatedSection>
+          </FadeIn>
 
-          {/* Project Cards — Case Study Style */}
-          <div className="space-y-6">
+          <div>
             <AnimatePresence mode="popLayout">
               {filtered.map((proj, i) => (
-                <motion.div key={proj.title} layout initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.35 }}>
-                  <ProjectCard proj={proj} i={i} />
+                <motion.div key={proj.title} layout>
+                  <ProjectCase proj={proj} i={i} />
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
 
-          {/* Stats */}
-          <AnimatedSection>
-            <div className="mt-24 float-panel glow-border rounded-3xl p-10 lg:p-12 relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                {[
-                  { val: "9", label: "Countries Served", icon: Globe, color: "var(--blue)" },
-                  { val: "60+", label: "Engineers Deployed", icon: Users, color: "var(--cyan)" },
-                  { val: "9", label: "Nike Stores Migrated", icon: Monitor, color: "var(--green)" },
-                  { val: "36", label: "Devices Migrated", icon: Server, color: "var(--amber)" },
-                ].map((s, i) => (
-                  <div key={i} className="text-center group">
-                    <div className="w-12 h-12 rounded-xl icon-box flex items-center justify-center mx-auto mb-4" style={{ background: `${s.color}10`, border: `1px solid ${s.color}20`, color: s.color }}>
-                      <s.icon size={22} style={{ color: s.color }} />
-                    </div>
-                    <div className="text-3xl font-black gradient-text mb-1">{s.val}</div>
-                    <div className="text-xs font-medium" style={{ color: "var(--w55)" }}>{s.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </AnimatedSection>
-
-          <AnimatedSection className="text-center mt-14">
+          <FadeIn delay={0.2} className="text-center mt-20">
             <Link href="/contact"><Button size="lg">{p.cta}</Button></Link>
-          </AnimatedSection>
+          </FadeIn>
         </div>
       </section>
     </>

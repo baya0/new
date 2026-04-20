@@ -2,18 +2,23 @@
 import { useRef, use } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { translations } from "@/lib/i18n";
+import { useLang } from "@/lib/language-context";
 import { Clock, ArrowLeft, User, Cloud, Server, Truck, Leaf } from "lucide-react";
 import { notFound } from "next/navigation";
-
-const t = translations.en;
-const b = t.blog;
 
 const catConfig: Record<string, { color: string; icon: typeof Cloud }> = {
   Cloud: { color: "var(--blue)", icon: Cloud },
   Infrastructure: { color: "var(--cyan)", icon: Server },
   Migration: { color: "var(--amber)", icon: Truck },
   Sustainability: { color: "var(--green)", icon: Leaf },
+  "السحابة": { color: "var(--blue)", icon: Cloud },
+  "البنية التحتية": { color: "var(--cyan)", icon: Server },
+  "الهجرة": { color: "var(--amber)", icon: Truck },
+  "الاستدامة": { color: "var(--green)", icon: Leaf },
+  "Bulut": { color: "var(--blue)", icon: Cloud },
+  "Altyapı": { color: "var(--cyan)", icon: Server },
+  "Göç": { color: "var(--amber)", icon: Truck },
+  "Sürdürülebilirlik": { color: "var(--green)", icon: Leaf },
 };
 
 function AnimatedSection({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -25,15 +30,18 @@ function AnimatedSection({ children, className }: { children: React.ReactNode; c
 }
 
 export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { t } = useLang();
+  const b = t.blog;
+  const posts = b.posts as unknown as any[];
   const { slug } = use(params);
-  const post = b.posts.find((p) => p.slug === slug);
+  const post = posts.find((p: any) => p.slug === slug);
   if (!post) return notFound();
 
   const cfg = catConfig[post.cat];
   const cc = cfg?.color ?? "var(--blue)";
   const Icon = cfg?.icon ?? Cloud;
 
-  const relatedPosts = b.posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const relatedPosts = posts.filter((p: any) => p.slug !== post.slug).slice(0, 3);
 
   return (
     <>

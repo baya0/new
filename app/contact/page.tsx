@@ -2,11 +2,8 @@
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { translations } from "@/lib/i18n";
+import { useLang } from "@/lib/language-context";
 import { CheckCircle2, Clock, MapPin, Phone, Mail, Globe, Linkedin, Instagram, Facebook, Twitter, MessageSquare, ArrowUpRight, Send } from "lucide-react";
-
-const t = translations.en;
-const c = t.contact;
 
 const contactIcons: Record<string, typeof Mail> = {
   "Email": Mail, "Phone": Phone, "Address": MapPin, "Locations": Globe,
@@ -30,6 +27,8 @@ function AnimatedSection({ children, className, delay = 0 }: { children: React.R
 }
 
 export default function ContactPage() {
+  const { t } = useLang();
+  const c = t.contact;
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", company: "", service: "", message: "" });
   const [focusedField, setFocusedField] = useState<string | null>(null);

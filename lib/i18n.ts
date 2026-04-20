@@ -117,6 +117,14 @@ export const translations = {
         "Multinational delivery across 9 locations worldwide",
         "Enterprise-grade SLAs with 24/7 support availability",
       ],
+      processLabel: "OUR PROCESS",
+      processTitle: "How we deliver results.",
+      processSteps: [
+        { title: "Discovery", desc: "We analyze your infrastructure and understand your goals.", color: "blue" },
+        { title: "Architecture", desc: "Custom solution design with detailed roadmap and timelines.", color: "cyan" },
+        { title: "Implementation", desc: "Zero-downtime deployment by certified engineers.", color: "green" },
+        { title: "Ongoing Support", desc: "24/7 monitoring and continuous optimization.", color: "amber" },
+      ],
       cta: "Talk to an Expert →",
     },
     vision: {
@@ -128,6 +136,12 @@ export const translations = {
       mission2: "Our mission is to help businesses harness the power of technology to achieve their goals and stay ahead of the competition.",
       watchLabel: "Watch: Our Story",
       valuesLabel: "OUR VALUES",
+      stats: [
+        { val: "11+", label: "Years in Business" },
+        { val: "9", label: "Global Locations" },
+        { val: "27+", label: "Projects Delivered" },
+        { val: "100%", label: "Client Retention" },
+      ],
       values: [
         { icon: "🎯", title: "Precision", desc: "Every deployment planned to the last detail. We never cut corners.", color: "blue" },
         { icon: "🤝", title: "Partnership", desc: "We become an extension of your team, not just another vendor.", color: "cyan" },
@@ -222,6 +236,8 @@ export const translations = {
           location: "Client Site",
         },
       ],
+      readMore: "Read the full case",
+      showLess: "Show less",
       cta: "Start Your Project →",
     },
     blog: {
@@ -424,6 +440,14 @@ export const translations = {
       whyTitle: "لماذا تختار سبورتيفا؟",
       whyDesc: "نلتزم بتقديم خدمات وحلول IT استثنائية تدفع نمو أعمالك.",
       whyPoints: ["حلول مخصصة لاحتياجاتك الفريدة", "مهندسون معتمدون بخبرة أكثر من 11 عامًا", "تسليم متعدد الجنسيات عبر 9 مواقع عالمية", "اتفاقيات خدمة مؤسسية مع دعم 24/7"],
+      processLabel: "العملية",
+      processTitle: "كيف نحقق النتائج.",
+      processSteps: [
+        { title: "الاستكشاف", desc: "نحلل بنيتك التحتية ونفهم أهدافك.", color: "blue" },
+        { title: "الهندسة المعمارية", desc: "تصميم حل مخصص مع خارطة طريق وجداول زمنية.", color: "cyan" },
+        { title: "التنفيذ", desc: "نشر بدون توقف من قبل مهندسين معتمدين.", color: "green" },
+        { title: "الدعم المستمر", desc: "مراقبة 24/7 وتحسين مستمر.", color: "amber" },
+      ],
       cta: "تحدث مع خبير →",
     },
     vision: {
@@ -433,6 +457,12 @@ export const translations = {
       mission1: "سد الفجوة بين أحدث التقنيات واحتياجات الأعمال الحقيقية.",
       mission2: "بأكثر من 11 عامًا من الخبرة عبر الصيدلة والسيارات والتصنيع والكيمياء.",
       watchLabel: "شاهد: قصتنا", valuesLabel: "قيمنا",
+      stats: [
+        { val: "11+", label: "سنوات في مجال الأعمال" },
+        { val: "9", label: "مواقع عالمية" },
+        { val: "27+", label: "مشاريع منجزة" },
+        { val: "100%", label: "الاحتفاظ بالعملاء" },
+      ],
       values: [
         { icon: "🎯", title: "الدقة", desc: "كل نشر مخطط حتى أدق التفاصيل.", color: "blue" },
         { icon: "🤝", title: "الشراكة", desc: "نصبح امتداداً لفريقك، لا مجرد مزود خدمة.", color: "cyan" },
@@ -454,6 +484,8 @@ export const translations = {
         { icon: "📦", color: "purple", title: "تأجير أجهزة الشبكة", desc: "حل مؤقت بالتأجير لتفعيل موقع العميل.", fullDesc: "تأخر تسليم الأجهزة الجديدة لعميلنا. لكن في سبورتيفا استجبنا سريعًا لهذا التحدي بتوفير أجهزة شبكة للإيجار مما وفر على العميل الوقت والجهد.", tags: ["تأجير", "شبكة", "دعم"], location: "موقع العميل" },
         { icon: "🪟", color: "blue", title: "الهجرة من Windows 10 إلى 11", desc: "هجرة سلسة لـ36 جهازًا بدون فقدان بيانات أو توقف عمليات.", fullDesc: "أنجزنا بنجاح هجرة سلسة من Windows 10 إلى Windows 11 لأحد عملائنا، مع ترقية 36 جهازًا! يمثل هذا المشروع إنجازًا كبيرًا يعكس التزامنا بتقديم خدمات تقنية على أعلى مستوى.", tags: ["Windows 11", "36 جهاز", "هجرة"], location: "موقع العميل" },
       ],
+      readMore: "اقرأ الحالة كاملة",
+      showLess: "إخفاء",
       cta: "ابدأ مشروعك →",
     },
     blog: {
@@ -576,6 +608,14 @@ export const translations = {
       whyTitle: "Neden Supportiva?",
       whyDesc: "Supportiva olarak işletme büyümesini destekleyen olağanüstü BT hizmetleri ve çözümleri sunmaya kararlıyız.",
       whyPoints: ["Özel iş ihtiyaçlarınıza göre kişiselleştirilmiş çözümler", "11+ yıllık saha deneyimiyle sertifikalı mühendisler", "9 küresel lokasyonda çok uluslu teslimat", "7/24 destek ile kurumsal SLA'lar"],
+      processLabel: "SÜRECİMİZ",
+      processTitle: "Sonuçları nasıl sağlarız.",
+      processSteps: [
+        { title: "Keşif", desc: "Altyapınızı analiz ediyor ve hedeflerinizi anlıyoruz.", color: "blue" },
+        { title: "Mimari", desc: "Ayrıntılı yol haritası ve zaman çizelgesiyle özel çözüm tasarımı.", color: "cyan" },
+        { title: "Uygulama", desc: "Sertifikalı mühendisler tarafından sıfır kesinti süresiyle dağıtım.", color: "green" },
+        { title: "Sürekli Destek", desc: "7/24 izleme ve sürekli optimizasyon.", color: "amber" },
+      ],
       cta: "Uzmanla Konuşun →",
     },
     vision: {
@@ -585,6 +625,12 @@ export const translations = {
       mission1: "Son teknoloji ile gerçek iş ihtiyaçları arasındaki boşluğu kapatmak.",
       mission2: "İlaç, otomotiv, üretim ve kimya sektörlerinde 11+ yıllık uygulamalı deneyim.",
       watchLabel: "İzle: Hikayemiz", valuesLabel: "DEĞERLERİMİZ",
+      stats: [
+        { val: "11+", label: "İş Yılı" },
+        { val: "9", label: "Küresel Lokasyon" },
+        { val: "27+", label: "Teslim Edilen Proje" },
+        { val: "100%", label: "Müşteri Sadakati" },
+      ],
       values: [
         { icon: "🎯", title: "Hassasiyet", desc: "Her dağıtım en ince ayrıntısına kadar planlanır.", color: "blue" },
         { icon: "🤝", title: "Ortaklık", desc: "Sadece bir tedarikçi değil, ekibinizin uzantısı oluyoruz.", color: "cyan" },
@@ -606,6 +652,8 @@ export const translations = {
         { icon: "📦", color: "purple", title: "Ağ Cihazları Kiralama", desc: "Geçici kiralama çözümü.", fullDesc: "Müşterimize yeni cihazların teslimatı gecikti. Ancak Supportiva olarak hızlı yanıt verdik ve kiralık ağ cihazları sağlayarak müşterimize zaman ve sorun tasarrufu sağladık.", tags: ["Kiralama", "Ağ", "Destek"], location: "Müşteri Lokasyonu" },
         { icon: "🪟", color: "blue", title: "Windows 10'dan 11'e Geçiş", desc: "36 cihazda sorunsuz geçiş.", fullDesc: "Müşterimiz için Windows 10'dan Windows 11'e sorunsuz bir geçiş gerçekleştirerek toplamda 36 cihazı yükselttik! Bu proje, birinci sınıf BT hizmetleri sunma taahhüdümüzü yansıtan önemli bir kilometre taşıdır.", tags: ["Windows 11", "36 Cihaz", "Göç"], location: "Müşteri Lokasyonu" },
       ],
+      readMore: "Tam vakayı oku",
+      showLess: "Küçült",
       cta: "Projenizi Başlatın →",
     },
     blog: {
