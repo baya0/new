@@ -57,152 +57,112 @@ export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroBgY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const heroNumY = useTransform(scrollYProgress, [0, 1], [0, -40]);
 
   const year = new Date().getFullYear();
 
   return (
     <>
       {/* ═══════════════════════════════════════════════════════
-          HERO — Editorial typographic splash
+          HERO — Meridian centered typographic
          ═══════════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
-        className="relative overflow-hidden hero-bg"
-        style={{ minHeight: "calc(100vh - 72px)", padding: "32px 0 60px" }}
+        className="relative overflow-hidden hero-bg flex flex-col"
+        style={{ minHeight: "100vh" }}
       >
-        {/* Ambient motion layer */}
+        {/* Ambient background */}
         <motion.div style={{ y: heroBgY }} className="absolute inset-0 pointer-events-none">
           <div className="aurora" />
-          <div className="blob blob-blue w-[680px] h-[680px] animate-blob" style={{ right: -200, top: -160 }} />
-          <div className="blob blob-amber w-[420px] h-[420px] animate-blob" style={{ left: -120, bottom: 20, animationDelay: "-6s" }} />
-          <div className="blob blob-cyan w-[380px] h-[380px] animate-blob" style={{ left: "42%", top: "55%", animationDelay: "-3s" }} />
-          <div className="absolute inset-0 dot-grid opacity-40" />
+          <div className="blob blob-blue w-[600px] h-[600px] animate-blob" style={{ right: -180, top: -120 }} />
+          <div className="blob blob-cyan w-[350px] h-[350px] animate-blob" style={{ left: -100, bottom: 60, animationDelay: "-3s" }} />
+          <div className="absolute inset-0 dot-grid opacity-30" />
         </motion.div>
 
-        {/* Rotating decorative orbits in corner */}
-        <div className="hidden lg:block absolute right-[-140px] top-[-140px] pointer-events-none">
-          <div className="orbit w-[480px] h-[480px]" />
-          <div className="orbit orbit-reverse absolute inset-10 w-[420px] h-[420px]" />
+        {/* Corner stats — desktop */}
+        <div className="absolute inset-0 z-10 pointer-events-none hidden lg:block">
+          {th.stats.slice(0, 4).map((s, i) => {
+            const pos = [
+              "top-28 left-12",
+              "top-28 right-12 text-right",
+              "bottom-28 left-12",
+              "bottom-28 right-12 text-right",
+            ];
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: i < 2 ? 20 : -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 + i * 0.12, duration: 0.6 }}
+                className={`absolute ${pos[i]}`}
+              >
+                <div className="text-[48px] font-black leading-none tracking-tight" style={{ color: "var(--blue)" }}>
+                  {s.val}
+                </div>
+                <div className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2" style={{ color: "var(--w25)" }}>
+                  {s.label}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Editorial top bar */}
-        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center justify-between text-[11px] font-bold tracking-[0.2em] uppercase py-4"
-            style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}
-          >
-            <span className="flex items-center gap-3">
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--green)" }} />
-              ISSUE — VOL.{year - 2013}
-            </span>
-            <span className="hidden sm:block">SUPPORTIVA / INFRASTRUCTURE QUARTERLY</span>
-            <span>{year}</span>
-          </motion.div>
-        </div>
-
-        {/* Main headline layout */}
-        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10 pt-16 lg:pt-24 grid grid-cols-12 gap-6">
-          {/* Left vertical label */}
-          <div className="hidden lg:flex col-span-1 items-start justify-center pt-8">
+        {/* Center content */}
+        <div className="flex-1 flex items-center justify-center relative z-10 px-6">
+          <div className="text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="vertical-label"
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
-              {th.eyebrow.replace("✦ ", "")} — EST. 2013
+              <h1 className="headline-xl" style={{ textAlign: "center" }}>
+                {th.h1[0]}<br />
+                {th.h1[1]}<br />
+                <span style={{ color: "var(--blue)" }}>{th.h1[2]}</span>
+              </h1>
             </motion.div>
-          </div>
 
-          {/* Center large typographic block */}
-          <div className="col-span-12 lg:col-span-8">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="mt-8 text-base lg:text-lg leading-relaxed max-w-xl mx-auto"
+              style={{ color: "var(--w55)" }}
+            >
+              {th.sub}
+            </motion.p>
+
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mono-label mb-6 flex items-center gap-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="mt-10 flex flex-wrap items-center justify-center gap-5"
             >
-              <span className="w-8 h-px" style={{ background: "var(--blue)" }} />
-              Chapter 01 — The Practice
-            </motion.div>
-
-            <h1 className="headline-xl mb-8">
-              <WordReveal text={th.h1[0]} as="span" />
-              <br />
-              <WordReveal text={th.h1[1]} as="span" delay={0.12} />
-              <br />
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.9, duration: 0.6 }}
-                className="italic font-light"
-                style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--blue)" }}
-              >
-                {th.h1[2].toLowerCase()}.
-              </motion.span>
-            </h1>
-
-            <FadeIn delay={0.8} className="max-w-xl">
-              <p className="text-base lg:text-lg leading-[1.8]" style={{ color: "var(--w55)" }}>
-                {th.sub}
-              </p>
-            </FadeIn>
-
-            <FadeIn delay={1.0} className="mt-12 flex flex-wrap items-center gap-6">
               <Link href="/solutions"><Button size="lg">{th.btn1}</Button></Link>
               <Link href="/projects" className="group inline-flex items-center gap-2 text-sm font-bold tracking-wide" style={{ color: "var(--white)" }}>
                 <span className="swept-underline">{th.btn2}</span>
                 <ArrowUpRight size={16} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
               </Link>
-            </FadeIn>
-          </div>
+            </motion.div>
 
-          {/* Right column — editorial meta panel */}
-          <div className="col-span-12 lg:col-span-3 lg:pl-6 mt-10 lg:mt-0">
-            <motion.div style={{ y: heroNumY }}>
-              <FadeIn delay={0.5}>
-                <div className="mono-label mb-3">Index</div>
-                <div className="space-y-5 pt-5" style={{ borderTop: "1px solid var(--border)" }}>
-                  {th.stats.slice(0, 4).map((s, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.9 + i * 0.1, duration: 0.6 }}
-                      className="flex items-baseline justify-between gap-4"
-                    >
-                      <span className="text-[11px] font-semibold tracking-wider uppercase" style={{ color: "var(--w55)" }}>
-                        {s.label}
-                      </span>
-                      <span className="display-num !text-[32px] !italic" style={{ color: "var(--blue)" }}>{s.val}</span>
-                    </motion.div>
-                  ))}
+            {/* Mobile stats */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 lg:hidden"
+            >
+              {th.stats.slice(0, 4).map((s, i) => (
+                <div key={i} className="text-center">
+                  <div className="text-2xl font-black" style={{ color: "var(--blue)" }}>{s.val}</div>
+                  <div className="text-[10px] font-bold tracking-wider uppercase mt-1" style={{ color: "var(--w25)" }}>{s.label}</div>
                 </div>
-
-                <div className="mt-10 pt-6" style={{ borderTop: "1px solid var(--border)" }}>
-                  <div className="mono-label mb-4">Operating in</div>
-                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold" style={{ color: "var(--w85)" }}>
-                    {["Istanbul", "Amsterdam", "Dubai", "Berlin", "Paris", "+5 more"].map((c, i) => (
-                      <motion.span
-                        key={i}
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.3 + i * 0.06 }}
-                      >{c}</motion.span>
-                    ))}
-                  </div>
-                </div>
-              </FadeIn>
+              ))}
             </motion.div>
           </div>
         </div>
 
         {/* Bottom marquee — trusted by */}
-        <div className="relative z-10 mt-20 lg:mt-32 py-6 border-t border-b" style={{ borderColor: "var(--border)" }}>
+        <div className="relative z-10 py-6 border-t border-b" style={{ borderColor: "var(--border)" }}>
           <div className="marquee-track text-[32px] lg:text-[44px] font-black tracking-tight">
             {[...th.clients, "—", ...th.clients, "—", ...th.clients, "—"].map((c, i) => (
               <span key={i} className="shrink-0" style={{ color: c === "—" ? "var(--blue)" : "var(--w85)", opacity: c === "—" ? 1 : 0.28 }}>

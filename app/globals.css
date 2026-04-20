@@ -136,7 +136,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
   background: var(--bg0);
   color: var(--white);
   -webkit-font-smoothing: antialiased;
