@@ -65,9 +65,9 @@ export default function VisionPage() {
           <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.2em] uppercase py-4 mb-20" style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}>
             <span className="flex items-center gap-3">
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--cyan)" }} />
-              SECTION III — VISION
+              Vision
             </span>
-            <span className="hidden sm:block">EST. 2013 — VOL. {year - 2013}</span>
+            <span className="hidden sm:block">Since 2013</span>
           </div>
 
           <div className="grid grid-cols-12 gap-6">
@@ -116,7 +116,7 @@ export default function VisionPage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-5">
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 01 — The Origin</div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Story</div>
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {v.missionTitle.split(" ")[0]}
                   <br />
@@ -158,7 +158,7 @@ export default function VisionPage() {
         <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
           <FadeIn>
             <div className="mb-16">
-              <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Values</div>
+              <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Values</div>
               <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                 {v.valuesLabel.toLowerCase()}.
               </h2>
@@ -206,7 +206,7 @@ export default function VisionPage() {
           <FadeIn>
             <div className="mb-16 grid grid-cols-12 gap-6">
               <div className="col-span-12 lg:col-span-5">
-                <div className="mono-label mb-4" style={{ color: "var(--amber)" }}>Chapter 03 — The Numbers</div>
+                <div className="mono-label mb-4" style={{ color: "var(--amber)" }}>By The Numbers</div>
                 <h2 className="text-[32px] lg:text-[40px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                   By the{" "}
                   <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--amber)" }}>

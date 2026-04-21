@@ -59,7 +59,7 @@ export default function SolutionsPage() {
           <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.2em] uppercase py-4 mb-20" style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}>
             <span className="flex items-center gap-3">
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--blue)" }} />
-              SECTION II — SOLUTIONS
+              Solutions
             </span>
             <span className="hidden sm:block">{s.eyebrow.toUpperCase()}</span>
           </div>
@@ -119,7 +119,7 @@ export default function SolutionsPage() {
         <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
           <FadeIn>
             <div className="mb-16">
-              <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 01 — The Disciplines</div>
+              <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Services</div>
               <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                 Our{" "}
                 <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
@@ -165,7 +165,7 @@ export default function SolutionsPage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-4">
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Method</div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Process</div>
                 <h2 className="text-[32px] lg:text-[40px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {s.processTitle.split(".")[0]}
                   <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
@@ -208,7 +208,7 @@ export default function SolutionsPage() {
 
         <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
           <FadeIn>
-            <div className="mono-label mb-4" style={{ color: "var(--green)" }}>Chapter 03 — The Case</div>
+            <div className="mono-label mb-4" style={{ color: "var(--green)" }}>Why Choose Us</div>
           </FadeIn>
 
           <div className="grid grid-cols-12 gap-6">
