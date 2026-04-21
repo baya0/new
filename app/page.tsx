@@ -183,7 +183,7 @@ export default function HomePage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-4">
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Studio</div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Who We Are</div>
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {th.whoWeAreTitle}.
                 </h2>
@@ -232,7 +232,7 @@ export default function HomePage() {
           <div className="flex items-end justify-between flex-wrap gap-6 mb-20">
             <div>
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 03 — The Disciplines</div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Services</div>
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                   {th.servicesTitle}.
                 </h2>
@@ -374,7 +374,7 @@ export default function HomePage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-5 lg:sticky lg:top-24 lg:self-start">
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 05 — The Promise</div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Why Us</div>
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {th.whyTitle.split(" ").slice(0, 3).join(" ")}
                   <br />
@@ -435,7 +435,7 @@ export default function HomePage() {
           <FadeIn>
             <div className="flex items-center justify-between flex-wrap gap-4 mb-16">
               <div className="mono-label" style={{ color: "var(--blue)" }}>
-                Chapter 06 — The Invitation
+                Get In Touch
               </div>
               <div className="text-[11px] font-bold tracking-widest uppercase" style={{ color: "var(--w25)" }}>
                 Response time — under 24 hrs
@@ -470,9 +470,9 @@ export default function HomePage() {
           {/* Editorial footer bar */}
           <FadeIn delay={0.5}>
             <div className="mt-24 pt-6 flex items-center justify-between flex-wrap gap-4 text-[11px] font-bold tracking-[0.2em] uppercase" style={{ borderTop: "1px solid var(--border)", color: "var(--w25)" }}>
-              <span>END OF ISSUE</span>
-              <span>— ∞ —</span>
-              <span>SUPPORTIVA © {year}</span>
+              <span>SUPPORTIVA.NET</span>
+              <span>—</span>
+              <span>© {year}</span>
             </div>
           </FadeIn>
         </div>

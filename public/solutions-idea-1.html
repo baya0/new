@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Idea 1 — Orbiting Wheel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,300&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0D1A2A;
+    color: #E2E8F0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  :root {
+    --blue: #5E9FCC;
+    --cyan: #4AA0BE;
+    --green: #3EC8A0;
+    --amber: #D4A55A;
+    --glass-card: #1A2A3E;
+    --glass-card-border: #243444;
+    --w55: rgba(255,255,255,0.55);
+    --w85: rgba(255,255,255,0.85);
+    --white: #F0F4F8;
+  }
+
+  .section { padding: 120px 24px; max-width: 1200px; margin: 0 auto; }
+  .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--blue); margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+  .label::before { content: ''; width: 32px; height: 1px; background: var(--blue); }
+  h2 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; line-height: 1.05; color: var(--white); margin-bottom: 16px; }
+  h2 em { font-style: italic; font-weight: 300; color: var(--blue); }
+  .subtitle { font-size: 15px; color: var(--w55); line-height: 1.8; max-width: 480px; margin-bottom: 60px; }
+
+  .wheel-container {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+  }
+
+  /* The ring itself */
+  .wheel-ring {
+    position: absolute;
+    inset: 40px;
+    border: 1.5px dashed rgba(94,159,204,0.2);
+    border-radius: 50%;
+    transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Each node on the ring */
+  .wheel-node {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 2;
+  }
+  .wheel-node .node-inner {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--glass-card);
+    border: 1.5px solid var(--glass-card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .wheel-node .icon { font-size: 28px; transition: transform 0.5s; }
+  .wheel-node .node-label {
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--w55);
+    text-align: center;
+    line-height: 1.2;
+    max-width: 64px;
+  }
+
+  .wheel-node:hover .node-inner,
+  .wheel-node.active .node-inner {
+    transform: scale(1.25);
+    border-color: var(--blue);
+    box-shadow: 0 0 40px rgba(94,159,204,0.25);
+  }
+  .wheel-node:hover .icon,
+  .wheel-node.active .icon { transform: scale(1.15); }
+
+  /* Position nodes — top, right, bottom, left */
+  .wheel-node:nth-child(1) { top: -10px; left: 50%; transform: translateX(-50%); }
+  .wheel-node:nth-child(2) { top: 50%; right: -10px; transform: translateY(-50%); }
+  .wheel-node:nth-child(3) { bottom: -10px; left: 50%; transform: translateX(-50%); }
+  .wheel-node:nth-child(4) { top: 50%; left: -10px; transform: translateY(-50%); }
+
+  /* Center hub */
+  .wheel-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .center-content {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(94,159,204,0.08), transparent 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+  .center-content .center-icon { font-size: 40px; margin-bottom: 8px; transition: all 0.6s; }
+  .center-content .center-title { font-size: 16px; font-weight: 800; color: var(--white); margin-bottom: 6px; transition: all 0.5s; }
+  .center-content .center-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; transition: all 0.5s; }
+  .center-content .center-desc { font-size: 11px; color: var(--w55); line-height: 1.6; transition: all 0.5s; opacity: 0; max-height: 0; overflow: hidden; }
+  .center-content.has-detail .center-desc { opacity: 1; max-height: 120px; }
+
+  /* Info bubble that appears on click */
+  .info-bubble {
+    position: absolute;
+    padding: 24px 28px;
+    background: var(--glass-card);
+    border: 1px solid var(--glass-card-border);
+    border-radius: 20px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+    max-width: 300px;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9) translateY(10px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 10;
+  }
+  .info-bubble.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1) translateY(0);
+  }
+  .info-bubble .bubble-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; }
+  .info-bubble .bubble-title { font-size: 18px; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+  .info-bubble .bubble-desc { font-size: 13px; color: var(--w55); line-height: 1.7; }
+  .info-bubble::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--glass-card);
+    border-left: 1px solid var(--glass-card-border);
+    border-top: 1px solid var(--glass-card-border);
+    transform: rotate(45deg);
+  }
+
+  /* Bubble arrow positions */
+  .info-bubble.pos-bottom { top: calc(100% + 20px); left: 50%; transform: translateX(-50%) scale(0.9); }
+  .info-bubble.pos-bottom.visible { transform: translateX(-50%) scale(1); }
+  .info-bubble.pos-bottom::before { top: -7px; left: 50%; transform: translateX(-50%) rotate(45deg); }
+
+  .info-bubble.pos-left { right: calc(100% + 20px); top: 50%; transform: translateY(-50%) scale(0.9); }
+  .info-bubble.pos-left.visible { transform: translateY(-50%) scale(1); }
+  .info-bubble.pos-left::before { right: -7px; top: 50%; transform: translateY(-50%) rotate(225deg); }
+
+  .info-bubble.pos-top { bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%) scale(0.9); }
+  .info-bubble.pos-top.visible { transform: translateX(-50%) scale(1); }
+  .info-bubble.pos-top::before { bottom: -7px; left: 50%; transform: translateX(-50%) rotate(225deg); }
+
+  .info-bubble.pos-right { left: calc(100% + 20px); top: 50%; transform: translateY(-50%) scale(0.9); }
+  .info-bubble.pos-right.visible { transform: translateY(-50%) scale(1); }
+  .info-bubble.pos-right::before { left: -7px; top: 50%; transform: translateY(-50%) rotate(45deg); }
+
+  /* Connecting line from center */
+  .connector {
+    position: absolute;
+    background: var(--blue);
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 1;
+  }
+  .connector.visible { opacity: 0.3; }
+
+  .hint { text-align: center; margin-top: 40px; font-size: 12px; color: var(--w55); font-weight: 600; }
+  .hint span { color: var(--blue); }
+
+  @media (max-width: 640px) {
+    .wheel-container { max-width: 340px; }
+    .wheel-node .node-inner { width: 60px; height: 60px; }
+    .wheel-node .icon { font-size: 22px; }
+    .wheel-node .node-label { display: none; }
+    .center-content { width: 140px; height: 140px; }
+    .center-content .center-icon { font-size: 28px; }
+    .center-content .center-title { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="section">
+  <div class="label">Our Services</div>
+  <h2>What we <em>deliver.</em></h2>
+  <p class="subtitle">Click any node on the wheel to explore our core disciplines. Each one is backed by certified engineers and enterprise-grade SLAs.</p>
+
+  <div class="wheel-container" id="wheel">
+    <div class="wheel-ring" id="ring"></div>
+
+    <!-- Nodes -->
+    <div class="wheel-node" data-idx="0" onclick="selectNode(0)">
+      <div class="node-inner" style="--accent: var(--blue)">
+        <span class="icon">🖥</span>
+        <span class="node-label">IT Consulting</span>
+      </div>
+      <div class="info-bubble pos-bottom">
+        <div class="bubble-tag" style="color: var(--blue)">Cloud · App Dev · Integration</div>
+        <div class="bubble-title">IT Consulting & Strategy</div>
+        <div class="bubble-desc">Tailored IT consulting to help achieve your business goals. Cloud migration, application development, and software integration — we've got you covered.</div>
+      </div>
+    </div>
+
+    <div class="wheel-node" data-idx="1" onclick="selectNode(1)">
+      <div class="node-inner" style="--accent: var(--cyan)">
+        <span class="icon">⚡</span>
+        <span class="node-label">Staff Aug</span>
+      </div>
+      <div class="info-bubble pos-left">
+        <div class="bubble-tag" style="color: var(--cyan)">On-demand · Scalable · Certified</div>
+        <div class="bubble-title">Staff Augmentation</div>
+        <div class="bubble-desc">Top-tier IT professionals aligned with your unique needs, ensuring seamless collaboration and project success.</div>
+      </div>
+    </div>
+
+    <div class="wheel-node" data-idx="2" onclick="selectNode(2)">
+      <div class="node-inner" style="--accent: var(--amber)">
+        <span class="icon">🏗</span>
+        <span class="node-label">Datacenter</span>
+      </div>
+      <div class="info-bubble pos-top">
+        <div class="bubble-tag" style="color: var(--amber)">Design · Deploy · Optimize</div>
+        <div class="bubble-title">Datacenter Infrastructure</div>
+        <div class="bubble-desc">We architect, implement, and optimize your data center. From design to deployment — a robust foundation for digital operations.</div>
+      </div>
+    </div>
+
+    <div class="wheel-node" data-idx="3" onclick="selectNode(3)">
+      <div class="node-inner" style="--accent: var(--green)">
+        <span class="icon">🛡</span>
+        <span class="node-label">Managed IT</span>
+      </div>
+      <div class="info-bubble pos-right">
+        <div class="bubble-tag" style="color: var(--green)">24/7 · Help Desk · Maintenance</div>
+        <div class="bubble-title">Managed IT Services</div>
+        <div class="bubble-desc">Comprehensive managed services: 24/7 monitoring, help desk support, software updates, and hardware maintenance.</div>
+      </div>
+    </div>
+
+    <div class="wheel-center">
+      <div class="center-content" id="centerContent">
+        <div class="center-icon" id="centerIcon">✦</div>
+        <div class="center-title" id="centerTitle">Supportiva</div>
+        <div class="center-tag" id="centerTag" style="color: var(--blue)">4 Core Services</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="hint">Click a service node to see details · <span>Hover to preview</span></p>
+</div>
+
+<script>
+  const nodes = document.querySelectorAll('.wheel-node');
+  const colors = ['var(--blue)', 'var(--cyan)', 'var(--amber)', 'var(--green)'];
+  let activeIdx = -1;
+
+  function selectNode(idx) {
+    const wasActive = activeIdx === idx;
+    // Clear all
+    nodes.forEach(n => {
+      n.classList.remove('active');
+      n.querySelector('.info-bubble').classList.remove('visible');
+    });
+    activeIdx = wasActive ? -1 : idx;
+    if (!wasActive) {
+      nodes[idx].classList.add('active');
+      nodes[idx].querySelector('.info-bubble').classList.add('visible');
+      // Subtle ring rotation
+      const ring = document.getElementById('ring');
+      ring.style.transform = `rotate(${idx * 15}deg)`;
+    } else {
+      document.getElementById('ring').style.transform = 'rotate(0deg)';
+    }
+  }
+
+  // Hover preview
+  nodes.forEach((node, i) => {
+    node.addEventListener('mouseenter', () => {
+      if (activeIdx === -1) {
+        node.querySelector('.info-bubble').classList.add('visible');
+      }
+    });
+    node.addEventListener('mouseleave', () => {
+      if (activeIdx !== i) {
+        node.querySelector('.info-bubble').classList.remove('visible');
+      }
+    });
+  });
+</script>
+</body>
+</html>
