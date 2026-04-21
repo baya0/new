@@ -95,10 +95,10 @@ export default function HomePage() {
                 transition={{ delay: 0.8 + i * 0.12, duration: 0.6 }}
                 className={`absolute ${pos[i]}`}
               >
-                <div className="text-[48px] font-black leading-none tracking-tight" style={{ color: "var(--blue)" }}>
+                <div className="text-[32px] lg:text-[40px] font-bold leading-none tracking-tight" style={{ color: "var(--blue)" }}>
                   {s.val}
                 </div>
-                <div className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2" style={{ color: "var(--w25)" }}>
+                <div className="text-[10px] font-semibold tracking-[0.2em] uppercase mt-2" style={{ color: "var(--w25)" }}>
                   {s.label}
                 </div>
               </motion.div>
@@ -153,8 +153,8 @@ export default function HomePage() {
             >
               {th.stats.slice(0, 4).map((s, i) => (
                 <div key={i} className="text-center">
-                  <div className="text-2xl font-black" style={{ color: "var(--blue)" }}>{s.val}</div>
-                  <div className="text-[10px] font-bold tracking-wider uppercase mt-1" style={{ color: "var(--w25)" }}>{s.label}</div>
+                  <div className="text-xl font-bold" style={{ color: "var(--blue)" }}>{s.val}</div>
+                  <div className="text-[10px] font-semibold tracking-wider uppercase mt-1" style={{ color: "var(--w25)" }}>{s.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -163,7 +163,7 @@ export default function HomePage() {
 
         {/* Bottom marquee — trusted by */}
         <div className="relative z-10 py-6 border-t border-b" style={{ borderColor: "var(--border)" }}>
-          <div className="marquee-track text-[32px] lg:text-[44px] font-black tracking-tight">
+          <div className="marquee-track text-[24px] lg:text-[36px] font-bold tracking-tight">
             {[...th.clients, "—", ...th.clients, "—", ...th.clients, "—"].map((c, i) => (
               <span key={i} className="shrink-0" style={{ color: c === "—" ? "var(--blue)" : "var(--w85)", opacity: c === "—" ? 1 : 0.28 }}>
                 {c}
@@ -184,7 +184,7 @@ export default function HomePage() {
             <div className="col-span-12 lg:col-span-4">
               <FadeIn>
                 <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Studio</div>
-                <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight mb-8" style={{ color: "var(--white)" }}>
+                <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {th.whoWeAreTitle}.
                 </h2>
                 <div className="brush-line w-20 mb-8" />
@@ -193,7 +193,7 @@ export default function HomePage() {
 
             <div className="col-span-12 lg:col-span-7 lg:col-start-6">
               <FadeIn delay={0.15}>
-                <p className="pull-quote text-2xl lg:text-[30px] leading-[1.4]" style={{ color: "var(--white)" }}>
+                <p className="pull-quote text-lg lg:text-xl leading-[1.5]" style={{ color: "var(--white)" }}>
                   &ldquo;{th.whoWeAreText}&rdquo;
                 </p>
               </FadeIn>
@@ -233,7 +233,7 @@ export default function HomePage() {
             <div>
               <FadeIn>
                 <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 03 — The Disciplines</div>
-                <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight" style={{ color: "var(--white)" }}>
+                <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                   {th.servicesTitle}.
                 </h2>
               </FadeIn>
@@ -260,7 +260,7 @@ export default function HomePage() {
                     <div className="index-row">
                       {/* Number */}
                       <span
-                        className="display-num !text-[44px] lg:!text-[56px] transition-colors duration-500"
+                        className="display-num !text-[28px] lg:!text-[36px] transition-colors duration-500"
                         style={{ color: "var(--w25)" }}
                       >
                         0{i + 1}
@@ -269,7 +269,7 @@ export default function HomePage() {
                       {/* Title + meta */}
                       <div>
                         <h3
-                          className="text-2xl lg:text-4xl font-black leading-tight tracking-tight mb-1 transition-colors duration-300"
+                          className="text-xl lg:text-2xl font-bold leading-tight tracking-tight mb-1 transition-colors duration-300"
                           style={{ color: "var(--white)" }}
                         >
                           {svc.title}
@@ -321,19 +321,18 @@ export default function HomePage() {
               <span
                 className="absolute -top-16 -left-4 lg:-top-24 lg:-left-16 select-none pointer-events-none"
                 style={{
-                  fontFamily: "Georgia, 'Times New Roman', serif",
-                  fontSize: "clamp(180px, 24vw, 340px)",
+                  fontSize: "clamp(120px, 18vw, 220px)",
                   lineHeight: 1,
                   color: "var(--amber)",
-                  opacity: 0.14,
-                  fontStyle: "italic",
+                  opacity: 0.1,
+                  fontWeight: 300,
                 }}
               >
                 &ldquo;
               </span>
 
               <blockquote
-                className="pull-quote text-[28px] sm:text-[36px] lg:text-[52px] leading-[1.25] relative z-10"
+                className="pull-quote text-[22px] sm:text-[28px] lg:text-[36px] leading-[1.3] relative z-10"
                 style={{ color: "var(--white)" }}
               >
                 {th.testimonial.quote.replace(/^"|"$/g, "")}
@@ -376,10 +375,10 @@ export default function HomePage() {
             <div className="col-span-12 lg:col-span-5 lg:sticky lg:top-24 lg:self-start">
               <FadeIn>
                 <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 05 — The Promise</div>
-                <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight mb-8" style={{ color: "var(--white)" }}>
+                <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {th.whyTitle.split(" ").slice(0, 3).join(" ")}
                   <br />
-                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                  <span style={{ fontStyle: "italic", fontWeight: 300, color: "var(--blue)" }}>
                     {th.whyTitle.split(" ").slice(3).join(" ")}
                   </span>
                 </h2>
@@ -408,7 +407,7 @@ export default function HomePage() {
                   <div className="mono-label mb-3" style={{ color: colorMap[item.color] }}>
                     0{i + 1} — Principle
                   </div>
-                  <h4 className="text-xl lg:text-2xl font-black mb-2 tracking-tight" style={{ color: "var(--white)" }}>
+                  <h4 className="text-lg lg:text-xl font-bold mb-2 tracking-tight" style={{ color: "var(--white)" }}>
                     {item.title}
                   </h4>
                   <p className="text-sm lg:text-[15px] leading-[1.8]" style={{ color: "var(--w55)" }}>
@@ -449,7 +448,7 @@ export default function HomePage() {
               <h2 className="headline-xl">
                 <WordReveal text="Let's build something" />
                 <br />
-                <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                <span style={{ fontStyle: "italic", fontWeight: 300, color: "var(--blue)" }}>
                   <WordReveal text="worth keeping." delay={0.1} />
                 </span>
               </h2>

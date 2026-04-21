@@ -47,7 +47,7 @@ export default function ContactPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
           <div className="max-w-2xl">
             <div className="badge mb-6"><MessageSquare size={12} />{c.eyebrow}</div>
-            <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
+            <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-bold leading-[1.1] tracking-tight" style={{ color: "var(--white)" }}>
               {c.h1[0]}<br /><span className="gradient-text">{c.h1[1]}</span>
             </h1>
             <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-lg" style={{ color: "var(--w55)" }}>{c.sub}</p>
@@ -107,7 +107,7 @@ export default function ContactPage() {
                   >
                     <CheckCircle2 size={36} style={{ color: "var(--green)" }} />
                   </motion.div>
-                  <h3 className="text-2xl font-black mb-3" style={{ color: "var(--white)" }}>Message Sent!</h3>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: "var(--white)" }}>Message Sent!</h3>
                   <p className="text-sm" style={{ color: "var(--w55)" }}>We typically respond within 4 business hours.</p>
                 </motion.div>
               ) : (

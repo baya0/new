@@ -61,7 +61,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
               <Icon size={11} />{post.cat}
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-black leading-[1.1] tracking-tight mb-6" style={{ color: "var(--white)" }}>
+            <h1 className="text-2xl sm:text-3xl lg:text-[36px] font-bold leading-[1.1] tracking-tight mb-6" style={{ color: "var(--white)" }}>
               {post.title}
             </h1>
 
@@ -107,7 +107,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                     return <p key={i} className="text-[15px] leading-[1.9] mb-6" style={{ color: "var(--w55)" }}>{block.text}</p>;
                   }
                   if (block.type === "h2") {
-                    return <h2 key={i} className="text-xl font-black mb-4 mt-10" style={{ color: "var(--white)" }}>{block.text}</h2>;
+                    return <h2 key={i} className="text-lg font-bold mb-4 mt-10" style={{ color: "var(--white)" }}>{block.text}</h2>;
                   }
                   if (block.type === "ul") {
                     return (
@@ -145,7 +145,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           <AnimatedSection>
             <div className="mt-16">
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-xl font-black" style={{ color: "var(--white)" }}>Recent Posts</h3>
+                <h3 className="text-lg font-bold" style={{ color: "var(--white)" }}>Recent Posts</h3>
                 <Link href="/blog" className="text-sm font-bold transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>See All</Link>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">

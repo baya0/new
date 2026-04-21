@@ -55,7 +55,7 @@ export default function BlogPage() {
           <div className="badge mb-6" style={{ background: "rgba(94,74,158,0.07)", borderColor: "rgba(94,74,158,0.12)", color: "var(--purple)" }}>
             <BookOpen size={12} />{b.eyebrow}
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black leading-[1.08] tracking-tight" style={{ color: "var(--white)" }}>
+          <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-bold leading-[1.1] tracking-tight" style={{ color: "var(--white)" }}>
             {b.h1[0]}<br /><span className="gradient-text">{b.h1[1]}</span>
           </h1>
           <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{b.sub}</p>
@@ -89,7 +89,7 @@ export default function BlogPage() {
                       </div>
                     );
                   })()}
-                  <h2 className="text-2xl font-black mb-3 leading-tight relative z-10" style={{ color: "var(--white)" }}>{posts[0].title}</h2>
+                  <h2 className="text-xl font-bold mb-3 leading-tight relative z-10" style={{ color: "var(--white)" }}>{posts[0].title}</h2>
                   <p className="text-sm leading-[1.8] mb-5 relative z-10" style={{ color: "var(--w55)" }}>{posts[0].desc}</p>
                   <div className="flex items-center gap-4 mb-4">
                     <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}>
@@ -163,7 +163,7 @@ export default function BlogPage() {
                     <Send size={22} style={{ color: "var(--blue)" }} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-black mb-1" style={{ color: "var(--white)" }}>Stay in the loop</h3>
+                    <h3 className="text-lg font-bold mb-1" style={{ color: "var(--white)" }}>Stay in the loop</h3>
                     <p className="text-sm leading-relaxed" style={{ color: "var(--w55)" }}>Get the latest IT insights from our field engineers, straight to your inbox.</p>
                   </div>
                 </div>
