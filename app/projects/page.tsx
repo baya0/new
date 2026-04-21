@@ -207,7 +207,7 @@ export default function ProjectsPage() {
   const { t } = useLang();
   const p = t.projects;
   const [activeFilter, setActiveFilter] = useState("All");
-  const [featuredTitle, setFeaturedTitle] = useState(p.items[0]?.title ?? "");
+  const [featuredTitle, setFeaturedTitle] = useState<string>(p.items[0]?.title ?? "");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const filtered = activeFilter === "All"
