@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { type Lang } from "@/lib/i18n";
 import { Menu, X, Sun, Moon, ChevronRight, Globe } from "lucide-react";
@@ -63,12 +64,13 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
           <div className="h-full flex items-center gap-1">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 px-3 shrink-0 group" style={{ color: "var(--white)" }}>
-              <span
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-black text-white transition-all duration-300 group-hover:scale-110"
-                style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-sm)" }}
-              >
-                S
-              </span>
+              <Image
+                src="/images/logo.png"
+                alt="Supportiva"
+                width={32}
+                height={32}
+                className="transition-all duration-300 group-hover:scale-110"
+              />
               <span className="font-extrabold text-[15px] hidden lg:inline">
                 supportiva<span style={{ color: "var(--blue)" }}>.net</span>
               </span>
@@ -231,9 +233,12 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               <div className="p-6 pt-8">
                 {/* Close */}
                 <div className="flex items-center justify-between mb-8">
-                  <span className="font-extrabold text-[15px]" style={{ color: "var(--white)" }}>
-                    supportiva<span style={{ color: "var(--blue)" }}>.net</span>
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <Image src="/images/logo.png" alt="Supportiva" width={28} height={28} />
+                    <span className="font-extrabold text-[15px]" style={{ color: "var(--white)" }}>
+                      supportiva<span style={{ color: "var(--blue)" }}>.net</span>
+                    </span>
+                  </div>
                   <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ color: "var(--w55)", background: "var(--bg3)" }}>
                     <X size={16} />
                   </button>

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { type Lang } from "@/lib/i18n";
 import { Linkedin, Instagram, Facebook, Twitter, Mail } from "lucide-react";
 
@@ -39,9 +40,7 @@ export default function Footer({ t, lang, setLang }: FooterProps) {
           {/* Brand */}
           <div className="sm:col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 font-extrabold text-base mb-4 group" style={{ color: "var(--white)", flexDirection: isAR ? "row-reverse" : "row" }}>
-              <span className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black text-white shrink-0 transition-transform group-hover:scale-110" style={{ background: "var(--gradient-brand)" }}>
-                S
-              </span>
+              <Image src="/images/logo.png" alt="Supportiva" width={32} height={32} className="shrink-0 transition-transform group-hover:scale-110" />
               supportiva<span style={{ color: "var(--blue)" }}>.net</span>
             </Link>
             <p className="text-xs leading-relaxed mb-6" style={{ color: "var(--w55)", maxWidth: 260 }}>{t.footer.tagline}</p>
