@@ -72,7 +72,7 @@ function ProjectCase({ proj, i }: { proj: any; i: number }) {
     >
       {/* Left: case number + location */}
       <div className="col-span-12 md:col-span-2">
-        <div className="display-num !text-[56px]" style={{ color }}>
+        <div className="display-num !text-[36px]" style={{ color }}>
           {String(i + 1).padStart(2, "0")}
         </div>
         <div className="mono-label mt-4 flex items-center gap-1.5" style={{ color: "var(--w55)" }}>
@@ -98,7 +98,7 @@ function ProjectCase({ proj, i }: { proj: any; i: number }) {
           ))}
         </div>
 
-        <h3 className="text-2xl lg:text-[32px] font-black leading-[1.1] tracking-tight mb-5" style={{ color: "var(--white)" }}>
+        <h3 className="text-xl lg:text-2xl font-bold leading-[1.1] tracking-tight mb-5" style={{ color: "var(--white)" }}>
           {proj.title.includes("Nike") ? (
             <>
               <a href="https://www.linkedin.com/company/nike/" target="_blank" rel="noopener noreferrer" className="swept-underline">Nike</a>
@@ -191,7 +191,7 @@ export default function ProjectsPage() {
               </FadeIn>
               <h1 className="headline-xl mb-8">
                 <WordReveal text="Field" />{" "}
-                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--blue)" }}>
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.6 }} className="italic font-light" style={{ color: "var(--blue)" }}>
                   notes
                 </motion.span>
                 <br />
@@ -208,15 +208,15 @@ export default function ProjectsPage() {
                 <div className="pt-4" style={{ borderTop: "1px solid var(--border)" }}>
                   <div className="flex items-baseline justify-between py-3">
                     <span className="mono-label">Total Cases</span>
-                    <span className="display-num !text-[32px]" style={{ color: "var(--blue)" }}>{p.items.length}</span>
+                    <span className="display-num !text-[28px]" style={{ color: "var(--blue)" }}>{p.items.length}</span>
                   </div>
                   <div className="flex items-baseline justify-between py-3" style={{ borderTop: "1px solid var(--border)" }}>
                     <span className="mono-label">Countries</span>
-                    <span className="display-num !text-[32px]" style={{ color: "var(--cyan)" }}>9</span>
+                    <span className="display-num !text-[28px]" style={{ color: "var(--cyan)" }}>9</span>
                   </div>
                   <div className="flex items-baseline justify-between py-3" style={{ borderTop: "1px solid var(--border)" }}>
                     <span className="mono-label">Since</span>
-                    <span className="display-num !text-[32px]" style={{ color: "var(--amber)" }}>2013</span>
+                    <span className="display-num !text-[28px]" style={{ color: "var(--amber)" }}>2013</span>
                   </div>
                 </div>
               </FadeIn>
@@ -235,9 +235,9 @@ export default function ProjectsPage() {
             <div className="flex items-end justify-between flex-wrap gap-8 mb-16">
               <div>
                 <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 01 — The Cases</div>
-                <h2 className="text-[40px] lg:text-[56px] font-black leading-[0.98] tracking-tight" style={{ color: "var(--white)" }}>
+                <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                   Filter the{" "}
-                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                  <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
                     archive.
                   </span>
                 </h2>

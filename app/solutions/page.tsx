@@ -82,7 +82,7 @@ export default function SolutionsPage() {
                     <>
                       <WordReveal text={line1} />
                       <br />
-                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--blue)" }}>
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }} className="italic font-light" style={{ color: "var(--blue)" }}>
                         {line2.toLowerCase()}.
                       </motion.span>
                     </>
@@ -120,9 +120,9 @@ export default function SolutionsPage() {
           <FadeIn>
             <div className="mb-16">
               <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 01 — The Disciplines</div>
-              <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight" style={{ color: "var(--white)" }}>
+              <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                 Our{" "}
-                <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
                   services.
                 </span>
               </h2>
@@ -141,10 +141,10 @@ export default function SolutionsPage() {
                 style={{ borderTop: "1px solid var(--border)" }}
               >
                 <div className="flex items-baseline gap-4 mb-5">
-                  <span className="display-num !text-[42px]" style={{ color: colorMap[svc.color] }}>0{i + 1}</span>
+                  <span className="display-num !text-[28px]" style={{ color: colorMap[svc.color] }}>0{i + 1}</span>
                   <span className="mono-label" style={{ color: "var(--w25)" }}>{svc.tag}</span>
                 </div>
-                <h3 className="text-2xl lg:text-3xl font-black leading-tight tracking-tight mb-4" style={{ color: "var(--white)" }}>
+                <h3 className="text-xl lg:text-2xl font-bold leading-tight tracking-tight mb-4" style={{ color: "var(--white)" }}>
                   {svc.title}
                 </h3>
                 <p className="text-sm lg:text-[15px] leading-[1.8] mb-6" style={{ color: "var(--w55)" }}>
@@ -166,9 +166,9 @@ export default function SolutionsPage() {
             <div className="col-span-12 lg:col-span-4">
               <FadeIn>
                 <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Method</div>
-                <h2 className="text-[44px] lg:text-[56px] font-black leading-[0.98] tracking-tight mb-8" style={{ color: "var(--white)" }}>
+                <h2 className="text-[32px] lg:text-[40px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {s.processTitle.split(".")[0]}
-                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                  <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
                     {s.processTitle.includes(".") ? "." : ""}
                   </span>
                 </h2>
@@ -189,10 +189,10 @@ export default function SolutionsPage() {
                 >
                   <div className="absolute left-0 top-1 w-2.5 h-2.5 rounded-full -translate-x-[5.5px] transition-transform duration-500 group-hover:scale-[2]" style={{ background: colorMap[step.color] }} />
                   <div className="flex items-baseline gap-4 mb-3">
-                    <span className="display-num !text-[40px]" style={{ color: colorMap[step.color] }}>0{i + 1}</span>
+                    <span className="display-num !text-[28px]" style={{ color: colorMap[step.color] }}>0{i + 1}</span>
                     <span className="mono-label" style={{ color: colorMap[step.color] }}>Phase</span>
                   </div>
-                  <h4 className="text-2xl font-black mb-2 tracking-tight" style={{ color: "var(--white)" }}>{step.title}</h4>
+                  <h4 className="text-xl font-bold mb-2 tracking-tight" style={{ color: "var(--white)" }}>{step.title}</h4>
                   <p className="text-sm lg:text-[15px] leading-[1.8] max-w-lg" style={{ color: "var(--w55)" }}>{step.desc}</p>
                 </motion.div>
               ))}
@@ -214,9 +214,9 @@ export default function SolutionsPage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-6">
               <FadeIn>
-                <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight mb-8" style={{ color: "var(--white)" }}>
+                <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {s.whyTitle.split(" ").slice(0, 2).join(" ")}{" "}
-                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                  <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
                     {s.whyTitle.split(" ").slice(2).join(" ")}
                   </span>
                 </h2>

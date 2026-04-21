@@ -92,7 +92,7 @@ export default function VisionPage() {
                     <>
                       <WordReveal text={words.slice(0, mid).join(" ")} />
                       <br />
-                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }} className="italic font-light" style={{ fontFamily: "Georgia, 'Times New Roman', serif", color: "var(--cyan)" }}>
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }} className="italic font-light" style={{ color: "var(--cyan)" }}>
                         {words.slice(mid).join(" ").toLowerCase()}
                       </motion.span>
                     </>
@@ -117,10 +117,10 @@ export default function VisionPage() {
             <div className="col-span-12 lg:col-span-5">
               <FadeIn>
                 <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 01 — The Origin</div>
-                <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight mb-8" style={{ color: "var(--white)" }}>
+                <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {v.missionTitle.split(" ")[0]}
                   <br />
-                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
+                  <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
                     {v.missionTitle.split(" ").slice(1).join(" ")}.
                   </span>
                 </h2>
@@ -139,7 +139,7 @@ export default function VisionPage() {
 
             <div className="col-span-12 lg:col-span-6 lg:col-start-7">
               <FadeIn delay={0.2}>
-                <p className="pull-quote text-2xl lg:text-[32px] leading-[1.4] mb-8" style={{ color: "var(--white)" }}>
+                <p className="pull-quote text-lg lg:text-xl leading-[1.4] mb-8" style={{ color: "var(--white)" }}>
                   &ldquo;{v.mission1}&rdquo;
                 </p>
                 <p className="text-[15px] leading-[1.9] mb-10" style={{ color: "var(--w55)" }}>{v.mission2}</p>
@@ -159,7 +159,7 @@ export default function VisionPage() {
           <FadeIn>
             <div className="mb-16">
               <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Chapter 02 — The Values</div>
-              <h2 className="text-[44px] lg:text-[64px] font-black leading-[0.96] tracking-tight" style={{ color: "var(--white)" }}>
+              <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                 {v.valuesLabel.toLowerCase()}.
               </h2>
             </div>
@@ -181,7 +181,7 @@ export default function VisionPage() {
                 </div>
                 <div className="col-span-12 md:col-span-4">
                   <div className="mono-label mb-3" style={{ color: colorMap[val.color] }}>Principle</div>
-                  <h3 className="text-3xl lg:text-4xl font-black leading-tight tracking-tight" style={{ color: "var(--white)" }}>
+                  <h3 className="text-xl lg:text-2xl font-bold leading-tight tracking-tight" style={{ color: "var(--white)" }}>
                     {val.title}
                   </h3>
                 </div>
@@ -207,9 +207,9 @@ export default function VisionPage() {
             <div className="mb-16 grid grid-cols-12 gap-6">
               <div className="col-span-12 lg:col-span-5">
                 <div className="mono-label mb-4" style={{ color: "var(--amber)" }}>Chapter 03 — The Numbers</div>
-                <h2 className="text-[44px] lg:text-[56px] font-black leading-[0.98] tracking-tight" style={{ color: "var(--white)" }}>
+                <h2 className="text-[32px] lg:text-[40px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                   By the{" "}
-                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic", fontWeight: 400, color: "var(--amber)" }}>
+                  <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--amber)" }}>
                     figures.
                   </span>
                 </h2>
@@ -228,7 +228,7 @@ export default function VisionPage() {
                 className="py-10 md:py-14 border-r last:border-r-0 md:pr-4"
                 style={{ borderColor: "var(--border)" }}
               >
-                <div className="display-num !text-[64px] md:!text-[88px] mb-3" style={{ color: "var(--white)" }}>
+                <div className="display-num !text-[40px] md:!text-[56px] mb-3" style={{ color: "var(--white)" }}>
                   {stat.val}
                 </div>
                 <div className="mono-label" style={{ color: "var(--w55)" }}>{stat.label}</div>
