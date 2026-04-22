@@ -65,10 +65,11 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 px-3 shrink-0 group" style={{ color: "var(--white)" }}>
               <Image
-                src="/images/logo.png"
+                src="/images/logo.avif"
                 alt="Supportiva"
                 width={32}
                 height={32}
+                // unoptimized
                 className="transition-all duration-300 group-hover:scale-110"
               />
               <span className="font-extrabold text-[15px] hidden lg:inline">
