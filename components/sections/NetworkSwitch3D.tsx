@@ -17,8 +17,14 @@ function getColors(dark: boolean) {
     amber: dark ? 0xD4A55A : 0xB8873E,
     switchGlass: dark ? 0x162335 : 0x1E2E42,
     portInner: dark ? 0x0A1018 : 0x0E1720,
-    floor: dark ? 0x111C2A : 0xE0E2E8,
   };
+}
+
+function getResponsiveConfig(width: number) {
+  if (width < 480) return { h: width * 0.75, fov: 42, camY: 4.5, camZ: 10, labelBottom: "4%", scale: 0.55 };
+  if (width < 640) return { h: width * 0.65, fov: 38, camY: 4.0, camZ: 9, labelBottom: "5%", scale: 0.7 };
+  if (width < 900) return { h: width * 0.58, fov: 35, camY: 3.8, camZ: 8.5, labelBottom: "6%", scale: 0.85 };
+  return { h: Math.min(width * 0.5, 520), fov: 32, camY: 3.5, camZ: 8, labelBottom: "8%", scale: 1 };
 }
 
 export default function NetworkSwitch3D() {
@@ -30,6 +36,7 @@ export default function NetworkSwitch3D() {
   const sceneDataRef = useRef<any>(null);
   const [hoveredPort, setHoveredPort] = useState(-1);
   const [ready, setReady] = useState(false);
+  const [viewConfig, setViewConfig] = useState({ labelBottom: "8%", scale: 1 });
   const router = useRouter();
 
   useEffect(() => {
@@ -46,42 +53,47 @@ export default function NetworkSwitch3D() {
       const isDark = document.documentElement.classList.contains("dark");
       const colors = getColors(isDark);
       const W = container.clientWidth;
-      const H = Math.min(W * 0.55, 520);
+      const rc = getResponsiveConfig(W);
+
+      setViewConfig({ labelBottom: rc.labelBottom, scale: rc.scale });
 
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-      renderer.setSize(W, H);
+      renderer.setClearColor(0x000000, 0);
+      renderer.setSize(W, rc.h);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.2;
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 100);
-      camera.position.set(0, 3.5, 8);
+      scene.background = null;
+
+      const camera = new THREE.PerspectiveCamera(rc.fov, W / rc.h, 0.1, 100);
+      camera.position.set(0, rc.camY, rc.camZ);
       camera.lookAt(0, 0.2, 0);
 
       /* Lights */
-      scene.add(new THREE.AmbientLight(0xffffff, isDark ? 0.3 : 0.5));
-      const keyLight = new THREE.DirectionalLight(0xffffff, isDark ? 0.8 : 1.0);
+      scene.add(new THREE.AmbientLight(0xffffff, isDark ? 0.4 : 0.55));
+      const keyLight = new THREE.DirectionalLight(0xffffff, isDark ? 0.9 : 1.1);
       keyLight.position.set(5, 8, 4);
       scene.add(keyLight);
-      const fillLight = new THREE.DirectionalLight(colors.blue, 0.3);
+      const fillLight = new THREE.DirectionalLight(colors.blue, 0.35);
       fillLight.position.set(-4, 3, -2);
       scene.add(fillLight);
-      const rimLight = new THREE.PointLight(colors.cyan, isDark ? 0.6 : 0.3, 15);
+      const rimLight = new THREE.PointLight(colors.cyan, isDark ? 0.7 : 0.35, 15);
       rimLight.position.set(0, 2, -4);
       scene.add(rimLight);
-      const underGlow = new THREE.PointLight(colors.blue, isDark ? 0.4 : 0.15, 8);
+      const underGlow = new THREE.PointLight(colors.blue, isDark ? 0.5 : 0.2, 8);
       underGlow.position.set(0, -1, 2);
       scene.add(underGlow);
 
-      /* Floor */
-      const floorMesh = new THREE.Mesh(
-        new THREE.PlaneGeometry(30, 30),
-        new THREE.MeshStandardMaterial({ color: colors.floor, roughness: 0.85, metalness: 0.05 })
+      /* Subtle shadow plane (transparent, just catches reflections) */
+      const shadowPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(14, 8),
+        new THREE.MeshStandardMaterial({ color: isDark ? 0x0E1720 : 0xD0D3D8, transparent: true, opacity: 0.15, roughness: 0.9, metalness: 0.0 })
       );
-      floorMesh.rotation.x = -Math.PI / 2;
-      floorMesh.position.y = -0.62;
-      scene.add(floorMesh);
+      shadowPlane.rotation.x = -Math.PI / 2;
+      shadowPlane.position.y = -0.62;
+      scene.add(shadowPlane);
 
       /* Switch body */
       const SW = 7.2, SH = 0.65, SD = 2.2;
@@ -272,10 +284,14 @@ export default function NetworkSwitch3D() {
       const onResize = () => {
         if (!container) return;
         const w = container.clientWidth;
-        const h = Math.min(w * 0.55, 520);
-        camera.aspect = w / h;
+        const newRc = getResponsiveConfig(w);
+        camera.aspect = w / newRc.h;
+        camera.fov = newRc.fov;
+        camera.position.set(0, newRc.camY, newRc.camZ);
+        camera.lookAt(0, 0.2, 0);
         camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
+        renderer.setSize(w, newRc.h);
+        setViewConfig({ labelBottom: newRc.labelBottom, scale: newRc.scale });
       };
       window.addEventListener("resize", onResize);
 
@@ -352,13 +368,19 @@ export default function NetworkSwitch3D() {
               <div
                 key={i}
                 className="absolute transition-all duration-500"
-                style={{ left: `${xPercent}%`, bottom: "8%", transform: "translateX(-50%)" }}
+                style={{ left: `${xPercent}%`, bottom: viewConfig.labelBottom, transform: "translateX(-50%)" }}
               >
                 <div
                   className="text-center whitespace-nowrap transition-all duration-300"
-                  style={{ opacity: isHovered ? 1 : 0.7, transform: isHovered ? "translateY(-4px)" : "translateY(0)" }}
+                  style={{ opacity: isHovered ? 1 : 0.85, transform: isHovered ? "translateY(-4px)" : "translateY(0)" }}
                 >
-                  <div className="text-[11px] sm:text-[13px] font-bold tracking-tight" style={{ color: "var(--white)" }}>
+                  <div
+                    className="text-[12px] sm:text-[14px] md:text-[15px] font-extrabold tracking-tight"
+                    style={{
+                      color: "var(--white)",
+                      textShadow: "0 1px 8px rgba(0,0,0,0.5), 0 0 2px rgba(0,0,0,0.3)",
+                    }}
+                  >
                     {port.main}
                   </div>
                 </div>
@@ -372,10 +394,10 @@ export default function NetworkSwitch3D() {
                   }}
                 >
                   <div
-                    className="px-4 py-2 rounded-xl text-[10px] sm:text-[11px] font-bold tracking-wider uppercase whitespace-nowrap"
+                    className="px-4 py-2.5 rounded-xl text-[11px] sm:text-[12px] md:text-[13px] font-bold tracking-wider uppercase whitespace-nowrap"
                     style={{
                       background: "var(--glass-card)", border: "1px solid var(--glass-card-border)",
-                      color: "var(--blue)", backdropFilter: "blur(12px)", boxShadow: "var(--shadow-lg)",
+                      color: "var(--blue)", backdropFilter: "blur(16px)", boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
                     }}
                   >
                     {port.tag}
