@@ -1,10 +1,10 @@
 "use client";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
-import { MapPin, ArrowUpRight, ChevronLeft, ChevronRight, Maximize2, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)",
@@ -35,49 +35,192 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
   );
 }
 
-function FeaturedCard({ proj, color }: { proj: any; color: string }) {
-  const [expanded, setExpanded] = useState(false);
+const ITEMS_PER_PAGE = { sm: 1, md: 2, lg: 3 };
+
+function usePerPage() {
+  const [perPage, setPerPage] = useState(3);
+  useEffect(() => {
+    const check = () => {
+      const w = window.innerWidth;
+      setPerPage(w < 640 ? ITEMS_PER_PAGE.sm : w < 1024 ? ITEMS_PER_PAGE.md : ITEMS_PER_PAGE.lg);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return perPage;
+}
+
+function ProjectCard({ proj, color, index, onClick, isSelected }: { proj: any; color: string; index: number; onClick: () => void; isSelected: boolean }) {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -30, scale: 0.95 }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      onClick={onClick}
+      className="group cursor-pointer relative flex flex-col h-full"
+      style={{
+        background: "var(--glass-card)",
+        border: isSelected ? `2px solid ${color}` : "1px solid var(--glass-card-border)",
+        borderRadius: 24,
+        overflow: "hidden",
+        boxShadow: isSelected ? `0 8px 40px ${color}20` : "var(--shadow)",
+      }}
+    >
+      {/* Icon area with gradient */}
+      <div
+        className="relative h-[200px] sm:h-[220px] overflow-hidden flex items-center justify-center"
+        style={{ background: `linear-gradient(135deg, ${color}14, ${color}06, var(--glass-card))` }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
+
+        {/* Decorative rings */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <motion.div
+            className="rounded-full border"
+            style={{ width: 140, height: 140, borderColor: `${color}12` }}
+            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.1, 0.3] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <motion.div
+            className="rounded-full border"
+            style={{ width: 200, height: 200, borderColor: `${color}08` }}
+            animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.05, 0.2] }}
+            transition={{ duration: 5, delay: 1, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+
+        <motion.span
+          className="text-6xl sm:text-7xl relative z-10"
+          whileHover={{ scale: 1.15, rotate: -5 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {proj.icon}
+        </motion.span>
+
+        {/* Hover glow */}
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          style={{ background: `radial-gradient(circle at center, ${color}15, transparent 70%)` }}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="p-6 sm:p-7 flex flex-col flex-1">
+        <div className="flex flex-wrap gap-2 mb-4">
+          {proj.tags.map((tag: string, j: number) => (
+            <span
+              key={j}
+              className="text-[11px] font-bold tracking-wider uppercase px-3 py-1 rounded-full"
+              style={{
+                color: j === 0 ? color : "var(--w55)",
+                background: j === 0 ? `${color}0E` : "transparent",
+                border: j === 0 ? `1px solid ${color}22` : "1px solid var(--border)",
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <h3 className="text-[18px] sm:text-[20px] font-extrabold leading-snug tracking-tight mb-3" style={{ color: "var(--white)" }}>
+          {proj.title}
+        </h3>
+
+        <div className="flex items-center gap-2 text-[12px] mb-3" style={{ color: "var(--w25)" }}>
+          <MapPin size={12} />
+          <span>{proj.location}</span>
+        </div>
+
+        <p className="text-[14px] sm:text-[15px] leading-[1.8] flex-1" style={{ color: "var(--w55)" }}>
+          {proj.desc}
+        </p>
+
+        <div
+          className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold transition-all duration-300 group-hover:gap-3"
+          style={{ color }}
+        >
+          <span>View Details</span>
+          <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+        </div>
+      </div>
+
+      {/* Bottom accent */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-0 group-hover:h-[3px] transition-all duration-500"
+        style={{ background: `linear-gradient(90deg, ${color}, ${color}40, transparent)` }}
+      />
+    </motion.div>
+  );
+}
+
+function DetailPanel({ proj, color, onClose }: { proj: any; color: string; onClose: () => void }) {
   const { t } = useLang();
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => { setExpanded(false); }, [proj.title]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: 30, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.97 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className="overflow-hidden"
       style={{
         background: "var(--glass-card)",
-        border: "1px solid var(--glass-card-border)",
-        borderRadius: 24,
-        boxShadow: "var(--shadow-lg)",
+        border: `1.5px solid ${color}33`,
+        borderRadius: 28,
+        boxShadow: `0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px ${color}10`,
       }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2">
+        {/* Left — visual */}
         <div
-          className="relative min-h-[240px] md:min-h-full overflow-hidden flex items-center justify-center"
-          style={{ background: `linear-gradient(135deg, ${color}12, ${color}06, var(--glass-card))` }}
+          className="relative min-h-[260px] lg:min-h-full overflow-hidden flex items-center justify-center"
+          style={{ background: `linear-gradient(135deg, ${color}14, ${color}06, var(--glass-card))` }}
         >
           <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
+
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <motion.div
+              className="rounded-full border"
+              style={{ width: 200, height: 200, borderColor: `${color}15` }}
+              animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <motion.div
+              className="rounded-full border border-dashed"
+              style={{ width: 280, height: 280, borderColor: `${color}0A` }}
+              animate={{ scale: [1, 1.1, 1], rotate: [360, 180, 0] }}
+              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            />
+          </div>
+
           <motion.span
             key={proj.title}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="text-7xl lg:text-8xl"
+            initial={{ scale: 0.7, opacity: 0, rotate: -10 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            transition={{ delay: 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-8xl lg:text-9xl relative z-10"
           >
             {proj.icon}
           </motion.span>
         </div>
 
+        {/* Right — content */}
         <div className="p-8 lg:p-10 flex flex-col justify-center">
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-5">
             {proj.tags.map((tag: string, j: number) => (
               <span
                 key={j}
-                className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded"
+                className="text-[11px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-full"
                 style={{
                   color: j === 0 ? color : "var(--w55)",
                   background: j === 0 ? `${color}0E` : "transparent",
@@ -89,16 +232,16 @@ function FeaturedCard({ proj, color }: { proj: any; color: string }) {
             ))}
           </div>
 
-          <h2 className="text-xl lg:text-2xl font-bold leading-tight tracking-tight mb-3" style={{ color: "var(--white)" }}>
+          <h2 className="text-[24px] lg:text-[28px] font-extrabold leading-tight tracking-tight mb-4" style={{ color: "var(--white)" }}>
             {proj.title}
           </h2>
 
-          <div className="flex items-center gap-1.5 text-xs mb-4" style={{ color: "var(--w25)" }}>
-            <MapPin size={11} />
+          <div className="flex items-center gap-2 text-[13px] mb-5" style={{ color: "var(--w25)" }}>
+            <MapPin size={13} />
             <span>{proj.location}</span>
           </div>
 
-          <p className="text-[14px] leading-[1.8] mb-4" style={{ color: "var(--w55)" }}>
+          <p className="text-[15px] lg:text-[16px] leading-[1.85] mb-5" style={{ color: "var(--w55)" }}>
             {expanded ? proj.fullDesc : proj.desc}
           </p>
 
@@ -108,97 +251,47 @@ function FeaturedCard({ proj, color }: { proj: any; color: string }) {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="space-y-2 mb-4 overflow-hidden"
+                className="space-y-3 mb-5 overflow-hidden"
               >
                 {proj.bullets.map((b: string, bi: number) => (
-                  <li key={bi} className="flex gap-3 items-start text-[13px] leading-relaxed" style={{ color: "var(--w55)" }}>
-                    <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: color }} />
+                  <motion.li
+                    key={bi}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: bi * 0.05 }}
+                    className="flex gap-3 items-start text-[14px] leading-relaxed"
+                    style={{ color: "var(--w55)" }}
+                  >
+                    <span className="w-2 h-2 rounded-full mt-2 shrink-0" style={{ background: color }} />
                     <span>{b}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </motion.ul>
             )}
           </AnimatePresence>
 
-          {proj.fullDesc !== proj.desc && (
+          <div className="flex items-center gap-4 flex-wrap">
+            {proj.fullDesc !== proj.desc && (
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="inline-flex items-center gap-2 text-[14px] font-bold transition-colors duration-200 hover:opacity-80"
+                style={{ color }}
+              >
+                {expanded ? t.projects.showLess : t.projects.readMore}
+                {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </button>
+            )}
+
             <button
-              onClick={() => setExpanded(!expanded)}
-              className="inline-flex items-center gap-1.5 text-sm font-bold mb-4 transition-colors duration-200 hover:opacity-80"
-              style={{ color }}
+              onClick={onClose}
+              className="inline-flex items-center gap-2 text-[13px] font-bold transition-all duration-200 hover:opacity-70"
+              style={{ color: "var(--w25)" }}
             >
-              {expanded ? t.projects.showLess : t.projects.readMore}
-              {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              Close
             </button>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function ScrollCard({ proj, color, onClick }: { proj: any; color: string; onClick: () => void }) {
-  return (
-    <motion.div
-      layout
-      onClick={onClick}
-      className="group flex-shrink-0 w-[300px] sm:w-[320px] cursor-pointer relative"
-      style={{
-        background: "var(--glass-card)",
-        border: "1px solid var(--glass-card-border)",
-        borderRadius: 20,
-        overflow: "hidden",
-        boxShadow: "var(--shadow)",
-      }}
-      whileHover={{ y: -8, boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {/* Image area */}
-      <div
-        className="h-[160px] relative overflow-hidden flex items-center justify-center"
-        style={{ background: `linear-gradient(135deg, ${color}12, ${color}06, var(--glass-card))` }}
-      >
-        <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
-
-        <span className="text-[44px] relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
-          {proj.icon}
-        </span>
-
-        {/* Hover overlay — expand affordance */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-all duration-400 pointer-events-none">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-400" style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)" }}>
-            <Maximize2 size={16} className="text-white" />
           </div>
         </div>
       </div>
-
-      {/* Content */}
-      <div className="p-5">
-        <span
-          className="inline-block text-[9px] font-bold tracking-wider uppercase px-2.5 py-1 rounded mb-3"
-          style={{ color, background: `${color}0E`, border: `1px solid ${color}22` }}
-        >
-          {proj.tags[0]}
-        </span>
-
-        <h3 className="text-[14px] font-bold leading-snug tracking-tight mb-2 line-clamp-2" style={{ color: "var(--white)" }}>
-          {proj.title}
-        </h3>
-
-        <div className="flex items-center gap-1.5 text-[10px] mb-2" style={{ color: "var(--w25)" }}>
-          <MapPin size={9} />
-          <span>{proj.location}</span>
-        </div>
-
-        <p className="text-[12px] leading-relaxed line-clamp-2" style={{ color: "var(--w55)" }}>
-          {proj.desc}
-        </p>
-      </div>
-
-      {/* Bottom hover indicator */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-0 group-hover:h-[3px] transition-all duration-400"
-        style={{ background: `linear-gradient(90deg, ${color}, transparent)` }}
-      />
     </motion.div>
   );
 }
@@ -207,30 +300,53 @@ export default function ProjectsPage() {
   const { t } = useLang();
   const p = t.projects;
   const [activeFilter, setActiveFilter] = useState("All");
-  const [featuredTitle, setFeaturedTitle] = useState<string>(p.items[0]?.title ?? "");
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const detailRef = useRef<HTMLDivElement>(null);
+  const perPage = usePerPage();
 
-  const filtered = activeFilter === "All"
-    ? p.items
-    : p.items.filter(proj => getCategories(proj.tags).includes(activeFilter));
+  const filtered = useMemo(() =>
+    activeFilter === "All"
+      ? p.items
+      : p.items.filter((proj: any) => getCategories(proj.tags).includes(activeFilter)),
+    [activeFilter, p.items]
+  );
 
-  const featured = filtered.find(proj => proj.title === featuredTitle) || filtered[0];
-  const others = filtered.filter(proj => proj.title !== featured?.title);
-  const featuredColor = colorMap[featured?.color] ?? "var(--blue)";
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  const safeP = Math.min(page, totalPages - 1);
+  const pageItems = filtered.slice(safeP * perPage, safeP * perPage + perPage);
+  const selected = selectedTitle ? filtered.find((proj: any) => proj.title === selectedTitle) : null;
+  const selectedColor = selected ? (colorMap[selected.color] ?? "var(--blue)") : "var(--blue)";
 
   const handleFilterChange = useCallback((cat: string) => {
     setActiveFilter(cat);
-    const newFiltered = cat === "All"
-      ? p.items
-      : p.items.filter(proj => getCategories(proj.tags).includes(cat));
-    if (newFiltered.length > 0 && !newFiltered.find(proj => proj.title === featuredTitle)) {
-      setFeaturedTitle(newFiltered[0].title);
-    }
-  }, [p.items, featuredTitle]);
-
-  const scroll = useCallback((dir: "left" | "right") => {
-    scrollRef.current?.scrollBy({ left: dir === "right" ? 340 : -340, behavior: "smooth" });
+    setPage(0);
+    setDirection(0);
+    setSelectedTitle(null);
   }, []);
+
+  const goPage = useCallback((p: number) => {
+    setDirection(p > page ? 1 : -1);
+    setPage(p);
+  }, [page]);
+
+  const handleCardClick = useCallback((title: string) => {
+    setSelectedTitle(prev => prev === title ? null : title);
+    setTimeout(() => {
+      detailRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 100);
+  }, []);
+
+  useEffect(() => {
+    if (page >= totalPages) setPage(Math.max(0, totalPages - 1));
+  }, [totalPages, page]);
+
+  const pageVariants = {
+    enter: (d: number) => ({ x: d >= 0 ? 80 : -80, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (d: number) => ({ x: d >= 0 ? -80 : 80, opacity: 0 }),
+  };
 
   return (
     <>
@@ -248,14 +364,13 @@ export default function ProjectsPage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex items-center justify-between text-[11px] font-bold tracking-[0.2em] uppercase py-4 mb-16"
+            className="flex items-center text-[11px] font-bold tracking-[0.2em] uppercase py-4 mb-16"
             style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}
           >
             <span className="flex items-center gap-3">
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--green)" }} />
               Projects
             </span>
-            <span className="hidden sm:block">Case Archive</span>
           </motion.div>
 
           <div className="max-w-2xl">
@@ -272,13 +387,13 @@ export default function ProjectsPage() {
               </h1>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <p className="text-base lg:text-lg leading-[1.8]" style={{ color: "var(--w55)" }}>{p.sub}</p>
+              <p className="text-[16px] lg:text-[18px] leading-[1.8]" style={{ color: "var(--w55)" }}>{p.sub}</p>
             </FadeIn>
           </div>
         </div>
       </section>
 
-      {/* FEATURED + SCROLL */}
+      {/* PROJECTS GRID + DETAIL */}
       <section className="relative section-deep overflow-hidden" style={{ padding: "80px 0 140px" }}>
         <div className="blob blob-cyan w-[500px] h-[500px] animate-blob" style={{ right: -160, top: 100 }} />
         <div className="blob blob-purple w-[400px] h-[400px] animate-blob" style={{ left: -120, bottom: 60, animationDelay: "-4s" }} />
@@ -287,12 +402,12 @@ export default function ProjectsPage() {
 
           {/* Filters */}
           <FadeIn>
-            <div className="flex flex-wrap gap-3 mb-12">
+            <div className="flex flex-wrap gap-3 mb-14">
               {CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => handleFilterChange(cat)}
-                  className="px-4 py-2 text-[11px] font-bold tracking-wider uppercase transition-all duration-300"
+                  className="px-5 py-2.5 text-[12px] font-bold tracking-wider uppercase transition-all duration-300"
                   style={{
                     color: activeFilter === cat ? "var(--white)" : "var(--w55)",
                     background: activeFilter === cat ? "var(--blue)" : "transparent",
@@ -306,60 +421,91 @@ export default function ProjectsPage() {
             </div>
           </FadeIn>
 
-          {/* Featured project */}
-          {featured && (
+          {/* Detail panel */}
+          <div ref={detailRef}>
             <AnimatePresence mode="wait">
-              <FeaturedCard key={featured.title} proj={featured} color={featuredColor} />
-            </AnimatePresence>
-          )}
-
-          {/* Scroll row */}
-          {others.length > 0 && (
-            <div className="mt-12">
-              <div className="flex items-center justify-between mb-6">
-                <span className="mono-label" style={{ color: "var(--w55)" }}>
-                  More Cases
-                </span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => scroll("left")}
-                    className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
-                    style={{ border: "1px solid var(--border)", color: "var(--w55)", background: "transparent" }}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button
-                    onClick={() => scroll("right")}
-                    className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
-                    style={{ border: "1px solid var(--border)", color: "var(--w55)", background: "transparent" }}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-              </div>
-
-              <div
-                ref={scrollRef}
-                className="flex gap-5 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory"
-                style={{ scrollbarWidth: "thin", scrollbarColor: "var(--border) transparent" }}
-              >
-                {others.map(proj => (
-                  <ScrollCard
-                    key={proj.title}
-                    proj={proj}
-                    color={colorMap[proj.color] ?? "var(--blue)"}
-                    onClick={() => {
-                      setFeaturedTitle(proj.title);
-                      window.scrollTo({ top: document.querySelector(".featured-anchor")?.getBoundingClientRect().top! + window.scrollY - 100, behavior: "smooth" });
-                    }}
+              {selected && (
+                <div className="mb-12">
+                  <DetailPanel
+                    key={selected.title}
+                    proj={selected}
+                    color={selectedColor}
+                    onClose={() => setSelectedTitle(null)}
                   />
-                ))}
-              </div>
-            </div>
-          )}
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
 
-          {/* Anchor for scroll-to */}
-          <div className="featured-anchor" style={{ position: "absolute", top: 160 }} />
+          {/* Paginated grid */}
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={`page-${safeP}-${activeFilter}`}
+              custom={direction}
+              variants={pageVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+            >
+              {pageItems.map((proj: any, i: number) => (
+                <ProjectCard
+                  key={proj.title}
+                  proj={proj}
+                  color={colorMap[proj.color] ?? "var(--blue)"}
+                  index={i}
+                  onClick={() => handleCardClick(proj.title)}
+                  isSelected={selectedTitle === proj.title}
+                />
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Pagination controls */}
+          {totalPages > 1 && (
+            <FadeIn delay={0.1}>
+              <div className="flex items-center justify-center gap-6 mt-14">
+                <button
+                  onClick={() => goPage(Math.max(0, safeP - 1))}
+                  disabled={safeP === 0}
+                  className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105 disabled:opacity-30 disabled:hover:scale-100"
+                  style={{ border: "1px solid var(--border)", color: "var(--w55)", background: "transparent" }}
+                >
+                  <ChevronLeft size={18} />
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => goPage(i)}
+                      className="transition-all duration-300"
+                      style={{
+                        width: safeP === i ? 32 : 10,
+                        height: 10,
+                        borderRadius: 999,
+                        background: safeP === i ? "var(--blue)" : "var(--border)",
+                      }}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => goPage(Math.min(totalPages - 1, safeP + 1))}
+                  disabled={safeP === totalPages - 1}
+                  className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105 disabled:opacity-30 disabled:hover:scale-100"
+                  style={{ border: "1px solid var(--border)", color: "var(--w55)", background: "transparent" }}
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+
+              <div className="text-center mt-4 text-[13px] font-bold" style={{ color: "var(--w25)" }}>
+                {safeP + 1} / {totalPages}
+              </div>
+            </FadeIn>
+          )}
 
           {/* CTA */}
           <FadeIn delay={0.2} className="text-center mt-20">
