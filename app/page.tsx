@@ -57,24 +57,24 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 // Place logo SVGs/PNGs in /public/images/clients/ and add the path here.
 // Falls back to styled text when no logo is set.
 const CLIENT_LOGOS: Record<string, string | null> = {
-  "Dow":           null,  // e.g. "/images/clients/dow.svg"
-  "Medtronic":     null,
-  "Mercedes-Benz": null,
-  "Viatris":       null,
+  "Dow":           "/images/clients/Dow.png",
+  "Medtronic":     "/images/clients/Medtronic.png",
+  "Mercedes-Benz": "/images/clients/Mercedes.png",
+  "Viatris":       "/images/clients/Viatris.png",
 };
 
 function ClientLogo({ name }: { name: string }) {
   const src = CLIENT_LOGOS[name] ?? null;
   if (src) {
     return (
-      <span className="shrink-0 flex items-center justify-center" style={{ height: 36 }}>
+      <span className="shrink-0 flex items-center justify-center" style={{ height: 80 }}>
         <Image
           src={src}
           alt={name}
-          width={100}
-          height={32}
+          width={150}
+          height={50}
           className="object-contain"
-          style={{ filter: "grayscale(1)", opacity: 0.35 }}
+         
         />
       </span>
     );
