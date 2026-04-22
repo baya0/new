@@ -53,6 +53,10 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
   );
 }
 
+// ─── HERO LOGO PATH — change this string to point to your logo image ───────
+// e.g. "/images/logo.png"  or  "/images/logo-full.png"
+const HERO_LOGO_SRC = "/images/logo.png";
+
 /* ─────────── Client logo map ─────────── */
 // Place logo SVGs/PNGs in /public/images/clients/ and add the path here.
 // Falls back to styled text when no logo is set.
@@ -132,127 +136,102 @@ export default function HomePage() {
           <div className="absolute inset-0 dot-grid opacity-30" />
         </motion.div>
 
-        {/* Corner stats — desktop */}
-        <div className="absolute inset-0 z-10 pointer-events-none hidden lg:block">
-          {th.stats.slice(0, 4).map((s, i) => {
-            const pos = [
-              "top-28 left-12",
-              "top-28 right-12 text-right",
-              "bottom-28 left-12",
-              "bottom-28 right-12 text-right",
-            ];
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: i < 2 ? 20 : -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + i * 0.12, duration: 0.6 }}
-                className={`absolute ${pos[i]}`}
-              >
-                <div className="text-[32px] lg:text-[40px] font-bold leading-none tracking-tight" style={{ color: "var(--blue)" }}>
-                  {s.val}
-                </div>
-                <div className="text-[10px] font-semibold tracking-[0.2em] uppercase mt-2" style={{ color: "var(--w25)" }}>
-                  {s.label}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+        {/* Center content — split layout: text left, logo right */}
+        <div className="flex-1 flex items-center relative z-10 px-6 lg:px-16">
+          <div className="w-full max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center py-24 lg:py-0">
 
-        {/* Center content */}
-        <div className="flex-1 flex items-center justify-center relative z-10 px-6">
-          <div className="text-center">
-            {/* ── Approach 2: Illuminated Logo Centerpiece ── */}
+            {/* ── Left: headline + subtitle + CTA ── */}
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <h1 className="headline-xl">
+                  {th.h1[0]}<br />
+                  {th.h1[1]}<br />
+                  <span style={{ color: "var(--blue)" }}>{th.h1[2]}</span>
+                </h1>
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="mt-6 text-base lg:text-lg leading-relaxed max-w-lg"
+                style={{ color: "var(--w55)" }}
+              >
+                {th.sub}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="mt-10 flex flex-wrap items-center gap-5"
+              >
+                <Link href="/solutions"><Button size="lg">{th.btn1}</Button></Link>
+                <Link href="/projects" className="group inline-flex items-center gap-2 text-sm font-bold tracking-wide" style={{ color: "var(--white)" }}>
+                  <span className="swept-underline">{th.btn2}</span>
+                  <ArrowUpRight size={16} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* ── Right: large logo with glow ── */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-              className="flex justify-center mb-8"
+              initial={{ opacity: 0, x: 50, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="hidden lg:flex items-center justify-center"
             >
-              <div className="relative inline-flex items-center justify-center">
-                {/* Outer glow pulse */}
+              <div className="relative flex items-center justify-center">
+                {/* Large ambient glow ring */}
                 <div
                   className="absolute rounded-full animate-blob"
                   style={{
-                    width: 180,
-                    height: 180,
-                    background: "radial-gradient(circle, rgba(28,78,138,0.22) 0%, rgba(42,126,158,0.14) 50%, transparent 75%)",
-                    filter: "blur(24px)",
+                    width: 480,
+                    height: 480,
+                    background: "radial-gradient(circle, rgba(28,78,138,0.18) 0%, rgba(42,126,158,0.10) 45%, transparent 70%)",
+                    filter: "blur(48px)",
                   }}
                 />
-                {/* Inner soft ring */}
+                {/* Dashed orbit ring — slow spin */}
+                <div
+                  className="absolute rounded-full animate-spin-slow"
+                  style={{
+                    width: 360,
+                    height: 360,
+                    border: "1px dashed rgba(28,78,138,0.22)",
+                  }}
+                />
+                {/* Solid inner ring */}
                 <div
                   className="absolute rounded-full"
                   style={{
-                    width: 112,
-                    height: 112,
-                    border: "1px solid rgba(28,78,138,0.18)",
-                    boxShadow: "0 0 32px rgba(28,78,138,0.12)",
+                    width: 300,
+                    height: 300,
+                    border: "1px solid rgba(28,78,138,0.12)",
+                    boxShadow: "inset 0 0 60px rgba(28,78,138,0.06)",
                   }}
                 />
+                {/* ─── LOGO — path controlled by HERO_LOGO_SRC constant at top of file ─── */}
                 <Image
-                  src="/images/logo.png"
+                  src={HERO_LOGO_SRC}
                   alt="Supportiva"
-                  width={88}
-                  height={88}
-                  className="relative z-10 transition-all duration-700 hover:scale-105"
+                  width={260}
+                  height={260}
+                  className="relative z-10 animate-float-slow"
                   style={{
-                    filter: "drop-shadow(0 0 20px rgba(28,78,138,0.55)) drop-shadow(0 0 8px rgba(42,126,158,0.4))",
+                    filter:
+                      "drop-shadow(0 0 48px rgba(28,78,138,0.50)) " +
+                      "drop-shadow(0 0 16px rgba(42,126,158,0.35)) " +
+                      "drop-shadow(0 8px 24px rgba(0,0,0,0.12))",
                   }}
                 />
               </div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <h1 className="headline-xl" style={{ textAlign: "center" }}>
-                {th.h1[0]}<br />
-                {th.h1[1]}<br />
-                <span style={{ color: "var(--blue)" }}>{th.h1[2]}</span>
-              </h1>
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="mt-8 text-base lg:text-lg leading-relaxed max-w-xl mx-auto"
-              style={{ color: "var(--w55)" }}
-            >
-              {th.sub}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className="mt-10 flex flex-wrap items-center justify-center gap-5"
-            >
-              <Link href="/solutions"><Button size="lg">{th.btn1}</Button></Link>
-              <Link href="/projects" className="group inline-flex items-center gap-2 text-sm font-bold tracking-wide" style={{ color: "var(--white)" }}>
-                <span className="swept-underline">{th.btn2}</span>
-                <ArrowUpRight size={16} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
-              </Link>
-            </motion.div>
-
-            {/* Mobile stats */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 lg:hidden"
-            >
-              {th.stats.slice(0, 4).map((s, i) => (
-                <div key={i} className="text-center">
-                  <div className="text-xl font-bold" style={{ color: "var(--blue)" }}>{s.val}</div>
-                  <div className="text-[10px] font-semibold tracking-wider uppercase mt-1" style={{ color: "var(--w25)" }}>{s.label}</div>
-                </div>
-              ))}
-            </motion.div>
           </div>
         </div>
 
