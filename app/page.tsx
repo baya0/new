@@ -1,10 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { ArrowUpRight, Plus } from "lucide-react";
+
+const NetworkSwitch3D = dynamic(() => import("@/components/sections/NetworkSwitch3D"), { ssr: false });
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)", amber: "var(--amber)",
@@ -222,14 +225,14 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          03 — SERVICES (Numbered index — table of contents style)
+          03 — SERVICES (3D Network Switch)
          ═══════════════════════════════════════════════════════ */}
-      <section className="relative section-deep overflow-hidden" style={{ padding: "140px 0" }}>
+      <section className="relative section-deep overflow-hidden" style={{ padding: "100px 0 120px" }}>
         <div className="blob blob-cyan w-[520px] h-[520px] animate-blob" style={{ left: -200, bottom: 0, animationDelay: "-4s" }} />
         <div className="blob blob-purple w-[360px] h-[360px] animate-blob" style={{ right: 40, top: 80, animationDelay: "-2s", opacity: 0.4 }} />
 
         <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
-          <div className="flex items-end justify-between flex-wrap gap-6 mb-20">
+          <div className="flex items-end justify-between flex-wrap gap-6 mb-12">
             <div>
               <FadeIn>
                 <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Services</div>
@@ -246,54 +249,8 @@ export default function HomePage() {
             </FadeIn>
           </div>
 
-          <FadeIn>
-            <div style={{ borderTop: "1px solid var(--border)" }}>
-              {th.services.map((svc, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <Link href="/solutions" className="block group">
-                    <div className="index-row">
-                      {/* Number */}
-                      <span
-                        className="display-num !text-[28px] lg:!text-[36px] transition-colors duration-500"
-                        style={{ color: "var(--w25)" }}
-                      >
-                        0{i + 1}
-                      </span>
-
-                      {/* Title + meta */}
-                      <div>
-                        <h3
-                          className="text-xl lg:text-2xl font-bold leading-tight tracking-tight mb-1 transition-colors duration-300"
-                          style={{ color: "var(--white)" }}
-                        >
-                          {svc.title}
-                        </h3>
-                        <p className="text-sm lg:text-[15px] max-w-xl leading-relaxed" style={{ color: "var(--w55)" }}>
-                          {svc.tag}
-                        </p>
-                      </div>
-
-                      {/* Right — color accent & arrow */}
-                      <div className="flex items-center gap-4 shrink-0">
-                        <span className="hidden md:inline-block w-12 h-[2px]" style={{ background: colorMap[svc.color] }} />
-                        <span
-                          className="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-500 group-hover:rotate-45"
-                          style={{ border: `1.5px solid ${colorMap[svc.color]}`, color: colorMap[svc.color] }}
-                        >
-                          <Plus size={18} />
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+          <FadeIn delay={0.1}>
+            <NetworkSwitch3D />
           </FadeIn>
         </div>
       </section>
