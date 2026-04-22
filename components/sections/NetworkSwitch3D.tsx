@@ -247,13 +247,17 @@ export default function NetworkSwitch3D() {
       setReady(true);
 
       /* Animation */
-      const clock = new THREE.Clock();
+      let lastTime = performance.now();
+      let elapsed = 0;
       const baseZ = portZ - portDepth + 0.08;
 
       function animate() {
         if (disposed) return;
         animIdRef.current = requestAnimationFrame(animate);
-        const t = clock.getElapsedTime();
+        const now = performance.now();
+        elapsed += (now - lastTime) / 1000;
+        lastTime = now;
+        const t = elapsed;
         const hovered = hoveredRef.current;
         const cablePos = cablePosRef.current;
 
