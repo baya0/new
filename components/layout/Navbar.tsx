@@ -67,8 +67,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               <Image
                 src="/images/logo.avif"
                 alt="Supportiva"
-                width={32}
-                height={32}
+                width={60}
+                height={60}
                 // unoptimized
                 className="transition-all duration-300 group-hover:scale-110"
               />
@@ -235,7 +235,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                 {/* Close */}
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-2">
-                    <Image src="/images/logo.png" alt="Supportiva" width={28} height={28} />
+                    <Image src="/images/logo.avif" alt="Supportiva" width={50} height={50} />
                     <span className="font-extrabold text-[15px]" style={{ color: "var(--white)" }}>
                       supportiva<span style={{ color: "var(--blue)" }}>.net</span>
                     </span>

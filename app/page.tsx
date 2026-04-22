@@ -55,7 +55,7 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 
 // ─── HERO LOGO PATH — change this string to point to your logo image ───────
 // e.g. "/images/logo.png"  or  "/images/logo-full.png"
-const HERO_LOGO_SRC = "/images/logo.png";
+const HERO_LOGO_SRC = "/images/logo.avif";
 
 /* ─────────── Client logo map ─────────── */
 // Place logo SVGs/PNGs in /public/images/clients/ and add the path here.
@@ -114,14 +114,14 @@ export default function HomePage() {
         className="relative overflow-hidden hero-bg flex flex-col"
         style={{ minHeight: "100vh" }}
       >
-        {/* Server room background — swap src for /images/server-room.jpg once you save your photo there */}
+        {/* Server room background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <Image
-            src="/images/projects/rack-stack.jpg"
+            src="/images/backgrounds/serversroom.jpg"
             alt=""
             fill
             className="hero-server-img object-cover object-center"
-            style={{ opacity: 0.07, filter: "blur(1px) grayscale(15%)" }}
+            style={{ opacity: 0.10, filter: "blur(1px) grayscale(15%)" }}
             priority
           />
           {/* Gradient veil keeps text readable and unifies with brand palette */}
@@ -219,15 +219,10 @@ export default function HomePage() {
                 <Image
                   src={HERO_LOGO_SRC}
                   alt="Supportiva"
-                  width={260}
-                  height={260}
+                  width={300}
+                  height={300}
                   className="relative z-10 animate-float-slow"
-                  style={{
-                    filter:
-                      "drop-shadow(0 0 48px rgba(28,78,138,0.50)) " +
-                      "drop-shadow(0 0 16px rgba(42,126,158,0.35)) " +
-                      "drop-shadow(0 8px 24px rgba(0,0,0,0.12))",
-                  }}
+                 
                 />
               </div>
             </motion.div>
@@ -504,7 +499,7 @@ export default function HomePage() {
           {/* Editorial footer bar */}
           <FadeIn delay={0.5}>
             <div className="mt-24 pt-6 flex items-center justify-between flex-wrap gap-4 text-[11px] font-bold tracking-[0.2em] uppercase" style={{ borderTop: "1px solid var(--border)", color: "var(--w25)" }}>
-              <span>SUPPORTIVA.NET</span>
+              <span>SUPPORTIVA</span>
               <span>—</span>
               <span>© {year}</span>
             </div>

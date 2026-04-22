@@ -352,7 +352,7 @@ export const translations = {
         { title: "Company", links: ["About Us", "Vision", "Projects", "The S Blog"] },
         { title: "Contact", links: ["+1 724 906 3303", "info@supportiva.net", "Sheridan, WY 82801", "USA"] },
       ],
-      copy: "© 2026 Supportiva.net · All rights reserved.",
+      copy: "© 2026 Supportiva · All rights reserved.",
     },
   },
 
@@ -520,7 +520,7 @@ export const translations = {
         { title: "الشركة", links: ["من نحن", "الرؤية", "المشاريع", "المدونة"] },
         { title: "تواصل معنا", links: ["+1 724 906 3303", "info@supportiva.net", "شيريدان، وايومنغ", "الولايات المتحدة"] },
       ],
-      copy: "© 2026 Supportiva.net · جميع الحقوق محفوظة.",
+      copy: "© 2026 Supportiva · جميع الحقوق محفوظة.",
     },
   },
 
@@ -688,7 +688,7 @@ export const translations = {
         { title: "Şirket", links: ["Hakkımızda", "Vizyon", "Projeler", "S Blog"] },
         { title: "İletişim", links: ["+1 724 906 3303", "info@supportiva.net", "Sheridan, WY 82801", "ABD"] },
       ],
-      copy: "© 2026 Supportiva.net · Tüm hakları saklıdır.",
+      copy: "© 2026 Supportiva · Tüm hakları saklıdır.",
     },
   },
 } as const;
