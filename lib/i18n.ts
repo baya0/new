@@ -168,7 +168,7 @@ export const translations = {
           desc: "24-month migration project in Istanbul, Turkey.",
           fullDesc: "Our team of help desk support engineers successfully concluded a 24-month migration project in Istanbul, Turkey, for our client. Throughout this period, their primary responsibility involved assisting the client's end users by supplying them with devices equipped with the new Windows 11 image.",
           tags: ["L1 Support", "Windows 11", "24 months"],
-          location: "Istanbul, Turkey",
+          location: "Istanbul, Turkey", 
         },
         {
           icon: "🔌", color: "amber", image: "/images/projects/cabling-design.jpg",
