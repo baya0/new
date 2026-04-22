@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
-import { MapPin, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
+import { MapPin, ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)",
@@ -35,30 +35,19 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
   );
 }
 
-const ITEMS_PER_PAGE = { sm: 1, md: 2, lg: 3 };
+const BATCH_SIZE = 6;
 
-function usePerPage() {
-  const [perPage, setPerPage] = useState(3);
-  useEffect(() => {
-    const check = () => {
-      const w = window.innerWidth;
-      setPerPage(w < 640 ? ITEMS_PER_PAGE.sm : w < 1024 ? ITEMS_PER_PAGE.md : ITEMS_PER_PAGE.lg);
-    };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-  return perPage;
-}
+function ProjectCard({ proj, color, onClick, isSelected }: { proj: any; color: string; onClick: () => void; isSelected: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
 
-function ProjectCard({ proj, color, index, onClick, isSelected }: { proj: any; color: string; index: number; onClick: () => void; isSelected: boolean }) {
   return (
     <motion.div
+      ref={ref}
       layout
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -30, scale: 0.95 }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: 50, scale: 0.94 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
       className="group cursor-pointer relative flex flex-col h-full"
       style={{
@@ -296,15 +285,24 @@ function DetailPanel({ proj, color, onClose }: { proj: any; color: string; onClo
   );
 }
 
+function LoadTrigger({ onVisible }: { onVisible: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "200px" });
+
+  useEffect(() => {
+    if (inView) onVisible();
+  }, [inView, onVisible]);
+
+  return <div ref={ref} className="h-1" />;
+}
+
 export default function ProjectsPage() {
   const { t } = useLang();
   const p = t.projects;
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
-  const [page, setPage] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const detailRef = useRef<HTMLDivElement>(null);
-  const perPage = usePerPage();
 
   const filtered = useMemo(() =>
     activeFilter === "All"
@@ -313,23 +311,20 @@ export default function ProjectsPage() {
     [activeFilter, p.items]
   );
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const safeP = Math.min(page, totalPages - 1);
-  const pageItems = filtered.slice(safeP * perPage, safeP * perPage + perPage);
+  const visibleItems = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
   const selected = selectedTitle ? filtered.find((proj: any) => proj.title === selectedTitle) : null;
   const selectedColor = selected ? (colorMap[selected.color] ?? "var(--blue)") : "var(--blue)";
 
   const handleFilterChange = useCallback((cat: string) => {
     setActiveFilter(cat);
-    setPage(0);
-    setDirection(0);
+    setVisibleCount(BATCH_SIZE);
     setSelectedTitle(null);
   }, []);
 
-  const goPage = useCallback((p: number) => {
-    setDirection(p > page ? 1 : -1);
-    setPage(p);
-  }, [page]);
+  const loadMore = useCallback(() => {
+    setVisibleCount(prev => Math.min(prev + BATCH_SIZE, filtered.length));
+  }, [filtered.length]);
 
   const handleCardClick = useCallback((title: string) => {
     setSelectedTitle(prev => prev === title ? null : title);
@@ -337,16 +332,6 @@ export default function ProjectsPage() {
       detailRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }, 100);
   }, []);
-
-  useEffect(() => {
-    if (page >= totalPages) setPage(Math.max(0, totalPages - 1));
-  }, [totalPages, page]);
-
-  const pageVariants = {
-    enter: (d: number) => ({ x: d >= 0 ? 80 : -80, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d >= 0 ? -80 : 80, opacity: 0 }),
-  };
 
   return (
     <>
@@ -437,75 +422,21 @@ export default function ProjectsPage() {
             </AnimatePresence>
           </div>
 
-          {/* Paginated grid */}
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={`page-${safeP}-${activeFilter}`}
-              custom={direction}
-              variants={pageVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
-            >
-              {pageItems.map((proj: any, i: number) => (
-                <ProjectCard
-                  key={proj.title}
-                  proj={proj}
-                  color={colorMap[proj.color] ?? "var(--blue)"}
-                  index={i}
-                  onClick={() => handleCardClick(proj.title)}
-                  isSelected={selectedTitle === proj.title}
-                />
-              ))}
-            </motion.div>
-          </AnimatePresence>
+          {/* Infinite scroll grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {visibleItems.map((proj: any) => (
+              <ProjectCard
+                key={proj.title}
+                proj={proj}
+                color={colorMap[proj.color] ?? "var(--blue)"}
+                onClick={() => handleCardClick(proj.title)}
+                isSelected={selectedTitle === proj.title}
+              />
+            ))}
+          </div>
 
-          {/* Pagination controls */}
-          {totalPages > 1 && (
-            <FadeIn delay={0.1}>
-              <div className="flex items-center justify-center gap-6 mt-14">
-                <button
-                  onClick={() => goPage(Math.max(0, safeP - 1))}
-                  disabled={safeP === 0}
-                  className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105 disabled:opacity-30 disabled:hover:scale-100"
-                  style={{ border: "1px solid var(--border)", color: "var(--w55)", background: "transparent" }}
-                >
-                  <ChevronLeft size={18} />
-                </button>
-
-                <div className="flex items-center gap-2">
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => goPage(i)}
-                      className="transition-all duration-300"
-                      style={{
-                        width: safeP === i ? 32 : 10,
-                        height: 10,
-                        borderRadius: 999,
-                        background: safeP === i ? "var(--blue)" : "var(--border)",
-                      }}
-                    />
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => goPage(Math.min(totalPages - 1, safeP + 1))}
-                  disabled={safeP === totalPages - 1}
-                  className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105 disabled:opacity-30 disabled:hover:scale-100"
-                  style={{ border: "1px solid var(--border)", color: "var(--w55)", background: "transparent" }}
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-
-              <div className="text-center mt-4 text-[13px] font-bold" style={{ color: "var(--w25)" }}>
-                {safeP + 1} / {totalPages}
-              </div>
-            </FadeIn>
-          )}
+          {/* Auto-load trigger */}
+          {hasMore && <LoadTrigger onVisible={loadMore} />}
 
           {/* CTA */}
           <FadeIn delay={0.2} className="text-center mt-20">
