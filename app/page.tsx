@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
@@ -52,6 +53,42 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
   );
 }
 
+/* ─────────── Client logo map ─────────── */
+// Place logo SVGs/PNGs in /public/images/clients/ and add the path here.
+// Falls back to styled text when no logo is set.
+const CLIENT_LOGOS: Record<string, string | null> = {
+  "Dow":           null,  // e.g. "/images/clients/dow.svg"
+  "Medtronic":     null,
+  "Mercedes-Benz": null,
+  "Viatris":       null,
+};
+
+function ClientLogo({ name }: { name: string }) {
+  const src = CLIENT_LOGOS[name] ?? null;
+  if (src) {
+    return (
+      <span className="shrink-0 flex items-center justify-center" style={{ height: 36 }}>
+        <Image
+          src={src}
+          alt={name}
+          width={100}
+          height={32}
+          className="object-contain"
+          style={{ filter: "grayscale(1)", opacity: 0.35 }}
+        />
+      </span>
+    );
+  }
+  return (
+    <span
+      className="shrink-0 text-[22px] lg:text-[32px] font-bold tracking-tight select-none"
+      style={{ color: "var(--w85)", opacity: 0.32, letterSpacing: "0.02em" }}
+    >
+      {name}
+    </span>
+  );
+}
+
 /* ─────────── Page ─────────── */
 
 export default function HomePage() {
@@ -73,6 +110,20 @@ export default function HomePage() {
         className="relative overflow-hidden hero-bg flex flex-col"
         style={{ minHeight: "100vh" }}
       >
+        {/* Server room background — swap src for /images/server-room.jpg once you save your photo there */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <Image
+            src="/images/projects/rack-stack.jpg"
+            alt=""
+            fill
+            className="hero-server-img object-cover object-center"
+            style={{ opacity: 0.07, filter: "blur(1px) grayscale(15%)" }}
+            priority
+          />
+          {/* Gradient veil keeps text readable and unifies with brand palette */}
+          <div className="hero-server-bg absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.96) 100%)" }} />
+        </div>
+
         {/* Ambient background */}
         <motion.div style={{ y: heroBgY }} className="absolute inset-0 pointer-events-none">
           <div className="aurora" />
@@ -112,6 +163,47 @@ export default function HomePage() {
         {/* Center content */}
         <div className="flex-1 flex items-center justify-center relative z-10 px-6">
           <div className="text-center">
+            {/* ── Approach 2: Illuminated Logo Centerpiece ── */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+              className="flex justify-center mb-8"
+            >
+              <div className="relative inline-flex items-center justify-center">
+                {/* Outer glow pulse */}
+                <div
+                  className="absolute rounded-full animate-blob"
+                  style={{
+                    width: 180,
+                    height: 180,
+                    background: "radial-gradient(circle, rgba(28,78,138,0.22) 0%, rgba(42,126,158,0.14) 50%, transparent 75%)",
+                    filter: "blur(24px)",
+                  }}
+                />
+                {/* Inner soft ring */}
+                <div
+                  className="absolute rounded-full"
+                  style={{
+                    width: 112,
+                    height: 112,
+                    border: "1px solid rgba(28,78,138,0.18)",
+                    boxShadow: "0 0 32px rgba(28,78,138,0.12)",
+                  }}
+                />
+                <Image
+                  src="/images/logo.png"
+                  alt="Supportiva"
+                  width={88}
+                  height={88}
+                  className="relative z-10 transition-all duration-700 hover:scale-105"
+                  style={{
+                    filter: "drop-shadow(0 0 20px rgba(28,78,138,0.55)) drop-shadow(0 0 8px rgba(42,126,158,0.4))",
+                  }}
+                />
+              </div>
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -166,12 +258,18 @@ export default function HomePage() {
 
         {/* Bottom marquee — trusted by */}
         <div className="relative z-10 py-6 border-t border-b" style={{ borderColor: "var(--border)" }}>
-          <div className="marquee-track text-[24px] lg:text-[36px] font-bold tracking-tight">
-            {[...th.clients, "—", ...th.clients, "—", ...th.clients, "—"].map((c, i) => (
-              <span key={i} className="shrink-0" style={{ color: c === "—" ? "var(--blue)" : "var(--w85)", opacity: c === "—" ? 1 : 0.28 }}>
-                {c}
-              </span>
-            ))}
+          {/* Trusted-by label */}
+          <div className="absolute left-1/2 -top-3 -translate-x-1/2 px-3 text-[10px] font-bold tracking-[0.2em] uppercase" style={{ background: "var(--bg0)", color: "var(--w25)" }}>
+            Trusted By
+          </div>
+          <div className="marquee-track">
+            {[...th.clients, "—", ...th.clients, "—", ...th.clients, "—"].map((c, i) =>
+              c === "—" ? (
+                <span key={i} className="shrink-0 text-[24px] lg:text-[36px] font-bold" style={{ color: "var(--blue)" }}>—</span>
+              ) : (
+                <ClientLogo key={i} name={c} />
+              )
+            )}
           </div>
         </div>
       </section>
