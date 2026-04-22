@@ -193,7 +193,7 @@ function NetworkBubbles({ services }: { services: readonly any[] }) {
                 {svc.icon}
               </span>
               <span
-                className="text-[10px] sm:text-[11px] font-bold text-center leading-tight max-w-[80%] relative z-10"
+                className="text-[11px] sm:text-[13px] font-bold text-center leading-tight max-w-[80%] relative z-10"
                 style={{ color: "var(--white)" }}
               >
                 {svc.title.length > 20 ? svc.title.split(" ").slice(0, 2).join(" ") : svc.title}
@@ -222,43 +222,38 @@ function NetworkBubbles({ services }: { services: readonly any[] }) {
               onClick={() => setActive(null)}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.85, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.85, y: 20 }}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed z-40 left-1/2 top-1/2"
-              style={{
-                transform: "translate(-50%, -50%)",
-                width: "min(440px, 90vw)",
-              }}
+              className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none"
             >
               {(() => {
                 const svc = services[active];
                 const rgb = colorRaw[svc.color] ?? [94, 159, 204];
                 return (
                   <div
-                    className="relative rounded-3xl p-8 sm:p-10 overflow-hidden"
+                    className="relative rounded-3xl p-10 sm:p-12 overflow-hidden pointer-events-auto"
                     style={{
+                      width: "min(520px, 92vw)",
                       background: `radial-gradient(circle at 30% 20%, rgba(${rgb.join(",")},0.15), var(--glass-card) 60%)`,
                       border: `1.5px solid rgba(${rgb.join(",")},0.25)`,
                       backdropFilter: "blur(24px)",
                       boxShadow: `0 24px 80px rgba(0,0,0,0.3), 0 0 60px rgba(${rgb.join(",")},0.08)`,
                     }}
                   >
-                    {/* Close button */}
                     <button
                       onClick={() => setActive(null)}
-                      className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                      className="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
                       style={{
                         background: "rgba(255,255,255,0.06)",
                         border: "1px solid rgba(255,255,255,0.1)",
                         color: "var(--w55)",
                       }}
                     >
-                      <X size={14} />
+                      <X size={16} />
                     </button>
 
-                    {/* Glass highlight */}
                     <div
                       className="absolute top-0 left-0 w-full h-1/3 pointer-events-none"
                       style={{
@@ -266,42 +261,28 @@ function NetworkBubbles({ services }: { services: readonly any[] }) {
                       }}
                     />
 
-                    <span className="text-5xl mb-5 block">{svc.icon}</span>
+                    <span className="text-6xl mb-6 block">{svc.icon}</span>
 
                     <div
-                      className="text-[10px] font-bold tracking-wider uppercase mb-3"
+                      className="text-[11px] font-bold tracking-wider uppercase mb-4"
                       style={{ color: colorMap[svc.color] }}
                     >
                       {svc.tag}
                     </div>
 
                     <h3
-                      className="text-xl sm:text-2xl font-bold tracking-tight mb-4 leading-tight"
+                      className="text-2xl sm:text-3xl font-bold tracking-tight mb-5 leading-tight"
                       style={{ color: "var(--white)" }}
                     >
                       {svc.title}
                     </h3>
 
                     <p
-                      className="text-[13px] sm:text-[14px] leading-[1.8]"
+                      className="text-[15px] sm:text-base leading-[1.8]"
                       style={{ color: "var(--w55)" }}
                     >
                       {svc.desc}
                     </p>
-
-                    {/* Network indicator bar */}
-                    <div className="mt-6 flex items-center gap-3">
-                      <div
-                        className="w-2 h-2 rounded-full animate-pulse"
-                        style={{ background: `rgb(${rgb.join(",")})` }}
-                      />
-                      <span
-                        className="text-[10px] font-bold tracking-wider uppercase"
-                        style={{ color: "var(--w25)" }}
-                      >
-                        Connected to {services.length - 1} other nodes
-                      </span>
-                    </div>
                   </div>
                 );
               })()}
@@ -372,21 +353,17 @@ export default function SolutionsPage() {
 
         <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
           <FadeIn>
-            <div className="text-center mb-4">
-              <div className="mono-label mb-4 inline-flex items-center gap-3" style={{ color: "var(--blue)" }}>
+            <div className="mb-12">
+              <div className="mono-label mb-4 flex items-center gap-3" style={{ color: "var(--blue)" }}>
                 <span className="w-8 h-px" style={{ background: "var(--blue)" }} />
                 Our Services
-                <span className="w-8 h-px" style={{ background: "var(--blue)" }} />
               </div>
-              <h2 className="text-[28px] lg:text-[40px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
-                Connected{" "}
+              <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
+                Our{" "}
                 <span style={{ fontStyle: "italic", fontWeight: 300, color: "var(--blue)" }}>
-                  solutions.
+                  services.
                 </span>
               </h2>
-              <p className="text-sm mt-3 max-w-md mx-auto" style={{ color: "var(--w55)" }}>
-                Our services work together like a network — click any node to explore.
-              </p>
             </div>
           </FadeIn>
 
