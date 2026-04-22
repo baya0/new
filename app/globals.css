@@ -262,6 +262,15 @@ body {
   pointer-events: none;
 }
 
+/* server-room image tint — darker in dark mode so the background stays dark */
+.dark .hero-server-bg {
+  background: linear-gradient(180deg, rgba(14,23,32,0.92) 0%, rgba(14,23,32,0.98) 100%) !important;
+}
+.dark .hero-server-img {
+  opacity: 0.09 !important;
+  filter: blur(1px) grayscale(30%) !important;
+}
+
 /* ══════════ SECTION BACKGROUNDS ══════════ */
 .section-depth {
   position: relative;
