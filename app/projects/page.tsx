@@ -1,10 +1,11 @@
 "use client";
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
-import { MapPin, ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
+import { MapPin, ChevronDown, ChevronUp, ArrowRight, X } from "lucide-react";
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)",
@@ -58,43 +59,45 @@ function ProjectCard({ proj, color, onClick, isSelected }: { proj: any; color: s
         boxShadow: isSelected ? `0 8px 40px ${color}20` : "var(--shadow)",
       }}
     >
-      {/* Icon area with gradient */}
+      {/* Image area */}
       <div
         className="relative h-[200px] sm:h-[220px] overflow-hidden flex items-center justify-center"
         style={{ background: `linear-gradient(135deg, ${color}14, ${color}06, var(--glass-card))` }}
       >
         <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
 
-        {/* Decorative rings */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <motion.div
-            className="rounded-full border"
-            style={{ width: 140, height: 140, borderColor: `${color}12` }}
-            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.1, 0.3] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        {proj.image ? (
+          <Image
+            src={proj.image}
+            alt={proj.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <motion.div
-            className="rounded-full border"
-            style={{ width: 200, height: 200, borderColor: `${color}08` }}
-            animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.05, 0.2] }}
-            transition={{ duration: 5, delay: 1, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
+        ) : (
+          <>
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <motion.div
+                className="rounded-full border"
+                style={{ width: 140, height: 140, borderColor: `${color}12` }}
+                animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.1, 0.3] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </div>
+            <motion.span
+              className="text-6xl sm:text-7xl relative z-10"
+              whileHover={{ scale: 1.15, rotate: -5 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {proj.icon}
+            </motion.span>
+          </>
+        )}
 
-        <motion.span
-          className="text-6xl sm:text-7xl relative z-10"
-          whileHover={{ scale: 1.15, rotate: -5 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {proj.icon}
-        </motion.span>
-
-        {/* Hover glow */}
+        {/* Hover overlay */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{ background: `radial-gradient(circle at center, ${color}15, transparent 70%)` }}
+          style={{ background: `linear-gradient(to top, ${color}30, transparent 60%)` }}
         />
       </div>
 
@@ -147,7 +150,46 @@ function ProjectCard({ proj, color, onClick, isSelected }: { proj: any; color: s
   );
 }
 
-function DetailPanel({ proj, color, onClose }: { proj: any; color: string; onClose: () => void }) {
+function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", handler); document.body.style.overflow = ""; };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+      style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(12px)" }}
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+        style={{ background: "rgba(255,255,255,0.1)", color: "#fff" }}
+      >
+        <X size={20} />
+      </button>
+      <motion.div
+        initial={{ scale: 0.85, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.85, opacity: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-5xl aspect-video rounded-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Image src={src} alt={alt} fill className="object-contain" sizes="100vw" />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function DetailPanel({ proj, color, onClose, onImageClick }: { proj: any; color: string; onClose: () => void; onImageClick?: (src: string, alt: string) => void }) {
   const { t } = useLang();
   const [expanded, setExpanded] = useState(false);
 
@@ -170,37 +212,41 @@ function DetailPanel({ proj, color, onClose }: { proj: any; color: string; onClo
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* Left — visual */}
         <div
-          className="relative min-h-[260px] lg:min-h-full overflow-hidden flex items-center justify-center"
+          className="relative min-h-[280px] lg:min-h-[400px] overflow-hidden flex items-center justify-center"
           style={{ background: `linear-gradient(135deg, ${color}14, ${color}06, var(--glass-card))` }}
         >
           <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
 
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <motion.div
-              className="rounded-full border"
-              style={{ width: 200, height: 200, borderColor: `${color}15` }}
-              animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          {proj.image ? (
+            <Image
+              src={proj.image}
+              alt={proj.title}
+              fill
+              className="object-cover cursor-zoom-in hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              onClick={() => onImageClick?.(proj.image, proj.title)}
             />
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <motion.div
-              className="rounded-full border border-dashed"
-              style={{ width: 280, height: 280, borderColor: `${color}0A` }}
-              animate={{ scale: [1, 1.1, 1], rotate: [360, 180, 0] }}
-              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            />
-          </div>
-
-          <motion.span
-            key={proj.title}
-            initial={{ scale: 0.7, opacity: 0, rotate: -10 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            transition={{ delay: 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="text-8xl lg:text-9xl relative z-10"
-          >
-            {proj.icon}
-          </motion.span>
+          ) : (
+            <>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <motion.div
+                  className="rounded-full border"
+                  style={{ width: 200, height: 200, borderColor: `${color}15` }}
+                  animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                />
+              </div>
+              <motion.span
+                key={proj.title}
+                initial={{ scale: 0.7, opacity: 0, rotate: -10 }}
+                animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                transition={{ delay: 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="text-8xl lg:text-9xl relative z-10"
+              >
+                {proj.icon}
+              </motion.span>
+            </>
+          )}
         </div>
 
         {/* Right — content */}
@@ -302,6 +348,7 @@ export default function ProjectsPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() =>
@@ -416,6 +463,7 @@ export default function ProjectsPage() {
                     proj={selected}
                     color={selectedColor}
                     onClose={() => setSelectedTitle(null)}
+                    onImageClick={(src, alt) => setLightboxImage({ src, alt })}
                   />
                 </div>
               )}
@@ -444,6 +492,17 @@ export default function ProjectsPage() {
           </FadeIn>
         </div>
       </section>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxImage && (
+          <Lightbox
+            src={lightboxImage.src}
+            alt={lightboxImage.alt}
+            onClose={() => setLightboxImage(null)}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }
