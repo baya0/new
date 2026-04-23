@@ -7,7 +7,7 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { ArrowUpRight, Plus } from "lucide-react";
-import { useTheme } from "@/lib/theme-context";
+
 const NetworkSwitch3D = dynamic(() => import("@/components/sections/NetworkSwitch3D"), { ssr: false });
 
 const colorMap: Record<string, string> = {
@@ -53,12 +53,12 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
   );
 }
 
-// ─── HERO LOGO PATH  ───────
+// ─── HERO LOGO PATH — change this string to point to your logo image ───────
 // e.g. "/images/logo.png"  or  "/images/logo-full.png"
-const HERO_LOGO_LIGHT_SRC = "/images/backgrounds/logolight.png";
-const HERO_LOGO_DARK_SRC = "/images/backgrounds/logodark.png";
+const HERO_LOGO_SRC = "/images/backgrounds/logo2.png";
 
 /* ─────────── Client logo map ─────────── */
+// Place logo SVGs/PNGs in /public/images/clients/ and add the path here.
 // Falls back to styled text when no logo is set.
 const CLIENT_LOGOS: Record<string, string | null> = {
   "Dow":           "/images/clients/Dow.png",
@@ -98,11 +98,10 @@ function ClientLogo({ name }: { name: string }) {
 export default function HomePage() {
   const { t } = useLang();
   const th = t.home;
-  const { dark } = useTheme()
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroBgY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const heroLogoSrc = dark ? HERO_LOGO_DARK_SRC : HERO_LOGO_LIGHT_SRC;
+
   const year = new Date().getFullYear();
 
   return (
@@ -195,11 +194,12 @@ export default function HomePage() {
               
                 {/* ─── LOGO — path controlled by HERO_LOGO_SRC constant at top of file ─── */}
                 <Image
-                  src={heroLogoSrc}}
+                  src={HERO_LOGO_SRC}
                   alt="Supportiva"
                   width={900}
                   height={900}
                   className="relative z-10 animate-float-slow"
+                 
                 />
               </div>
             </motion.div>
