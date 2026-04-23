@@ -195,7 +195,7 @@ export default function HomePage() {
               
                 {/* ─── LOGO — path controlled by HERO_LOGO_SRC constant at top of file ─── */}
                 <Image
-                  src={heroLogoSrc}}
+                  src={heroLogoSrc}
                   alt="Supportiva"
                   width={900}
                   height={900}

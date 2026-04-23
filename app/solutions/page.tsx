@@ -4,7 +4,23 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
-import { CheckCircle2 } from "lucide-react";
+import {
+  CheckCircle2,
+  Cloud,
+  Server,
+  ShieldCheck,
+  LifeBuoy,
+  Cable,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+
+/* ── Service icon mapping — indexed to solutions.services order ─────────
+   0: Cloud Migration  · 1: Datacenter  · 2: Network Security
+   3: IT Support       · 4: Cabling     · 5: Staff Augmentation        */
+const SERVICE_ICONS: LucideIcon[] = [
+  Cloud, Server, ShieldCheck, LifeBuoy, Cable, Users,
+];
 
 /* ── Color helpers ─────────────────────────────────────────────── */
 const colorMap: Record<string, string> = {
@@ -54,19 +70,19 @@ function FadeIn({ children, className, delay = 0, y = 24 }: {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   NETWORK HUB — topology-style component with a central Supportiva Core
-   and evenly-distributed service nodes connected by animated lines.
-   Replaces the old pie/wheel UI while keeping the same circular footprint.
+   NETWORK HUB — topology-style component.
+   Central Supportiva Core with six evenly-distributed service nodes
+   connected by animated traffic lines. Nodes are HTML cards with
+   Lucide icons; hub, lines, and traffic dots live in the SVG layer.
+   Fully theme-aware via CSS custom properties.
    ══════════════════════════════════════════════════════════════════ */
 
-const HS = 400;        // SVG viewBox side length
-const HCX = 200;       // center x
-const HCY = 200;       // center y
-const HUB_R = 50;      // hub radius
-const NODE_R = 138;    // distance from center to each node center
-const NODE_BOX = 44;   // node icon box (square, rounded)
-
 const toRad = (deg: number) => (deg * Math.PI) / 180;
+
+// SVG coordinate system (0–100, percentage space)
+const HUB_R      = 12.5;  // hub radius
+const NODE_R     = 38;    // distance from center to node center
+const NODE_EDGE  = 7.5;   // half-size of node card in SVG units (where lines stop)
 
 function NetworkHub({
   services,
@@ -80,246 +96,293 @@ function NetworkHub({
   const [hov, setHov] = useState<number | null>(null);
   const n = services.length;
 
-  // Place first node at the top (-90°), then clockwise
+  // First node at the top (-90°), then clockwise
   const angleOf = (i: number) => -90 + (360 / n) * i;
 
   return (
-    <div className="relative w-full max-w-[440px] mx-auto" style={{ userSelect: "none" }}>
-      <motion.svg
-        viewBox={`0 0 ${HS} ${HS}`}
-        className="w-full h-auto"
+    <motion.div
+      className="relative w-full max-w-[480px] aspect-square mx-auto"
+      style={{ userSelect: "none" }}
+      initial={{ opacity: 0, scale: 0.92 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {/* ═══ SVG LAYER — hub, rings, connections, traffic dots ═══ */}
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+        className="absolute inset-0 w-full h-full"
         style={{ overflow: "visible" }}
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        aria-hidden="true"
       >
         <defs>
-          <filter id="node-glow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
           <radialGradient id="hub-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--blue-light)" stopOpacity="0.35" />
-            <stop offset="70%" stopColor="var(--blue)" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="var(--blue)" stopOpacity="0" />
+            <stop offset="0%"  stopColor="var(--blue-light)" stopOpacity="0.30" />
+            <stop offset="70%" stopColor="var(--blue)"       stopOpacity="0.08" />
+            <stop offset="100%" stopColor="var(--blue)"      stopOpacity="0" />
           </radialGradient>
+          <linearGradient id="hub-fill" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stopColor="var(--bg2)" />
+            <stop offset="100%" stopColor="var(--bg1)" />
+          </linearGradient>
         </defs>
 
-        {/* Decorative outer rings (network "reach") */}
-        <circle cx={HCX} cy={HCY} r={188} fill="none"
-          strokeDasharray="2 6" strokeWidth="0.7"
-          style={{ stroke: "var(--border-strong)", opacity: 0.45 }} />
-        <circle cx={HCX} cy={HCY} r={172} fill="none" strokeWidth="0.6"
-          style={{ stroke: "var(--border)", opacity: 0.3 }} />
+        {/* Outer decorative rings */}
+        <circle cx="50" cy="50" r="49"
+          fill="none" strokeWidth="0.12"
+          strokeDasharray="0.4 1.6"
+          style={{ stroke: "var(--border-strong)", opacity: 0.55 }} />
         <motion.circle
-          cx={HCX} cy={HCY} r={202}
-          fill="none" strokeDasharray="1 9" strokeWidth="0.6"
+          cx="50" cy="50" r="46"
+          fill="none" strokeWidth="0.1"
+          strokeDasharray="0.3 2.2"
           animate={{ rotate: 360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          style={{ stroke: "var(--border-strong)", opacity: 0.35, transformOrigin: `${HCX}px ${HCY}px` }}
+          transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+          style={{ stroke: "var(--border-strong)", opacity: 0.4, transformOrigin: "50% 50%" }}
         />
+        <circle cx="50" cy="50" r={NODE_R + 2}
+          fill="none" strokeWidth="0.1"
+          style={{ stroke: "var(--border)", opacity: 0.45 }} />
 
-        {/* ── Connection lines (hub → each node) ── */}
+        {/* Soft ambient glow behind hub */}
+        <circle cx="50" cy="50" r={HUB_R + 8} fill="url(#hub-grad)" />
+
+        {/* Connection lines + traffic dots */}
         {services.map((svc: any, i: number) => {
           const a = toRad(angleOf(i));
-          const nx = HCX + NODE_R * Math.cos(a);
-          const ny = HCY + NODE_R * Math.sin(a);
-          // Line starts at hub edge, ends at node edge
-          const hx = HCX + (HUB_R + 2) * Math.cos(a);
-          const hy = HCY + (HUB_R + 2) * Math.sin(a);
-          const ex = HCX + (NODE_R - NODE_BOX / 2) * Math.cos(a);
-          const ey = HCY + (NODE_R - NODE_BOX / 2) * Math.sin(a);
+          const nx = 50 + NODE_R * Math.cos(a);
+          const ny = 50 + NODE_R * Math.sin(a);
+          const hx = 50 + (HUB_R + 0.5) * Math.cos(a);
+          const hy = 50 + (HUB_R + 0.5) * Math.sin(a);
+          const ex = 50 + (NODE_R - NODE_EDGE) * Math.cos(a);
+          const ey = 50 + (NODE_R - NODE_EDGE) * Math.sin(a);
+
           const isAct = selected === i;
           const isH   = hov === i;
-          const linePath = `M${hx},${hy} L${ex},${ey}`;
-          const dotDur   = isAct ? "1.4s" : isH ? "2s" : "3.2s";
+          const lineColor = isAct || isH ? colorMap[svc.color] : "var(--border-strong)";
+          const lineOp    = isAct ? 0.95 : isH ? 0.75 : 0.55;
+          const linePath  = `M${hx},${hy} L${ex},${ey}`;
+          const dotDur    = isAct ? "1.3s" : isH ? "1.9s" : "3s";
 
           return (
-            <g key={`line-${i}`}>
+            <g key={`line-${i}`} style={{ transition: "opacity 0.3s ease" }}>
+              {/* Subtle wide underline (only when lit) */}
+              {(isAct || isH) && (
+                <line
+                  x1={hx} y1={hy} x2={ex} y2={ey}
+                  stroke={colorMap[svc.color]}
+                  strokeWidth="0.9"
+                  strokeLinecap="round"
+                  opacity="0.15"
+                />
+              )}
               <line
                 x1={hx} y1={hy} x2={ex} y2={ey}
-                stroke={isAct || isH ? colorMap[svc.color] : "var(--border-strong)"}
-                strokeWidth={isAct ? 1.8 : 1}
+                stroke={lineColor}
+                strokeWidth={isAct ? 0.35 : isH ? 0.3 : 0.22}
                 strokeLinecap="round"
-                opacity={isAct ? 0.95 : isH ? 0.75 : 0.5}
+                opacity={lineOp}
                 style={{ transition: "all 0.3s ease" }}
               />
-              {/* Animated "traffic" dot traveling along the line */}
+              {/* Traffic dots — two offset circles flowing hub → node */}
               <circle
-                r={isAct ? 3 : 2.2}
+                r={isAct ? 0.75 : 0.55}
                 fill={colorMap[svc.color]}
-                opacity={isAct ? 1 : 0.7}
-                style={{ filter: isAct ? "drop-shadow(0 0 4px currentColor)" : "none" }}
+                opacity={isAct ? 1 : 0.8}
+              >
+                <animateMotion dur={dotDur} repeatCount="indefinite" path={linePath} />
+              </circle>
+              <circle
+                r={isAct ? 0.55 : 0.4}
+                fill={colorMap[svc.color]}
+                opacity={isAct ? 0.7 : 0.45}
               >
                 <animateMotion
                   dur={dotDur}
                   repeatCount="indefinite"
                   path={linePath}
-                  keyPoints="0;1"
-                  keyTimes="0;1"
-                />
-              </circle>
-              {/* A second dot, offset, so traffic feels continuous */}
-              <circle r={isAct ? 2.4 : 1.8} fill={colorMap[svc.color]} opacity={isAct ? 0.8 : 0.45}>
-                <animateMotion
-                  dur={dotDur}
-                  repeatCount="indefinite"
-                  path={linePath}
-                  begin={`-${parseFloat(dotDur) * 0.5}s`}
+                  begin={`-${parseFloat(dotDur) * 0.55}s`}
                 />
               </circle>
             </g>
           );
         })}
 
-        {/* ── Hub (Supportiva Core) ── */}
-        <circle cx={HCX} cy={HCY} r={HUB_R + 20} fill="url(#hub-grad)" />
+        {/* Hub — rotating dashed ring + solid card + wordmark */}
         <motion.circle
-          cx={HCX} cy={HCY} r={HUB_R + 8}
-          fill="none" strokeDasharray="2 4" strokeWidth="0.7"
-          style={{ stroke: "var(--blue)", opacity: 0.35, transformOrigin: `${HCX}px ${HCY}px` }}
+          cx="50" cy="50" r={HUB_R + 2}
+          fill="none" strokeWidth="0.15" strokeDasharray="0.4 0.8"
           animate={{ rotate: -360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          style={{ stroke: "var(--blue)", opacity: 0.4, transformOrigin: "50% 50%" }}
         />
-        <circle cx={HCX} cy={HCY} r={HUB_R}
-          fill="var(--bg0)" stroke="var(--blue)" strokeWidth="1.5" />
-        <circle cx={HCX} cy={HCY} r={HUB_R - 6}
-          fill="none" stroke="var(--border)" strokeWidth="0.8"
-          strokeDasharray="1.5 3" opacity="0.55" />
+        <circle cx="50" cy="50" r={HUB_R}
+          fill="url(#hub-fill)"
+          stroke="var(--blue)" strokeWidth="0.35" />
+        <circle cx="50" cy="50" r={HUB_R - 1.5}
+          fill="none" stroke="var(--border)" strokeWidth="0.18"
+          strokeDasharray="0.3 0.6" opacity="0.6" />
+      </svg>
 
-        <text x={HCX} y={HCY - 7} textAnchor="middle" dominantBaseline="central"
-          fontSize="22" fontWeight="900"
-          style={{ fill: "var(--blue)", letterSpacing: "0.02em" }}>
+      {/* ═══ HTML LAYER — hub label (centered), node cards, text labels ═══ */}
+      {/* Hub label (centered over hub circle) */}
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center"
+      >
+        <div
+          className="font-black leading-none"
+          style={{
+            color: "var(--blue)",
+            fontSize: "clamp(20px, 4.2vw, 28px)",
+            letterSpacing: "0.02em",
+          }}
+        >
           S
-        </text>
-        <text x={HCX} y={HCY + 8} textAnchor="middle" dominantBaseline="central"
-          fontSize="6" fontWeight="800"
-          style={{ fill: "var(--w25)", letterSpacing: "0.18em" }}>
+        </div>
+        <div
+          className="font-extrabold mt-1"
+          style={{
+            color: "var(--w25)",
+            fontSize: "clamp(7px, 1.2vw, 8.5px)",
+            letterSpacing: "0.22em",
+            lineHeight: 1.2,
+          }}
+        >
           SUPPORTIVA
-        </text>
-        <text x={HCX} y={HCY + 18} textAnchor="middle" dominantBaseline="central"
-          fontSize="6" fontWeight="700"
-          style={{ fill: "var(--w25)", letterSpacing: "0.18em" }}>
+        </div>
+        <div
+          className="font-bold"
+          style={{
+            color: "var(--w25)",
+            fontSize: "clamp(7px, 1.2vw, 8.5px)",
+            letterSpacing: "0.22em",
+            lineHeight: 1.2,
+          }}
+        >
           CORE
-        </text>
+        </div>
+      </div>
 
-        {/* ── Service nodes ── */}
-        {services.map((svc: any, i: number) => {
-          const a = toRad(angleOf(i));
-          const nx = HCX + NODE_R * Math.cos(a);
-          const ny = HCY + NODE_R * Math.sin(a);
-          const isAct = selected === i;
-          const isH   = hov === i;
-          const scale = isAct ? 1.18 : isH ? 1.08 : 1;
+      {/* Node cards */}
+      {services.map((svc: any, i: number) => {
+        const a   = toRad(angleOf(i));
+        const cx  = 50 + NODE_R * Math.cos(a);
+        const cy  = 50 + NODE_R * Math.sin(a);
+        const Icon  = SERVICE_ICONS[i] ?? Server;
+        const isAct = selected === i;
+        const isH   = hov === i;
+        const accent = colorMap[svc.color];
 
-          // Label sits just outside the node, along the same radial direction
-          const labelR  = NODE_R + NODE_BOX / 2 + 16;
-          const lx      = HCX + labelR * Math.cos(a);
-          const ly      = HCY + labelR * Math.sin(a);
+        // Label sits radially outward from the card. For top/bottom nodes
+        // the label goes above/below; for side nodes it sits beside.
+        const labelR = NODE_R + 12;
+        const lx = 50 + labelR * Math.cos(a);
+        const ly = 50 + labelR * Math.sin(a);
 
-          // Split title into at most 2 lines for compact label
-          const words = (svc.title as string).split(" ");
-          const half  = Math.ceil(words.length / 2);
-          const l1    = words.slice(0, half).join(" ");
-          const l2    = words.slice(half).join(" ");
-          const hasL2 = l2.length > 0;
-
-          return (
-            <motion.g
-              key={`node-${i}`}
+        return (
+          <div key={`node-${i}`} className="absolute inset-0 pointer-events-none">
+            {/* Card */}
+            <motion.button
+              type="button"
               onClick={() => onSelect(isAct ? null : i)}
               onMouseEnter={() => setHov(i)}
               onMouseLeave={() => setHov(null)}
-              style={{ cursor: "pointer", transformOrigin: `${nx}px ${ny}px` }}
-              animate={{ scale }}
-              transition={{ type: "spring", stiffness: 280, damping: 22 }}
+              onFocus={() => setHov(i)}
+              onBlur={() => setHov(null)}
+              aria-pressed={isAct}
+              aria-label={svc.title}
+              className="absolute pointer-events-auto flex items-center justify-center rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              style={{
+                left: `${cx}%`,
+                top: `${cy}%`,
+                width: "clamp(52px, 12%, 64px)",
+                height: "clamp(52px, 12%, 64px)",
+                transform: "translate(-50%, -50%)",
+                background: isAct
+                  ? accent
+                  : "var(--bg2)",
+                border: `1.5px solid ${isAct ? accent : "var(--border-strong)"}`,
+                color: isAct ? "#fff" : accent,
+                boxShadow: isAct
+                  ? `0 10px 28px -6px ${accent}66, 0 4px 10px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.12)`
+                  : isH
+                    ? `0 6px 20px -6px ${accent}55, 0 2px 6px rgba(0,0,0,0.08)`
+                    : "var(--shadow)",
+                transition:
+                  "background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
+              }}
+              animate={{ scale: isAct ? 1.12 : isH ? 1.05 : 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
             >
-              {/* Glow halo when active/hovered */}
+              {/* Ambient glow behind card when lit */}
               {(isAct || isH) && (
-                <circle
-                  cx={nx} cy={ny}
-                  r={NODE_BOX / 2 + 10}
-                  fill={colorMap[svc.color]}
-                  opacity={isAct ? 0.25 : 0.12}
-                  filter="url(#node-glow)"
+                <span
+                  aria-hidden
+                  className="absolute inset-0 rounded-2xl -z-10"
+                  style={{
+                    background: `radial-gradient(circle, ${accent}33, transparent 70%)`,
+                    filter: "blur(10px)",
+                    transform: "scale(1.35)",
+                  }}
                 />
               )}
-
-              {/* Node card */}
-              <rect
-                x={nx - NODE_BOX / 2}
-                y={ny - NODE_BOX / 2}
-                width={NODE_BOX}
-                height={NODE_BOX}
-                rx="12"
-                fill={isAct ? colorMap[svc.color] : "var(--bg2)"}
-                stroke={colorMap[svc.color]}
-                strokeWidth={isAct ? 2 : 1.5}
+              <Icon
+                size={22}
+                strokeWidth={isAct ? 2.2 : 1.9}
+                style={{ transition: "all 0.3s ease" }}
+              />
+              {/* Status LED */}
+              <span
+                aria-hidden
+                className="absolute rounded-full"
                 style={{
-                  transition: "fill 0.3s ease",
-                  filter: isAct
-                    ? "drop-shadow(0 4px 12px rgba(0,0,0,0.18))"
-                    : "drop-shadow(0 2px 6px rgba(0,0,0,0.08))",
+                  top: 6,
+                  right: 6,
+                  width: 5,
+                  height: 5,
+                  background: isAct ? "rgba(255,255,255,0.95)" : accent,
+                  boxShadow: isAct
+                    ? "0 0 6px rgba(255,255,255,0.9)"
+                    : `0 0 5px ${accent}`,
+                  opacity: 0.9,
+                  animation: "pulse-dot 2s ease-in-out infinite",
                 }}
               />
+            </motion.button>
 
-              {/* Small inner accent dot (status LED) */}
-              <circle
-                cx={nx + NODE_BOX / 2 - 6}
-                cy={ny - NODE_BOX / 2 + 6}
-                r="2"
-                fill={isAct ? "white" : colorMap[svc.color]}
-                opacity={isAct ? 0.9 : 0.7}
-              >
-                <animate attributeName="opacity"
-                  values={isAct ? "0.4;1;0.4" : "0.3;0.85;0.3"}
-                  dur="1.8s" repeatCount="indefinite" />
-              </circle>
-
-              {/* Icon */}
-              <text
-                x={nx} y={ny}
-                textAnchor="middle" dominantBaseline="central"
-                fontSize={isAct ? 22 : 20}
-                style={{ transition: "font-size 0.25s ease" }}
-              >
-                {svc.icon}
-              </text>
-
-              {/* Label (below/outside the node) */}
-              <text
-                x={lx} y={ly - (hasL2 ? 5 : 0)}
-                textAnchor="middle" dominantBaseline="central"
-                fontSize="10.5" fontWeight="700"
+            {/* Label (below/outside the node, radially outward) */}
+            <div
+              className="absolute pointer-events-none text-center"
+              style={{
+                left: `${lx}%`,
+                top: `${ly}%`,
+                transform: "translate(-50%, -50%)",
+                width: 110,
+              }}
+            >
+              <div
+                className="font-bold leading-[1.15] tracking-wide"
                 style={{
-                  fill: isAct ? colorMap[svc.color] : "var(--w85)",
-                  letterSpacing: "0.02em",
-                  transition: "fill 0.3s ease",
+                  color: isAct ? accent : "var(--w85)",
+                  fontSize: "clamp(10.5px, 1.5vw, 12px)",
+                  transition: "color 0.3s ease",
                 }}
               >
-                {l1}
-              </text>
-              {hasL2 && (
-                <text
-                  x={lx} y={ly + 7}
-                  textAnchor="middle" dominantBaseline="central"
-                  fontSize="10.5" fontWeight="700"
-                  style={{
-                    fill: isAct ? colorMap[svc.color] : "var(--w85)",
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  {l2}
-                </text>
-              )}
-            </motion.g>
-          );
-        })}
-      </motion.svg>
-    </div>
+                {svc.title}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Keyframes for status LED pulse */}
+      <style jsx>{`
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 0.45; transform: scale(1); }
+          50%      { opacity: 1;    transform: scale(1.2); }
+        }
+      `}</style>
+    </motion.div>
   );
 }
 
@@ -461,9 +524,23 @@ export default function SolutionsPage() {
 
                     {/* Icon + tag row */}
                     <div className="flex flex-wrap items-center gap-4 mb-6">
-                      <span className="text-[52px] leading-none">
-                        {s.services[selected].icon}
-                      </span>
+                      {(() => {
+                        const Icon = SERVICE_ICONS[selected] ?? Server;
+                        return (
+                          <span
+                            className="flex items-center justify-center rounded-2xl"
+                            style={{
+                              width: 56,
+                              height: 56,
+                              background: tagBg[s.services[selected].color],
+                              border: `1px solid ${tagBorder[s.services[selected].color]}`,
+                              color: colorMap[s.services[selected].color],
+                            }}
+                          >
+                            <Icon size={28} strokeWidth={1.9} />
+                          </span>
+                        );
+                      })()}
                       <span
                         className="text-[11px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-lg"
                         style={{
