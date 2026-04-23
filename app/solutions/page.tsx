@@ -8,21 +8,30 @@ import { CheckCircle2 } from "lucide-react";
 
 /* ── Color helpers ─────────────────────────────────────────────── */
 const colorMap: Record<string, string> = {
-  blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)", amber: "var(--amber)",
+  blue: "var(--blue)",
+  "blue-light": "var(--blue-light)",
+  cyan: "var(--cyan)",
+  green: "var(--green)",
+  amber: "var(--amber)",
+  purple: "var(--purple)",
 };
 
 // Subtle tint backgrounds for tag badges (readable in both themes)
 const tagBg: Record<string, string> = {
   blue:  "rgba(28,78,138,0.10)",
+  "blue-light": "rgba(58,124,192,0.10)",
   cyan:  "rgba(42,126,158,0.10)",
   amber: "rgba(184,135,62,0.10)",
   green: "rgba(26,122,84,0.10)",
+  purple: "rgba(94,74,158,0.10)",
 };
 const tagBorder: Record<string, string> = {
   blue:  "rgba(28,78,138,0.20)",
+  "blue-light": "rgba(58,124,192,0.20)",
   cyan:  "rgba(42,126,158,0.20)",
   amber: "rgba(184,135,62,0.20)",
   green: "rgba(26,122,84,0.20)",
+  purple: "rgba(94,74,158,0.20)",
 };
 
 /* ── FadeIn ─────────────────────────────────────────────────────── */
@@ -45,42 +54,21 @@ function FadeIn({ children, className, delay = 0, y = 24 }: {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   SERVICE WHEEL — animated SVG pie with 4 interactive slices
+   NETWORK HUB — topology-style component with a central Supportiva Core
+   and evenly-distributed service nodes connected by animated lines.
+   Replaces the old pie/wheel UI while keeping the same circular footprint.
    ══════════════════════════════════════════════════════════════════ */
 
-const WS = 400;       // SVG viewBox side length
-const WCX = 200;      // center x
-const WCY = 200;      // center y
-const IR = 66;        // inner (hub) radius
-const OR = 184;       // outer (wheel) radius
-const GAP = 8;        // degrees of gap between slices
+const HS = 400;        // SVG viewBox side length
+const HCX = 200;       // center x
+const HCY = 200;       // center y
+const HUB_R = 50;      // hub radius
+const NODE_R = 138;    // distance from center to each node center
+const NODE_BOX = 44;   // node icon box (square, rounded)
 
-/** Convert degrees (0 = top, clockwise) to standard radians */
-const toRad = (deg: number) => ((deg - 90) * Math.PI) / 180;
+const toRad = (deg: number) => (deg * Math.PI) / 180;
 
-/** Build an SVG donut-slice path string */
-function arcPath(
-  cx: number, cy: number,
-  ir: number, or: number,
-  a0: number, a1: number,
-): string {
-  const r0 = toRad(a0), r1 = toRad(a1);
-  const big = a1 - a0 > 180 ? 1 : 0;
-  const pt = (r: number, a: number): [number, number] => [
-    cx + r * Math.cos(a),
-    cy + r * Math.sin(a),
-  ];
-  const [ix0, iy0] = pt(ir, r0), [ox0, oy0] = pt(or, r0);
-  const [ox1, oy1] = pt(or, r1), [ix1, iy1] = pt(ir, r1);
-  return (
-    `M${ix0},${iy0} L${ox0},${oy0} ` +
-    `A${or},${or} 0 ${big},1 ${ox1},${oy1} ` +
-    `L${ix1},${iy1} ` +
-    `A${ir},${ir} 0 ${big},0 ${ix0},${iy0}Z`
-  );
-}
-
-function ServiceWheel({
+function NetworkHub({
   services,
   selected,
   onSelect,
@@ -91,62 +79,148 @@ function ServiceWheel({
 }) {
   const [hov, setHov] = useState<number | null>(null);
   const n = services.length;
-  const sliceDeg = 360 / n - GAP;
+
+  // Place first node at the top (-90°), then clockwise
+  const angleOf = (i: number) => -90 + (360 / n) * i;
 
   return (
     <div className="relative w-full max-w-[440px] mx-auto" style={{ userSelect: "none" }}>
       <motion.svg
-        viewBox={`0 0 ${WS} ${WS}`}
+        viewBox={`0 0 ${HS} ${HS}`}
         className="w-full h-auto"
         style={{ overflow: "visible" }}
-        initial={{ opacity: 0, scale: 0.82, rotate: -12 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       >
         <defs>
-          {/* Soft glow filter for active slice */}
-          <filter id="svc-glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+          <filter id="node-glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <radialGradient id="hub-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="var(--blue-light)" stopOpacity="0.35" />
+            <stop offset="70%" stopColor="var(--blue)" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="var(--blue)" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
-        {/* Decorative outer rings */}
-        <circle cx={WCX} cy={WCY} r={OR + 28} fill="none"
-          strokeDasharray="4 7" strokeWidth={0.7}
-          style={{ stroke: "var(--border)", opacity: 0.35 }} />
-        <circle cx={WCX} cy={WCY} r={OR + 14} fill="none"
-          strokeWidth={0.8}
-          style={{ stroke: "var(--border)", opacity: 0.25 }} />
+        {/* Decorative outer rings (network "reach") */}
+        <circle cx={HCX} cy={HCY} r={188} fill="none"
+          strokeDasharray="2 6" strokeWidth="0.7"
+          style={{ stroke: "var(--border-strong)", opacity: 0.45 }} />
+        <circle cx={HCX} cy={HCY} r={172} fill="none" strokeWidth="0.6"
+          style={{ stroke: "var(--border)", opacity: 0.3 }} />
+        <motion.circle
+          cx={HCX} cy={HCY} r={202}
+          fill="none" strokeDasharray="1 9" strokeWidth="0.6"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          style={{ stroke: "var(--border-strong)", opacity: 0.35, transformOrigin: `${HCX}px ${HCY}px` }}
+        />
 
-        {/* ── Slices ── */}
+        {/* ── Connection lines (hub → each node) ── */}
         {services.map((svc: any, i: number) => {
-          const a0 = i * (360 / n) + GAP / 2;
-          const a1 = a0 + sliceDeg;
-          const mid = (a0 + a1) / 2;
-          const midRad = toRad(mid);
+          const a = toRad(angleOf(i));
+          const nx = HCX + NODE_R * Math.cos(a);
+          const ny = HCY + NODE_R * Math.sin(a);
+          // Line starts at hub edge, ends at node edge
+          const hx = HCX + (HUB_R + 2) * Math.cos(a);
+          const hy = HCY + (HUB_R + 2) * Math.sin(a);
+          const ex = HCX + (NODE_R - NODE_BOX / 2) * Math.cos(a);
+          const ey = HCY + (NODE_R - NODE_BOX / 2) * Math.sin(a);
           const isAct = selected === i;
           const isH   = hov === i;
+          const linePath = `M${hx},${hy} L${ex},${ey}`;
+          const dotDur   = isAct ? "1.4s" : isH ? "2s" : "3.2s";
 
-          // Push active/hovered slice outward from center
-          const push = isAct ? 22 : isH ? 9 : 0;
-          const ox = push * Math.cos(midRad);
-          const oy = push * Math.sin(midRad);
+          return (
+            <g key={`line-${i}`}>
+              <line
+                x1={hx} y1={hy} x2={ex} y2={ey}
+                stroke={isAct || isH ? colorMap[svc.color] : "var(--border-strong)"}
+                strokeWidth={isAct ? 1.8 : 1}
+                strokeLinecap="round"
+                opacity={isAct ? 0.95 : isH ? 0.75 : 0.5}
+                style={{ transition: "all 0.3s ease" }}
+              />
+              {/* Animated "traffic" dot traveling along the line */}
+              <circle
+                r={isAct ? 3 : 2.2}
+                fill={colorMap[svc.color]}
+                opacity={isAct ? 1 : 0.7}
+                style={{ filter: isAct ? "drop-shadow(0 0 4px currentColor)" : "none" }}
+              >
+                <animateMotion
+                  dur={dotDur}
+                  repeatCount="indefinite"
+                  path={linePath}
+                  keyPoints="0;1"
+                  keyTimes="0;1"
+                />
+              </circle>
+              {/* A second dot, offset, so traffic feels continuous */}
+              <circle r={isAct ? 2.4 : 1.8} fill={colorMap[svc.color]} opacity={isAct ? 0.8 : 0.45}>
+                <animateMotion
+                  dur={dotDur}
+                  repeatCount="indefinite"
+                  path={linePath}
+                  begin={`-${parseFloat(dotDur) * 0.5}s`}
+                />
+              </circle>
+            </g>
+          );
+        })}
 
-          // Icon center: 33% into slice depth
-          const iconR  = IR + (OR - IR) * 0.33;
-          const iconX  = WCX + iconR * Math.cos(midRad);
-          const iconY  = WCY + iconR * Math.sin(midRad);
+        {/* ── Hub (Supportiva Core) ── */}
+        <circle cx={HCX} cy={HCY} r={HUB_R + 20} fill="url(#hub-grad)" />
+        <motion.circle
+          cx={HCX} cy={HCY} r={HUB_R + 8}
+          fill="none" strokeDasharray="2 4" strokeWidth="0.7"
+          style={{ stroke: "var(--blue)", opacity: 0.35, transformOrigin: `${HCX}px ${HCY}px` }}
+          animate={{ rotate: -360 }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        />
+        <circle cx={HCX} cy={HCY} r={HUB_R}
+          fill="var(--bg0)" stroke="var(--blue)" strokeWidth="1.5" />
+        <circle cx={HCX} cy={HCY} r={HUB_R - 6}
+          fill="none" stroke="var(--border)" strokeWidth="0.8"
+          strokeDasharray="1.5 3" opacity="0.55" />
 
-          // Label center: 72% into slice depth
-          const textR  = IR + (OR - IR) * 0.72;
-          const textX  = WCX + textR * Math.cos(midRad);
-          const textY  = WCY + textR * Math.sin(midRad);
+        <text x={HCX} y={HCY - 7} textAnchor="middle" dominantBaseline="central"
+          fontSize="22" fontWeight="900"
+          style={{ fill: "var(--blue)", letterSpacing: "0.02em" }}>
+          S
+        </text>
+        <text x={HCX} y={HCY + 8} textAnchor="middle" dominantBaseline="central"
+          fontSize="6" fontWeight="800"
+          style={{ fill: "var(--w25)", letterSpacing: "0.18em" }}>
+          SUPPORTIVA
+        </text>
+        <text x={HCX} y={HCY + 18} textAnchor="middle" dominantBaseline="central"
+          fontSize="6" fontWeight="700"
+          style={{ fill: "var(--w25)", letterSpacing: "0.18em" }}>
+          CORE
+        </text>
 
-          // Split long titles over two lines
+        {/* ── Service nodes ── */}
+        {services.map((svc: any, i: number) => {
+          const a = toRad(angleOf(i));
+          const nx = HCX + NODE_R * Math.cos(a);
+          const ny = HCY + NODE_R * Math.sin(a);
+          const isAct = selected === i;
+          const isH   = hov === i;
+          const scale = isAct ? 1.18 : isH ? 1.08 : 1;
+
+          // Label sits just outside the node, along the same radial direction
+          const labelR  = NODE_R + NODE_BOX / 2 + 16;
+          const lx      = HCX + labelR * Math.cos(a);
+          const ly      = HCY + labelR * Math.sin(a);
+
+          // Split title into at most 2 lines for compact label
           const words = (svc.title as string).split(" ");
           const half  = Math.ceil(words.length / 2);
           const l1    = words.slice(0, half).join(" ");
@@ -155,117 +229,95 @@ function ServiceWheel({
 
           return (
             <motion.g
-              key={i}
-              animate={{ x: ox, y: oy }}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
+              key={`node-${i}`}
               onClick={() => onSelect(isAct ? null : i)}
               onMouseEnter={() => setHov(i)}
               onMouseLeave={() => setHov(null)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", transformOrigin: `${nx}px ${ny}px` }}
+              animate={{ scale }}
+              transition={{ type: "spring", stiffness: 280, damping: 22 }}
             >
-              {/* Active glow halo */}
-              {isAct && (
-                <path
-                  d={arcPath(WCX, WCY, IR - 6, OR + 12, a0, a1)}
-                  style={{ fill: colorMap[svc.color] }}
-                  opacity={0.28}
-                  filter="url(#svc-glow)"
+              {/* Glow halo when active/hovered */}
+              {(isAct || isH) && (
+                <circle
+                  cx={nx} cy={ny}
+                  r={NODE_BOX / 2 + 10}
+                  fill={colorMap[svc.color]}
+                  opacity={isAct ? 0.25 : 0.12}
+                  filter="url(#node-glow)"
                 />
               )}
 
-              {/* Main slice body */}
-              <path
-                d={arcPath(WCX, WCY, IR, OR, a0, a1)}
+              {/* Node card */}
+              <rect
+                x={nx - NODE_BOX / 2}
+                y={ny - NODE_BOX / 2}
+                width={NODE_BOX}
+                height={NODE_BOX}
+                rx="12"
+                fill={isAct ? colorMap[svc.color] : "var(--bg2)"}
+                stroke={colorMap[svc.color]}
+                strokeWidth={isAct ? 2 : 1.5}
                 style={{
-                  fill: colorMap[svc.color],
-                  opacity: isAct ? 1 : isH ? 0.86 : 0.62,
-                  transition: "opacity 0.3s ease",
+                  transition: "fill 0.3s ease",
+                  filter: isAct
+                    ? "drop-shadow(0 4px 12px rgba(0,0,0,0.18))"
+                    : "drop-shadow(0 2px 6px rgba(0,0,0,0.08))",
                 }}
-                stroke="var(--bg0)"
-                strokeWidth={isAct ? "3" : "2"}
               />
 
-              {/* Service icon (emoji) */}
+              {/* Small inner accent dot (status LED) */}
+              <circle
+                cx={nx + NODE_BOX / 2 - 6}
+                cy={ny - NODE_BOX / 2 + 6}
+                r="2"
+                fill={isAct ? "white" : colorMap[svc.color]}
+                opacity={isAct ? 0.9 : 0.7}
+              >
+                <animate attributeName="opacity"
+                  values={isAct ? "0.4;1;0.4" : "0.3;0.85;0.3"}
+                  dur="1.8s" repeatCount="indefinite" />
+              </circle>
+
+              {/* Icon */}
               <text
-                x={iconX} y={iconY}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={isAct ? 24 : 20}
-                // paintOrder gives a dark outline so emoji is readable on any slice color
-                paintOrder="stroke"
-                stroke="rgba(0,0,0,0.30)"
-                strokeWidth="3"
-                strokeLinejoin="round"
+                x={nx} y={ny}
+                textAnchor="middle" dominantBaseline="central"
+                fontSize={isAct ? 22 : 20}
                 style={{ transition: "font-size 0.25s ease" }}
               >
                 {svc.icon}
               </text>
 
-              {/* Service name — max 2 lines, white with dark outline for contrast */}
-              <text textAnchor="middle">
-                <tspan
-                  x={textX} y={textY - (hasL2 ? 8 : 0)}
-                  fill="white" fontSize={isAct ? "11.5" : "10.5"}
-                  fontWeight="700" letterSpacing="0.025em"
-                  paintOrder="stroke"
-                  stroke="rgba(0,0,0,0.45)"
-                  strokeWidth="2.5"
-                  strokeLinejoin="round"
-                >
-                  {l1}
-                </tspan>
-                {hasL2 && (
-                  <tspan
-                    x={textX} y={textY + 9}
-                    fill="white" fontSize={isAct ? "11.5" : "10.5"}
-                    fontWeight="700" letterSpacing="0.025em"
-                    paintOrder="stroke"
-                    stroke="rgba(0,0,0,0.45)"
-                    strokeWidth="2.5"
-                    strokeLinejoin="round"
-                  >
-                    {l2}
-                  </tspan>
-                )}
-              </text>
-
-              {/* Slice index number at inner edge */}
+              {/* Label (below/outside the node) */}
               <text
-                x={WCX + (IR + 10) * Math.cos(midRad)}
-                y={WCY + (IR + 10) * Math.sin(midRad)}
+                x={lx} y={ly - (hasL2 ? 5 : 0)}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize="9" fontWeight="800"
-                fill="white" opacity={0.55}
-                paintOrder="stroke"
-                stroke="rgba(0,0,0,0.3)"
-                strokeWidth="2"
+                fontSize="10.5" fontWeight="700"
+                style={{
+                  fill: isAct ? colorMap[svc.color] : "var(--w85)",
+                  letterSpacing: "0.02em",
+                  transition: "fill 0.3s ease",
+                }}
               >
-                {i + 1}
+                {l1}
               </text>
+              {hasL2 && (
+                <text
+                  x={lx} y={ly + 7}
+                  textAnchor="middle" dominantBaseline="central"
+                  fontSize="10.5" fontWeight="700"
+                  style={{
+                    fill: isAct ? colorMap[svc.color] : "var(--w85)",
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  {l2}
+                </text>
+              )}
             </motion.g>
           );
         })}
-
-        {/* ── Center hub ── */}
-        <circle cx={WCX} cy={WCY} r={IR} fill="var(--bg0)" />
-        <circle cx={WCX} cy={WCY} r={IR - 6}
-          fill="none" stroke="var(--border)" strokeWidth="1.5" />
-
-        {/* Hub label changes based on state */}
-        <text x={WCX} y={WCY - 8}
-          textAnchor="middle" dominantBaseline="central"
-          fontSize="18" fontWeight="900"
-          style={{ fill: "var(--blue)" }}
-        >
-          S
-        </text>
-        <text x={WCX} y={WCY + 10}
-          textAnchor="middle" dominantBaseline="central"
-          fontSize="7" fontWeight="600"
-          style={{ fill: "var(--w25)", letterSpacing: "0.12em" }}
-        >
-          {selected !== null ? "SELECTED" : "EXPLORE"}
-        </text>
       </motion.svg>
     </div>
   );
@@ -379,7 +431,7 @@ export default function SolutionsPage() {
                       style={{ color: "var(--w25)" }}
                     >
                       <span className="w-5 h-px" style={{ background: "var(--blue)" }} />
-                      <span style={{ color: "var(--blue)" }}>Select a slice</span>
+                      <span style={{ color: "var(--blue)" }}>Click a node</span>
                       &nbsp;to explore a service
                     </motion.div>
                   </motion.div>
@@ -440,11 +492,33 @@ export default function SolutionsPage() {
 
                     {/* Description */}
                     <p
-                      className="text-[15px] sm:text-base lg:text-[17px] leading-[1.9] mb-8"
+                      className="text-[15px] sm:text-base lg:text-[17px] leading-[1.9] mb-6"
                       style={{ color: "var(--w55)" }}
                     >
                       {s.services[selected].desc}
                     </p>
+
+                    {/* Capability bullets */}
+                    {Array.isArray(s.services[selected].bullets) && s.services[selected].bullets.length > 0 && (
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-8">
+                        {s.services[selected].bullets.map((b: string, bi: number) => (
+                          <motion.li
+                            key={bi}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.08 * bi, duration: 0.4 }}
+                            className="flex items-start gap-2.5 text-[14px] leading-snug"
+                            style={{ color: "var(--w85)" }}
+                          >
+                            <span
+                              className="shrink-0 mt-[7px] w-1.5 h-1.5 rounded-full"
+                              style={{ background: colorMap[s.services[selected].color] }}
+                            />
+                            <span>{b}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    )}
 
                     <Link href="/contact">
                       <Button size="lg">{s.cta ?? "Get In Touch →"}</Button>
@@ -455,9 +529,9 @@ export default function SolutionsPage() {
               </AnimatePresence>
             </div>
 
-            {/* ── Right: the wheel ── */}
+            {/* ── Right: the network hub ── */}
             <div className="order-1 lg:order-2 flex items-center justify-center">
-              <ServiceWheel
+              <NetworkHub
                 services={s.services}
                 selected={selected}
                 onSelect={setSelected}
