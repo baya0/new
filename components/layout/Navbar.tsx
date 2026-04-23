@@ -73,7 +73,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                 className="transition-all duration-300 group-hover:scale-110"
               />
               <span className="font-extrabold text-[15px] hidden lg:inline">
-                supportiva<span style={{ color: "var(--blue)" }}>.net</span>
+                supportiva
               </span>
             </Link>
 
@@ -237,7 +237,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                   <div className="flex items-center gap-2">
                     <Image src="/images/logo.avif" alt="Supportiva" width={50} height={50} />
                     <span className="font-extrabold text-[15px]" style={{ color: "var(--white)" }}>
-                      supportiva<span style={{ color: "var(--blue)" }}>.net</span>
+                      supportiva
                     </span>
                   </div>
                   <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ color: "var(--w55)", background: "var(--bg3)" }}>
