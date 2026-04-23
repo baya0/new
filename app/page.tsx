@@ -7,7 +7,7 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { ArrowUpRight, Plus } from "lucide-react";
-
+import { useTheme } from "@/lib/theme-context";
 const NetworkSwitch3D = dynamic(() => import("@/components/sections/NetworkSwitch3D"), { ssr: false });
 
 const colorMap: Record<string, string> = {
@@ -53,16 +53,12 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
   );
 }
 
-// ─── HERO LOGO PATHS — theme-aware ────────────────────────────────────────
-// When `.dark` is set on <html>, the dark logo is shown; otherwise the light
-// one. Drop a dedicated dark-theme variant in /public/images/ (e.g.
-// logo-dark.avif) and point HERO_LOGO_DARK_SRC at it. Both default to the
-// same file so the hero renders immediately without a missing asset.
-const HERO_LOGO_LIGHT_SRC = "/images/logo.avif";
-const HERO_LOGO_DARK_SRC  = "/images/logo.avif";
+// ─── HERO LOGO PATH  ───────
+// e.g. "/images/logo.png"  or  "/images/logo-full.png"
+const HERO_LOGO_LIGHT_SRC = "/images/backgrounds/logolight.png";
+const HERO_LOGO_DARK_SRC = "/images/backgrounds/logodark.png";
 
 /* ─────────── Client logo map ─────────── */
-// Place logo SVGs/PNGs in /public/images/clients/ and add the path here.
 // Falls back to styled text when no logo is set.
 const CLIENT_LOGOS: Record<string, string | null> = {
   "Dow":           "/images/clients/Dow.png",
@@ -102,10 +98,11 @@ function ClientLogo({ name }: { name: string }) {
 export default function HomePage() {
   const { t } = useLang();
   const th = t.home;
+  const { dark } = useTheme()
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroBgY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-
+  const heroLogoSrc = dark ? HERO_LOGO_DARK_SRC : HERO_LOGO_LIGHT_SRC;
   const year = new Date().getFullYear();
 
   return (
@@ -118,14 +115,14 @@ export default function HomePage() {
         className="relative overflow-hidden hero-bg flex flex-col"
         style={{ minHeight: "100vh" }}
       >
-        {/* Server room background — swap src for /images/server-room.jpg once you save your photo there */}
+        {/* Server room background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <Image
-            src="/images/projects/rack-stack.jpg"
+            src="/images/backgrounds/serversroom.jpg"
             alt=""
             fill
             className="hero-server-img object-cover object-center"
-            style={{ opacity: 0.07, filter: "blur(1px) grayscale(15%)" }}
+            style={{ opacity: 0.10, filter: "blur(1px) grayscale(15%)" }}
             priority
           />
           {/* Gradient veil keeps text readable and unifies with brand palette */}
@@ -191,66 +188,21 @@ export default function HomePage() {
             >
               <div className="relative flex items-center justify-center">
                 {/* Large ambient glow ring */}
-                <div
-                  className="absolute rounded-full animate-blob"
-                  style={{
-                    width: 480,
-                    height: 480,
-                    background: "radial-gradient(circle, rgba(28,78,138,0.18) 0%, rgba(42,126,158,0.10) 45%, transparent 70%)",
-                    filter: "blur(48px)",
-                  }}
-                />
+             
                 {/* Dashed orbit ring — slow spin */}
-                <div
-                  className="absolute rounded-full animate-spin-slow"
-                  style={{
-                    width: 360,
-                    height: 360,
-                    border: "1px dashed rgba(28,78,138,0.22)",
-                  }}
-                />
+            
                 {/* Solid inner ring */}
-                <div
-                  className="absolute rounded-full"
-                  style={{
-                    width: 300,
-                    height: 300,
-                    border: "1px solid rgba(28,78,138,0.12)",
-                    boxShadow: "inset 0 0 60px rgba(28,78,138,0.06)",
-                  }}
-                />
-                {/* ─── LOGO — theme-aware. Only one is visible at a time. ─── */}
+              
+                {/* ─── LOGO — path controlled by HERO_LOGO_SRC constant at top of file ─── */}
                 <Image
-                  src={HERO_LOGO_LIGHT_SRC}
+                  src={heroLogoSrc}
                   alt="Supportiva"
-                  width={260}
-                  height={260}
-                  priority
-                  className="relative z-10 animate-float-slow block dark:hidden"
-                  style={{
-                    filter:
-                      "drop-shadow(0 0 48px rgba(28,78,138,0.50)) " +
-                      "drop-shadow(0 0 16px rgba(42,126,158,0.35)) " +
-                      "drop-shadow(0 8px 24px rgba(0,0,0,0.12))",
-                  }}
-                />
-                <Image
-                  src={HERO_LOGO_DARK_SRC}
-                  alt="Supportiva"
-                  width={260}
-                  height={260}
-                  priority
-                  className="relative z-10 animate-float-slow hidden dark:block"
-                  style={{
-                    filter:
-                      "drop-shadow(0 0 52px rgba(94,159,204,0.55)) " +
-                      "drop-shadow(0 0 18px rgba(74,160,190,0.40)) " +
-                      "drop-shadow(0 8px 24px rgba(0,0,0,0.40))",
-                  }}
+                  width={900}
+                  height={900}
+                  className="relative z-10 animate-float-slow"
                 />
               </div>
             </motion.div>
-
           </div>
         </div>
 
@@ -523,7 +475,7 @@ export default function HomePage() {
           {/* Editorial footer bar */}
           <FadeIn delay={0.5}>
             <div className="mt-24 pt-6 flex items-center justify-between flex-wrap gap-4 text-[11px] font-bold tracking-[0.2em] uppercase" style={{ borderTop: "1px solid var(--border)", color: "var(--w25)" }}>
-              <span>SUPPORTIVA.NET</span>
+              <span>SUPPORTIVA</span>
               <span>—</span>
               <span>© {year}</span>
             </div>

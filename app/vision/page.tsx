@@ -65,7 +65,7 @@ export default function VisionPage() {
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--cyan)" }} />
               Vision
             </span>
-            <span className="hidden sm:block">Since 2013</span>
+  
           </div>
 
           <div className="grid grid-cols-12 gap-6">

@@ -56,7 +56,7 @@ export const translations = {
         { icon: "🛡", title: "IT Support Services", desc: "We provide comprehensive IT support services that are designed to keep your business running smoothly. Our team of experts is available 24/7 to provide you with the support you need, when you need it.", tag: "24/7 · Enterprise SLA", color: "green" },
       ],
       statsBar: [
-        { val: "11+", label: "Years of Experience", sub: "Delivering enterprise IT since 2013" },
+        { val: "11+", label: "Years of Experience", sub: "Delivering enterprise IT " },
         { val: "300+", label: "Monthly Supported Hours", sub: "Proactive monitoring & response" },
         { val: "27+", label: "Clients Served", sub: "SMB to Fortune 500" },
         { val: "27+", label: "Projects Completed", sub: "Delivered on time and budget" },
@@ -362,13 +362,13 @@ export const translations = {
       resp: "We typically respond within 4 business hours.",
     },
     footer: {
-      tagline: "Transforming businesses through expert IT services since 2013.",
+      tagline: "Transforming businesses through expert IT services.",
       cols: [
         { title: "Solutions", links: ["IT Consulting", "Staff Augmentation", "Datacenter Infra", "Managed IT"] },
         { title: "Company", links: ["About Us", "Vision", "Projects", "The S Blog"] },
         { title: "Contact", links: ["+1 724 906 3303", "info@supportiva.net", "Sheridan, WY 82801", "USA"] },
       ],
-      copy: "© 2026 Supportiva.net · All rights reserved.",
+      copy: "© 2024 Supportiva · All rights reserved.",
     },
   },
 
@@ -418,7 +418,7 @@ export const translations = {
         { icon: "🛡", title: "خدمات IT المُدارة", desc: "مراقبة 24/7، دعم مكتب المساعدة، تحديثات وصيانة.", tag: "24/7 · SLA مؤسسي", color: "green" },
       ],
       statsBar: [
-        { val: "11+", label: "سنوات الخبرة", sub: "تقديم IT للمؤسسات منذ 2013" },
+        { val: "11+", label: "سنوات الخبرة", sub: "تقديم IT للمؤسسات ذ " },
         { val: "300+", label: "ساعات الدعم الشهرية", sub: "مراقبة استباقية واستجابة" },
         { val: "27+", label: "عملاء موثوقون", sub: "من الشركات الصغيرة إلى Fortune 500" },
         { val: "9", label: "مواقع عالمية", sub: "الولايات المتحدة وأوروبا وأبعد" },
@@ -532,13 +532,13 @@ export const translations = {
       resp: "نرد عادةً خلال 4 ساعات عمل.",
     },
     footer: {
-      tagline: "نحوّل الأعمال من خلال خدمات تقنية المعلومات منذ 2013.",
+      tagline: "نحوّل الأعمال من خلال خدمات تقنية المعلومات ",
       cols: [
         { title: "الحلول", links: ["الاستشارات", "تعزيز الكوادر", "مراكز البيانات", "خدمات IT المُدارة"] },
         { title: "الشركة", links: ["من نحن", "الرؤية", "المشاريع", "المدونة"] },
         { title: "تواصل معنا", links: ["+1 724 906 3303", "info@supportiva.net", "شيريدان، وايومنغ", "الولايات المتحدة"] },
       ],
-      copy: "© 2026 Supportiva.net · جميع الحقوق محفوظة.",
+      copy: "© 2024 Supportiva · جميع الحقوق محفوظة.",
     },
   },
 
@@ -588,7 +588,7 @@ export const translations = {
         { icon: "🛡", title: "Yönetilen BT Hizmetleri", desc: "7/24 izleme, yardım masası desteği, yazılım güncellemeleri ve donanım bakımı.", tag: "7/24 · Kurumsal SLA", color: "green" },
       ],
       statsBar: [
-        { val: "11+", label: "Yıllık Deneyim", sub: "2013'ten beri kurumsal BT" },
+        { val: "11+", label: "Yıllık Deneyim", sub: "'ten  kurumsal BT" },
         { val: "300+", label: "Aylık Destek Saati", sub: "Proaktif izleme ve müdahale" },
         { val: "27+", label: "Güvenilen Müşteriler", sub: "KOBİ'den Fortune 500'e" },
         { val: "9", label: "Küresel Lokasyonlar", sub: "ABD, Avrupa ve ötesi" },
@@ -702,13 +702,13 @@ export const translations = {
       resp: "Genellikle 4 iş saati içinde yanıt veriyoruz.",
     },
     footer: {
-      tagline: "2013'ten bu yana uzman BT hizmetleriyle işletmeleri dönüştürüyoruz.",
+      tagline: "' uzman BT hizmetleriyle işletmeleri dönüştürüyoruz.",
       cols: [
         { title: "Çözümler", links: ["BT Danışmanlığı", "Personel Güçlendirme", "Veri Merkezi", "Yönetilen BT"] },
         { title: "Şirket", links: ["Hakkımızda", "Vizyon", "Projeler", "S Blog"] },
         { title: "İletişim", links: ["+1 724 906 3303", "info@supportiva.net", "Sheridan, WY 82801", "ABD"] },
       ],
-      copy: "© 2026 Supportiva.net · Tüm hakları saklıdır.",
+      copy: "© 2024 Supportiva · Tüm hakları saklıdır.",
     },
   },
 } as const;
