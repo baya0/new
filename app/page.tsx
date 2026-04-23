@@ -53,9 +53,13 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
   );
 }
 
-// ─── HERO LOGO PATH — change this string to point to your logo image ───────
-// e.g. "/images/logo.png"  or  "/images/logo-full.png"
-const HERO_LOGO_SRC = "/images/logo.png";
+// ─── HERO LOGO PATHS — theme-aware ────────────────────────────────────────
+// When `.dark` is set on <html>, the dark logo is shown; otherwise the light
+// one. Drop a dedicated dark-theme variant in /public/images/ (e.g.
+// logo-dark.avif) and point HERO_LOGO_DARK_SRC at it. Both default to the
+// same file so the hero renders immediately without a missing asset.
+const HERO_LOGO_LIGHT_SRC = "/images/logo.avif";
+const HERO_LOGO_DARK_SRC  = "/images/logo.avif";
 
 /* ─────────── Client logo map ─────────── */
 // Place logo SVGs/PNGs in /public/images/clients/ and add the path here.
@@ -215,18 +219,33 @@ export default function HomePage() {
                     boxShadow: "inset 0 0 60px rgba(28,78,138,0.06)",
                   }}
                 />
-                {/* ─── LOGO — path controlled by HERO_LOGO_SRC constant at top of file ─── */}
+                {/* ─── LOGO — theme-aware. Only one is visible at a time. ─── */}
                 <Image
-                  src={HERO_LOGO_SRC}
+                  src={HERO_LOGO_LIGHT_SRC}
                   alt="Supportiva"
                   width={260}
                   height={260}
-                  className="relative z-10 animate-float-slow"
+                  priority
+                  className="relative z-10 animate-float-slow block dark:hidden"
                   style={{
                     filter:
                       "drop-shadow(0 0 48px rgba(28,78,138,0.50)) " +
                       "drop-shadow(0 0 16px rgba(42,126,158,0.35)) " +
                       "drop-shadow(0 8px 24px rgba(0,0,0,0.12))",
+                  }}
+                />
+                <Image
+                  src={HERO_LOGO_DARK_SRC}
+                  alt="Supportiva"
+                  width={260}
+                  height={260}
+                  priority
+                  className="relative z-10 animate-float-slow hidden dark:block"
+                  style={{
+                    filter:
+                      "drop-shadow(0 0 52px rgba(94,159,204,0.55)) " +
+                      "drop-shadow(0 0 18px rgba(74,160,190,0.40)) " +
+                      "drop-shadow(0 8px 24px rgba(0,0,0,0.40))",
                   }}
                 />
               </div>

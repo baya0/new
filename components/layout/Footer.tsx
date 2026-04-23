@@ -40,7 +40,7 @@ export default function Footer({ t, lang, setLang }: FooterProps) {
           {/* Brand */}
           <div className="sm:col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 font-extrabold text-base mb-4 group" style={{ color: "var(--white)", flexDirection: isAR ? "row-reverse" : "row" }}>
-              <Image src="/images/logo.png" alt="Supportiva" width={32} height={32} className="shrink-0 transition-transform group-hover:scale-110" />
+              <Image src="/images/logo.avif" alt="Supportiva" width={32} height={32} className="shrink-0 transition-transform group-hover:scale-110" />
               supportiva<span style={{ color: "var(--blue)" }}>.net</span>
             </Link>
             <p className="text-xs leading-relaxed mb-6" style={{ color: "var(--w55)", maxWidth: 260 }}>{t.footer.tagline}</p>
