@@ -42,8 +42,6 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 export default function VisionPage() {
   const { t } = useLang();
   const v = t.vision;
-  const stats = v.stats;
-  const year = new Date().getFullYear();
 
   return (
     <>
@@ -197,50 +195,6 @@ export default function VisionPage() {
         </div>
       </section>
 
-      {/* STATS — editorial figures */}
-      <section className="relative section-deep overflow-hidden" style={{ padding: "160px 0" }}>
-        <div className="blob blob-amber w-[400px] h-[400px] animate-blob" style={{ right: -100, top: 40 }} />
-        <div className="blob blob-purple w-[350px] h-[350px] animate-blob" style={{ left: -80, bottom: 40, animationDelay: "-4s" }} />
-
-        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
-          <FadeIn>
-            <div className="mb-16 grid grid-cols-12 gap-6">
-              <div className="col-span-12 lg:col-span-5">
-                <div className="mono-label mb-4" style={{ color: "var(--amber)" }}>By The Numbers</div>
-                <h2 className="text-[32px] lg:text-[40px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
-                  By the{" "}
-                  <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--amber)" }}>
-                    figures.
-                  </span>
-                </h2>
-              </div>
-            </div>
-          </FadeIn>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6" style={{ borderTop: "1px solid var(--border)" }}>
-            {stats.map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12, duration: 0.6 }}
-                className="py-10 md:py-14 border-r last:border-r-0 md:pr-4"
-                style={{ borderColor: "var(--border)" }}
-              >
-                <div className="display-num !text-[40px] md:!text-[56px] mb-3" style={{ color: "var(--white)" }}>
-                  {stat.val}
-                </div>
-                <div className="mono-label" style={{ color: "var(--w55)" }}>{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-
-          <FadeIn delay={0.3} className="text-center mt-16">
-            <Link href="/contact"><Button size="lg">Start a Conversation →</Button></Link>
-          </FadeIn>
-        </div>
-      </section>
     </>
   );
 }
