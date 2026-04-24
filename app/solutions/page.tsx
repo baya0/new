@@ -60,6 +60,12 @@ function FadeIn({ children, className, delay = 0, y = 24 }: {
    Using CSS Grid with 3x3 grid - mathematically perfect placement
    ══════════════════════════════════════════════════════════════════ */
 
+/* ══════════════════════════════════════════════════════════════════
+   NETWORK HUB — reference-image card layout
+   Left 2 cards │ Hub (logo) │ Right 2 cards   +   Bottom 2 cards
+   SVG connecting lines measured via ResizeObserver for accuracy.
+   ══════════════════════════════════════════════════════════════════ */
+
 function NetworkHub({
   services,
   selected,
@@ -70,266 +76,316 @@ function NetworkHub({
   onSelect: (i: number | null) => void;
 }) {
   const [hov, setHov] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const hubRef       = useRef<HTMLDivElement>(null);
+  // Refs indexed by service index (0–5)
+  const cardRefs = useRef<(HTMLButtonElement | null)[]>(Array(6).fill(null));
+  const [lines, setLines] = useState<
+    { x1: number; y1: number; x2: number; y2: number; idx: number }[]
+  >([]);
 
-  // Grid positions for 6 cards in a perfect circle
-  // Using a 3x3 grid system where center is (1,1)
-  // Positions: Top(0,1), TopRight(0,2), BottomRight(2,2), Bottom(2,1), BottomLeft(2,0), TopLeft(0,0)
-  const gridPositions = [
-    { row: 0, col: 1, label: "top" },           // Cloud Migration
-    { row: 0, col: 2, label: "top-right" },     // Datacenter
-    { row: 2, col: 2, label: "bottom-right" },  // Network Security
-    { row: 2, col: 1, label: "bottom" },        // IT Support
-    { row: 2, col: 0, label: "bottom-left" },   // Cabling
-    { row: 0, col: 0, label: "top-left" },      // Staff Augmentation
-  ];
+  // Service-to-column assignment (indices into services[])
+  const leftIdx   = [1, 4]; // Datacenter Infrastructure, Cabling Design
+  const rightIdx  = [0, 2]; // Cloud Migration, Network Security
+  const bottomIdx = [5, 3]; // Staff Augmentation, IT Support
 
-  return (
-    <div className="relative w-full max-w-[580px] mx-auto">
-      {/* SVG Background - Orbits and connections */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <defs>
-            <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="var(--blue)" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="var(--blue)" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-          
-          {/* Orbit rings - perfectly centered */}
-          <circle cx="50" cy="50" r="42" fill="none" stroke="var(--border)" strokeWidth="0.4" strokeDasharray="3 4" opacity="0.35" />
-          <circle cx="50" cy="50" r="40" fill="none" stroke="var(--blue)" strokeWidth="0.2" strokeDasharray="1 3" opacity="0.25" />
-          <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border-strong)" strokeWidth="0.3" strokeDasharray="2 5" opacity="0.3" />
-          
-          {/* Hub glow */}
-          <circle cx="50" cy="50" r="20" fill="url(#hubGlow)" />
-          
-          {/* Central hub */}
-          <circle cx="50" cy="50" r="12" fill="var(--bg2)" stroke="var(--blue)" strokeWidth="0.8" />
-          <circle cx="50" cy="50" r="10" fill="none" stroke="var(--blue)" strokeWidth="0.2" strokeDasharray="1 2" opacity="0.5" />
-          
-          {/* Connection lines to each card position */}
-          <line x1="50" y1="50" x2="50" y2="8" stroke={selected === 0 ? "var(--blue)" : "var(--border)"} strokeWidth="0.4" opacity="0.5" />
-          <line x1="50" y1="50" x2="85" y2="25" stroke={selected === 1 ? "var(--blue-light)" : "var(--border)"} strokeWidth="0.4" opacity="0.5" />
-          <line x1="50" y1="50" x2="85" y2="75" stroke={selected === 2 ? "var(--cyan)" : "var(--border)"} strokeWidth="0.4" opacity="0.5" />
-          <line x1="50" y1="50" x2="50" y2="92" stroke={selected === 3 ? "var(--green)" : "var(--border)"} strokeWidth="0.4" opacity="0.5" />
-          <line x1="50" y1="50" x2="15" y2="75" stroke={selected === 4 ? "var(--amber)" : "var(--border)"} strokeWidth="0.4" opacity="0.5" />
-          <line x1="50" y1="50" x2="15" y2="25" stroke={selected === 5 ? "var(--purple)" : "var(--border)"} strokeWidth="0.4" opacity="0.5" />
-          
-          {/* Animated dots */}
-          <circle r="0.8" fill="var(--blue)" opacity="0.6">
-            <animateMotion dur="2s" repeatCount="indefinite" path="M50,50 L50,8" />
-          </circle>
-          <circle r="0.8" fill="var(--blue-light)" opacity="0.6">
-            <animateMotion dur="2.2s" repeatCount="indefinite" path="M50,50 L85,25" />
-          </circle>
-          <circle r="0.8" fill="var(--cyan)" opacity="0.6">
-            <animateMotion dur="2.4s" repeatCount="indefinite" path="M50,50 L85,75" />
-          </circle>
-          <circle r="0.8" fill="var(--green)" opacity="0.6">
-            <animateMotion dur="2.6s" repeatCount="indefinite" path="M50,50 L50,92" />
-          </circle>
-          <circle r="0.8" fill="var(--amber)" opacity="0.6">
-            <animateMotion dur="2.8s" repeatCount="indefinite" path="M50,50 L15,75" />
-          </circle>
-          <circle r="0.8" fill="var(--purple)" opacity="0.6">
-            <animateMotion dur="3s" repeatCount="indefinite" path="M50,50 L15,25" />
-          </circle>
-        </svg>
-      </div>
+  // Measure hub + card centre positions → draw lines
+  useEffect(() => {
+    const measure = () => {
+      const cr = containerRef.current?.getBoundingClientRect();
+      const hr = hubRef.current?.getBoundingClientRect();
+      if (!cr || !hr) return;
+      const hcx = hr.left - cr.left + hr.width  / 2;
+      const hcy = hr.top  - cr.top  + hr.height / 2;
+      setLines(
+        cardRefs.current.map((el, idx) => {
+          if (!el) return null;
+          const r = el.getBoundingClientRect();
+          return {
+            x1: hcx,
+            y1: hcy,
+            x2: r.left - cr.left + r.width  / 2,
+            y2: r.top  - cr.top  + r.height / 2,
+            idx,
+          };
+        }).filter(Boolean) as any
+      );
+    };
+    measure();
+    const obs = new ResizeObserver(measure);
+    if (containerRef.current) obs.observe(containerRef.current);
+    return () => obs.disconnect();
+  }, []);
 
-      {/* Center text */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none z-10">
-        <span className="text-2xl font-black" style={{ color: "var(--blue)" }}>S</span>
-        <span className="text-[7px] font-bold tracking-[0.2em] mt-0.5" style={{ color: "var(--w35)" }}>SUPPORTIVA</span>
-        <span className="text-[6px] font-bold tracking-[0.2em]" style={{ color: "var(--w35)" }}>CORE</span>
-      </div>
+  // First sentence of desc, capped at 88 chars
+  const shortDesc = (desc: string) => {
+    const s = desc.split(".")[0] + ".";
+    return s.length > 90 ? s.slice(0, 87) + "…" : s;
+  };
 
-      {/* 3x3 Grid Container - PERFECT SYMMETRY guaranteed */}
-      <div className="grid grid-cols-3 grid-rows-3 aspect-square gap-4 p-4">
-        {/* Empty cells for spacing */}
-        <div className="row-start-1 col-start-1" />
-        <div className="row-start-1 col-start-2" />
-        <div className="row-start-1 col-start-3" />
-        <div className="row-start-2 col-start-1" />
-        <div className="row-start-2 col-start-2" /> {/* Center - empty */}
-        <div className="row-start-2 col-start-3" />
-        <div className="row-start-3 col-start-1" />
-        <div className="row-start-3 col-start-2" />
-        <div className="row-start-3 col-start-3" />
+  const renderCard = (si: number) => {
+    const svc    = services[si];
+    const Icon   = SERVICE_ICONS[si] ?? Server;
+    const isAct  = selected === si;
+    const isH    = hov === si;
+    const accent = colorMap[svc.color];
 
-        {/* Card 1 - Top (Cloud Migration) */}
-        <div className="row-start-1 col-start-2 flex items-center justify-center">
-          <ServiceCard
-            service={services[0]}
-            icon={SERVICE_ICONS[0]}
-            isSelected={selected === 0}
-            isHovered={hov === 0}
-            onSelect={() => onSelect(selected === 0 ? null : 0)}
-            onHover={(val) => setHov(val ? 0 : null)}
-            colorKey="blue"
-          />
-        </div>
-
-        {/* Card 2 - Top Right (Datacenter) */}
-        <div className="row-start-1 col-start-3 flex items-center justify-center">
-          <ServiceCard
-            service={services[1]}
-            icon={SERVICE_ICONS[1]}
-            isSelected={selected === 1}
-            isHovered={hov === 1}
-            onSelect={() => onSelect(selected === 1 ? null : 1)}
-            onHover={(val) => setHov(val ? 1 : null)}
-            colorKey="blue-light"
-          />
-        </div>
-
-        {/* Card 3 - Bottom Right (Network Security) */}
-        <div className="row-start-3 col-start-3 flex items-center justify-center">
-          <ServiceCard
-            service={services[2]}
-            icon={SERVICE_ICONS[2]}
-            isSelected={selected === 2}
-            isHovered={hov === 2}
-            onSelect={() => onSelect(selected === 2 ? null : 2)}
-            onHover={(val) => setHov(val ? 2 : null)}
-            colorKey="cyan"
-          />
-        </div>
-
-        {/* Card 4 - Bottom (IT Support) */}
-        <div className="row-start-3 col-start-2 flex items-center justify-center">
-          <ServiceCard
-            service={services[3]}
-            icon={SERVICE_ICONS[3]}
-            isSelected={selected === 3}
-            isHovered={hov === 3}
-            onSelect={() => onSelect(selected === 3 ? null : 3)}
-            onHover={(val) => setHov(val ? 3 : null)}
-            colorKey="green"
-          />
-        </div>
-
-        {/* Card 5 - Bottom Left (Cabling) */}
-        <div className="row-start-3 col-start-1 flex items-center justify-center">
-          <ServiceCard
-            service={services[4]}
-            icon={SERVICE_ICONS[4]}
-            isSelected={selected === 4}
-            isHovered={hov === 4}
-            onSelect={() => onSelect(selected === 4 ? null : 4)}
-            onHover={(val) => setHov(val ? 4 : null)}
-            colorKey="amber"
-          />
-        </div>
-
-        {/* Card 6 - Top Left (Staff Augmentation) */}
-        <div className="row-start-1 col-start-1 flex items-center justify-center">
-          <ServiceCard
-            service={services[5]}
-            icon={SERVICE_ICONS[5]}
-            isSelected={selected === 5}
-            isHovered={hov === 5}
-            onSelect={() => onSelect(selected === 5 ? null : 5)}
-            onHover={(val) => setHov(val ? 5 : null)}
-            colorKey="purple"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* Service Card Component */
-function ServiceCard({
-  service,
-  icon: Icon,
-  isSelected,
-  isHovered,
-  onSelect,
-  onHover,
-  colorKey,
-}: {
-  service: any;
-  icon: LucideIcon;
-  isSelected: boolean;
-  isHovered: boolean;
-  onSelect: () => void;
-  onHover: (isHovering: boolean) => void;
-  colorKey: string;
-}) {
-  const accent = colorMap[colorKey];
-  
-  return (
-    <motion.button
-      onClick={onSelect}
-      onMouseEnter={() => onHover(true)}
-      onMouseLeave={() => onHover(false)}
-      className="flex flex-col items-center justify-center rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg1)]"
-      style={{
-        width: "clamp(80px, 14vw, 100px)",
-        height: "clamp(80px, 14vw, 100px)",
-        background: isSelected ? accent : "var(--bg2)",
-        border: `1.5px solid ${
-          isSelected ? accent : isHovered ? `${accent}aa` : "var(--border-strong)"
-        }`,
-        boxShadow: isSelected
-          ? `0 12px 32px -8px ${accent}99, inset 0 1px 0 rgba(255,255,255,0.15)`
-          : isHovered
-          ? `0 8px 24px -6px ${accent}66, inset 0 1px 0 rgba(255,255,255,0.5)`
-          : "0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.4)",
-        cursor: "pointer",
-        transition: "all 0.2s ease",
-      }}
-      animate={{ scale: isSelected ? 1.06 : isHovered ? 1.03 : 1 }}
-      transition={{ duration: 0.2 }}
-    >
-      {isSelected && (
-        <span
-          className="absolute inset-0 rounded-xl pointer-events-none"
-          style={{
-            border: `2px solid ${accent}cc`,
-            animation: "ringPulse 2s ease-out infinite",
-          }}
-        />
-      )}
-      
-      <div className="flex items-center justify-center w-7 h-7 mb-1">
-        <Icon
-          size={16}
-          strokeWidth={isSelected ? 2 : 1.75}
-          style={{ color: isSelected ? "#fff" : accent }}
-        />
-      </div>
-      
-      <div
-        className="text-center font-semibold px-1"
+    return (
+      <motion.button
+        key={si}
+        ref={el => { cardRefs.current[si] = el; }}
+        type="button"
+        onClick={() => onSelect(isAct ? null : si)}
+        onMouseEnter={() => setHov(si)}
+        onMouseLeave={() => setHov(null)}
+        onFocus={() => setHov(si)}
+        onBlur={() => setHov(null)}
+        aria-pressed={isAct}
+        aria-label={svc.title}
+        className="flex items-center gap-3 rounded-2xl text-left w-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         style={{
-          fontSize: "clamp(7px, 1.8vw, 9px)",
-          lineHeight: "1.25",
-          color: isSelected ? "#fff" : "var(--w85)",
-          minHeight: "22px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          padding: "14px",
+          background: isAct ? accent : "var(--glass-card)",
+          border: `1.5px solid ${isAct ? accent : isH ? `${accent}88` : "var(--border-strong)"}`,
+          boxShadow: isAct
+            ? `0 12px 32px -8px ${accent}88, 0 4px 12px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.2)`
+            : isH
+              ? `0 8px 24px -6px ${accent}44, 0 2px 8px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.7)`
+              : "0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.7)",
+          transition:
+            "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+        }}
+        animate={{ scale: isAct ? 1.02 : isH ? 1.01 : 1 }}
+        transition={{ type: "spring", stiffness: 360, damping: 26 }}
+      >
+        {/* Icon box */}
+        <span style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: 46, height: 46, borderRadius: 12, flexShrink: 0,
+          background: isAct ? "rgba(255,255,255,0.18)" : `${accent}18`,
+          border: `1px solid ${isAct ? "rgba(255,255,255,0.25)" : `${accent}33`}`,
+          color: isAct ? "#fff" : accent,
+          transition: "all 0.3s ease",
+        }}>
+          <Icon size={20} strokeWidth={isAct ? 2.1 : 1.9} />
+        </span>
+
+        {/* Text */}
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <span className="block font-bold leading-tight"
+            style={{
+              fontSize: 13,
+              color: isAct ? "#fff" : "var(--white)",
+              marginBottom: 3,
+              transition: "color 0.3s ease",
+            }}>
+            {svc.title}
+          </span>
+          <span className="block leading-snug"
+            style={{
+              fontSize: 11,
+              color: isAct ? "rgba(255,255,255,0.78)" : "var(--w55)",
+              transition: "color 0.3s ease",
+            }}>
+            {shortDesc(svc.desc)}
+          </span>
+        </span>
+
+        {/* Arrow */}
+        <span style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+          background: isAct ? "rgba(255,255,255,0.18)" : `${accent}14`,
+          border: `1px solid ${isAct ? "rgba(255,255,255,0.25)" : `${accent}22`}`,
+          color: isAct ? "#fff" : accent,
+          fontSize: 14, fontWeight: 700,
+          transition: "all 0.3s ease",
+        }}>
+          →
+        </span>
+      </motion.button>
+    );
+  };
+
+  return (
+    <motion.div
+      ref={containerRef}
+      className="relative w-full"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {/* ── SVG connecting lines (measured, always accurate) ───────── */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        aria-hidden="true"
+        style={{ zIndex: 0, overflow: "visible" }}
+      >
+        {lines.map(({ x1, y1, x2, y2, idx }) => {
+          const svc   = services[idx];
+          if (!svc) return null;
+          const color = colorMap[svc.color];
+          const isAct = selected === idx;
+          const isH   = hov === idx;
+          const path  = `M${x1},${y1} L${x2},${y2}`;
+          const dur   = isAct ? "1.3s" : isH ? "2s" : "3s";
+
+          return (
+            <g key={`ln-${idx}`}>
+              {(isAct || isH) && (
+                <line x1={x1} y1={y1} x2={x2} y2={y2}
+                  stroke={color} strokeWidth="5"
+                  strokeLinecap="round" opacity="0.1" />
+              )}
+              <line x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke={isAct || isH ? color : "var(--border-strong)"}
+                strokeWidth={isAct ? 2 : isH ? 1.5 : 1}
+                strokeLinecap="round"
+                strokeDasharray={isAct || isH ? "" : "5 7"}
+                opacity={isAct ? 1 : isH ? 0.85 : 0.5}
+                style={{ transition: "stroke 0.3s, stroke-width 0.3s, opacity 0.3s" }}
+              />
+              {/* Endpoint dot at card */}
+              <circle cx={x2} cy={y2}
+                r={isAct ? 4.5 : 3}
+                fill={color} opacity={isAct ? 0.9 : 0.45} />
+              {/* Animated traffic dot A */}
+              <circle r={isAct ? 5 : 4} fill={color} opacity={isAct ? 1 : 0.7}>
+                <animateMotion dur={dur} repeatCount="indefinite" path={path} />
+              </circle>
+              {/* Animated traffic dot B (staggered) */}
+              <circle r={isAct ? 3.5 : 2.8} fill={color} opacity={isAct ? 0.65 : 0.4}>
+                <animateMotion dur={dur} repeatCount="indefinite" path={path}
+                  begin={`-${parseFloat(dur) * 0.5}s`} />
+              </circle>
+            </g>
+          );
+        })}
+      </svg>
+
+      {/* ── Desktop: 3-column grid  │  Mobile: hub + 2-col card grid ─ */}
+
+      {/* Desktop layout */}
+      <div
+        className="hidden lg:grid items-center"
+        style={{
+          gridTemplateColumns: "1fr auto 1fr",
+          gap: "clamp(20px, 3vw, 40px)",
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        {service.title}
+        {/* Left column */}
+        <div className="flex flex-col gap-3">
+          {leftIdx.map(si => renderCard(si))}
+        </div>
+
+        {/* Hub */}
+        <div ref={hubRef} className="flex flex-col items-center justify-center">
+          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {/* Outer spinning ring */}
+            <div style={{
+              position: "absolute",
+              width: "clamp(178px, 18vw, 214px)", height: "clamp(178px, 18vw, 214px)",
+              borderRadius: "50%",
+              border: "1px dashed var(--border-strong)",
+              opacity: 0.38,
+              animation: "hub-cw 22s linear infinite",
+            }} />
+            {/* Inner counter-spinning ring */}
+            <div style={{
+              position: "absolute",
+              width: "clamp(148px, 15vw, 178px)", height: "clamp(148px, 15vw, 178px)",
+              borderRadius: "50%",
+              border: "0.8px dashed var(--blue)",
+              opacity: 0.22,
+              animation: "hub-ccw 35s linear infinite",
+            }} />
+            {/* Hub body */}
+            <div style={{
+              width:  "clamp(116px, 12vw, 148px)",
+              height: "clamp(116px, 12vw, 148px)",
+              borderRadius: "50%",
+              background: "linear-gradient(140deg, var(--bg2), var(--bg1))",
+              border: "2px solid var(--blue)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow:
+                "0 0 0 8px rgba(28,78,138,0.07), 0 0 48px rgba(28,78,138,0.16), inset 0 1px 0 rgba(255,255,255,0.2)",
+              position: "relative",
+              zIndex: 1,
+            }}>
+              {/* Inner detail ring */}
+              <div style={{
+                position: "absolute", inset: 10, borderRadius: "50%",
+                border: "1px dashed var(--blue)", opacity: 0.28,
+              }} />
+              {/* Logo */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/logo.avif" alt="Supportiva"
+                style={{ width: "58%", height: "58%", objectFit: "contain", position: "relative", zIndex: 1 }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Right column */}
+        <div className="flex flex-col gap-3">
+          {rightIdx.map(si => renderCard(si))}
+        </div>
       </div>
-      
+
+      {/* Desktop bottom row */}
       <div
-        className="absolute rounded-full"
-        style={{
-          top: "6px",
-          right: "6px",
-          width: "4px",
-          height: "4px",
-          background: isSelected ? "#fff" : accent,
-          opacity: 0.8,
-        }}
-      />
-    </motion.button>
+        className="hidden lg:flex gap-3 mt-4"
+        style={{ justifyContent: "center", position: "relative", zIndex: 1 }}
+      >
+        {bottomIdx.map(si => (
+          <div key={si} style={{ flex: "1 1 0", maxWidth: 290 }}>
+            {renderCard(si)}
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile layout: hub centred + 2-column card grid */}
+      <div className="lg:hidden flex flex-col items-center gap-5">
+        {/* Hub (inline, no ResizeObserver ref — lines not shown on mobile) */}
+        <div className="flex flex-col items-center justify-center">
+          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{
+              position: "absolute", width: 150, height: 150, borderRadius: "50%",
+              border: "1px dashed var(--border-strong)", opacity: 0.35,
+              animation: "hub-cw 22s linear infinite",
+            }} />
+            <div style={{
+              width: 110, height: 110, borderRadius: "50%",
+              background: "linear-gradient(140deg, var(--bg2), var(--bg1))",
+              border: "2px solid var(--blue)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 0 0 6px rgba(28,78,138,0.07), 0 0 32px rgba(28,78,138,0.14)",
+              position: "relative", zIndex: 1,
+            }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/logo.avif" alt="Supportiva"
+                style={{ width: "56%", height: "56%", objectFit: "contain" }} />
+            </div>
+          </div>
+        </div>
+
+        {/* All 6 cards in a 2-column grid on mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+          {[...leftIdx, ...rightIdx, ...bottomIdx].map(si => renderCard(si))}
+        </div>
+      </div>
+
+      {/* Keyframes */}
+      <style jsx>{`
+        @keyframes hub-cw  { to { transform: rotate(360deg);  } }
+        @keyframes hub-ccw { to { transform: rotate(-360deg); } }
+      `}</style>
+    </motion.div>
   );
 }
+
 
 /* ══════════════════════════════════════════════════════════════════
    SOLUTIONS PAGE
