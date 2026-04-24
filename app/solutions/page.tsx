@@ -86,8 +86,8 @@ const toRad = (deg: number) => (deg * Math.PI) / 180;
 // Perfect hexagonal symmetry — single anchors at top (Cloud) and bottom (IT Support),
 // mirrored pairs on each side.
 const HUB_R     = 14;    // hub circle radius
-const NODE_R    = 36;    // orbit radius (all 6 nodes sit on this circle)
-const NODE_EDGE = 9;     // half-card size in SVG units → controls where lines stop
+const NODE_R    = 38;    // orbit radius — increased for breathing room
+const NODE_EDGE = 9.5;   // half-card size in SVG units → controls where lines stop
 
 function NetworkHub({
   services,
@@ -270,16 +270,25 @@ function NetworkHub({
         const isH    = hov === i;
         const accent = colorMap[svc.color];
 
-        // Tooltip: place outward from hub, clamped to 4 zones
-        const tipTop    = cy < 28;
-        const tipBottom = cy > 72;
-        const tipRight  = cx > 62 && !tipTop && !tipBottom;
-        const tipLeft   = cx < 38 && !tipTop && !tipBottom;
-        // Top/bottom nodes → shift tooltip to the right so it stays visible
-        const tipDx = tipRight ? 12 : tipLeft ? -12 : 10;
-        const tipDy = tipTop ? 12 : tipBottom ? -12 : 0;
+        // ── Optical correction ─────────────────────────────────────────
+        // Mathematically equal angles can still look visually unbalanced
+        // because the eye perceives circles as slightly "heavy" at the bottom.
+        // Shift top-half nodes a fraction downward, bottom-half nodes upward
+        // to tighten the perceived circle without moving the geometry.
+        const opticalCy =
+          cy < 50 ? cy + 0.45   // top half → nudge toward center
+          : cy > 50 ? cy - 0.7  // bottom half → nudge toward center
+          : cy;                  // perfect horizontal centre → unchanged
+
+        // ── Tooltip placement (outward from hub) ───────────────────────
+        const tipTop    = cy < 30;
+        const tipBottom = cy > 70;
+        const tipRight  = cx > 64 && !tipTop && !tipBottom;
+        const tipLeft   = cx < 36 && !tipTop && !tipBottom;
+        const tipDx     = tipRight ? 12 : tipLeft ? -12 : 10;
+        const tipDy     = tipTop   ? 12 : tipBottom ? -12 : 0;
         const tipAlignX = tipLeft ? "-100%" : "0";
-        const tipAlignY = tipTop ? "0" : tipBottom ? "-100%" : "-50%";
+        const tipAlignY = tipTop  ? "0" : tipBottom ? "-100%" : "-50%";
 
         return (
           <div key={`nd-${i}`} className="absolute inset-0 pointer-events-none">
@@ -297,21 +306,29 @@ function NetworkHub({
               className="absolute pointer-events-auto flex flex-col items-center justify-center rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
               style={{
                 left: `${cx}%`,
-                top:  `${cy}%`,
-                width:  "clamp(84px, 16.5%, 104px)",
-                height: "clamp(80px, 15.5%, 98px)",
+                top:  `${opticalCy}%`,   // ← optical correction applied here
+                /* Perfect square: identical clamp for width & height */
+                width:  "clamp(90px, 17%, 108px)",
+                height: "clamp(90px, 17%, 108px)",
                 transform: "translate(-50%, -50%)",
-                padding: "10px 8px 9px",
-                rowGap: 5,
+                /* No freeform padding — content uses fixed inner containers */
+                padding: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0,
+                /* Fully opaque active background — hex-alpha was bleeding
+                   through on light backgrounds making text unreadable */
                 background: isAct
-                  ? `linear-gradient(145deg, ${accent}f0, ${accent}cc)`
+                  ? accent
                   : "var(--glass-card)",
                 border: `1.5px solid ${isAct ? accent : isH ? `${accent}99` : "var(--border-strong)"}`,
                 color: isAct ? "#fff" : accent,
                 boxShadow: isAct
-                  ? `0 16px 44px -8px ${accent}88, 0 4px 18px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.22)`
+                  ? `0 16px 44px -8px ${accent}88, 0 4px 18px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.22)`
                   : isH
-                    ? `0 12px 36px -8px ${accent}66, 0 3px 12px rgba(0,0,0,0.09), inset 0 1px 0 rgba(255,255,255,0.6)`
+                    ? `0 12px 36px -8px ${accent}55, 0 3px 12px rgba(0,0,0,0.09), inset 0 1px 0 rgba(255,255,255,0.6)`
                     : "0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.7)",
                 transition:
                   "background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
@@ -335,7 +352,7 @@ function NetworkHub({
                 <span aria-hidden
                   className="absolute inset-0 rounded-2xl pointer-events-none"
                   style={{
-                    border: `2px solid ${accent}dd`,
+                    border: `2px solid ${accent}cc`,
                     animation: "ring-pulse 2.2s ease-out infinite",
                   }}
                 />
@@ -346,28 +363,48 @@ function NetworkHub({
                   className="absolute inset-x-0 top-0 h-1/2 rounded-t-2xl pointer-events-none"
                   style={{
                     background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0))",
+                      "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0))",
                   }}
                 />
               )}
 
-              <Icon
-                size={22}
-                strokeWidth={isAct ? 2.2 : 1.9}
-                style={{ transition: "all 0.3s ease", flexShrink: 0 }}
-              />
-
+              {/* ── Fixed icon container — identical size for every card ── */}
               <span
-                className="font-semibold text-center"
                 style={{
-                  fontSize: "clamp(7.5px, 0.9vw + 3px, 9.5px)",
-                  lineHeight: 1.2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 34,
+                  height: 34,
+                  flexShrink: 0,
+                }}
+              >
+                <Icon
+                  size={20}
+                  strokeWidth={isAct ? 2.2 : 1.9}
+                  style={{ transition: "all 0.3s ease" }}
+                />
+              </span>
+
+              {/* ── Fixed text container — 2-line height, always aligned ── */}
+              <span
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "86%",
+                  height: 24,          /* fits 2 lines at 9px × 1.3 line-height */
+                  flexShrink: 0,
+                  fontSize: 9,
+                  fontWeight: 600,
+                  lineHeight: 1.25,
                   letterSpacing: "0.01em",
+                  textAlign: "center",
                   color: isAct ? "rgba(255,255,255,0.95)" : "var(--w55)",
                   transition: "color 0.3s ease",
-                  maxWidth: "92%",
                   wordBreak: "break-word",
                   hyphens: "auto",
+                  overflow: "hidden",
                 }}
               >
                 {svc.title}
@@ -376,7 +413,7 @@ function NetworkHub({
               {/* Status LED */}
               <span aria-hidden className="absolute rounded-full"
                 style={{
-                  top: 6, right: 6,
+                  top: 7, right: 7,
                   width: 5.5, height: 5.5,
                   background: isAct ? "rgba(255,255,255,0.95)" : accent,
                   boxShadow: isAct
