@@ -56,14 +56,9 @@ function FadeIn({ children, className, delay = 0, y = 24 }: {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   PERFECTLY SYMMETRICAL NETWORK HUB
-   Using CSS Grid with 3x3 grid - mathematically perfect placement
-   ══════════════════════════════════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════
-   NETWORK HUB — reference-image card layout
-   Left 2 cards │ Hub (logo) │ Right 2 cards   +   Bottom 2 cards
-   SVG connecting lines measured via ResizeObserver for accuracy.
+   NETWORK HUB — radial orbital layout
+   6 cards at 60° intervals around a central branded hub.
+   Pure math positioning: no ResizeObserver needed.
    ══════════════════════════════════════════════════════════════════ */
 
 function NetworkHub({
@@ -76,313 +71,321 @@ function NetworkHub({
   onSelect: (i: number | null) => void;
 }) {
   const [hov, setHov] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const hubRef       = useRef<HTMLDivElement>(null);
-  // Refs indexed by service index (0–5)
-  const cardRefs = useRef<(HTMLButtonElement | null)[]>(Array(6).fill(null));
-  const [lines, setLines] = useState<
-    { x1: number; y1: number; x2: number; y2: number; idx: number }[]
-  >([]);
 
-  // Service-to-column assignment (indices into services[])
-  const leftIdx   = [1, 4]; // Datacenter Infrastructure, Cabling Design
-  const rightIdx  = [0, 2]; // Cloud Migration, Network Security
-  const bottomIdx = [5, 3]; // Staff Augmentation, IT Support
+  // SVG coordinate space (viewBox)
+  const VW = 680, VH = 560;
+  const CX = 340, CY = 280; // hub center
+  const HUB_R = 65;         // hub circle radius
+  const ORBIT = 200;        // card-center distance from hub center
 
-  // Measure hub + card centre positions → draw lines
-  useEffect(() => {
-    const measure = () => {
-      const cr = containerRef.current?.getBoundingClientRect();
-      const hr = hubRef.current?.getBoundingClientRect();
-      if (!cr || !hr) return;
-      const hcx = hr.left - cr.left + hr.width  / 2;
-      const hcy = hr.top  - cr.top  + hr.height / 2;
-      setLines(
-        cardRefs.current.map((el, idx) => {
-          if (!el) return null;
-          const r = el.getBoundingClientRect();
-          return {
-            x1: hcx,
-            y1: hcy,
-            x2: r.left - cr.left + r.width  / 2,
-            y2: r.top  - cr.top  + r.height / 2,
-            idx,
-          };
-        }).filter(Boolean) as any
-      );
+  // 6 nodes, 60° apart, starting at top (-90°)
+  const nodes = (services as any[]).map((svc, i) => {
+    const rad = (-90 + i * 60) * (Math.PI / 180);
+    const cx  = CX + ORBIT * Math.cos(rad);
+    const cy  = CY + ORBIT * Math.sin(rad);
+    return {
+      cx, cy,
+      lx: CX + HUB_R * Math.cos(rad), // line start at hub edge
+      ly: CY + HUB_R * Math.sin(rad),
+      svc, i,
     };
-    measure();
-    const obs = new ResizeObserver(measure);
-    if (containerRef.current) obs.observe(containerRef.current);
-    return () => obs.disconnect();
-  }, []);
+  });
 
-  // First sentence of desc, capped at 88 chars
   const shortDesc = (desc: string) => {
     const s = desc.split(".")[0] + ".";
-    return s.length > 90 ? s.slice(0, 87) + "…" : s;
+    return s.length > 62 ? s.slice(0, 59) + "…" : s;
   };
 
-  const renderCard = (si: number) => {
-    const svc    = services[si];
-    const Icon   = SERVICE_ICONS[si] ?? Server;
-    const isAct  = selected === si;
-    const isH    = hov === si;
+  const renderMobileCard = (i: number) => {
+    const svc    = (services as any[])[i];
+    const isAct  = selected === i;
+    const isH    = hov === i;
     const accent = colorMap[svc.color];
-
+    const Icon   = SERVICE_ICONS[i];
     return (
       <motion.button
-        key={si}
-        ref={el => { cardRefs.current[si] = el; }}
+        key={i}
         type="button"
-        onClick={() => onSelect(isAct ? null : si)}
-        onMouseEnter={() => setHov(si)}
+        onClick={() => onSelect(isAct ? null : i)}
+        onMouseEnter={() => setHov(i)}
         onMouseLeave={() => setHov(null)}
-        onFocus={() => setHov(si)}
-        onBlur={() => setHov(null)}
         aria-pressed={isAct}
         aria-label={svc.title}
-        className="flex items-center gap-3 rounded-2xl text-left w-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+        className="flex items-center gap-3 rounded-2xl text-left w-full outline-none focus-visible:ring-2"
         style={{
-          padding: "14px",
+          padding: "13px 14px",
           background: isAct ? accent : "var(--glass-card)",
-          border: `1.5px solid ${isAct ? accent : isH ? `${accent}88` : "var(--border-strong)"}`,
+          border: `1.5px solid ${isAct ? accent : isH ? `${accent}66` : "var(--border-strong)"}`,
           boxShadow: isAct
-            ? `0 12px 32px -8px ${accent}88, 0 4px 12px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.2)`
+            ? `0 12px 32px -8px ${accent}55, inset 0 1px 0 rgba(255,255,255,0.2)`
             : isH
-              ? `0 8px 24px -6px ${accent}44, 0 2px 8px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.7)`
-              : "0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.7)",
-          transition:
-            "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+            ? `0 8px 20px -4px ${accent}33, inset 0 1px 0 rgba(255,255,255,0.6)`
+            : "0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)",
+          transition: "all 0.25s",
+          cursor: "pointer",
         }}
-        animate={{ scale: isAct ? 1.02 : isH ? 1.01 : 1 }}
-        transition={{ type: "spring", stiffness: 360, damping: 26 }}
+        animate={{ scale: isAct ? 1.02 : 1 }}
+        transition={{ type: "spring", stiffness: 380, damping: 28 }}
       >
-        {/* Icon box */}
         <span style={{
           display: "flex", alignItems: "center", justifyContent: "center",
-          width: 46, height: 46, borderRadius: 12, flexShrink: 0,
-          background: isAct ? "rgba(255,255,255,0.18)" : `${accent}18`,
-          border: `1px solid ${isAct ? "rgba(255,255,255,0.25)" : `${accent}33`}`,
+          width: 42, height: 42, borderRadius: 12, flexShrink: 0,
+          background: isAct ? "rgba(255,255,255,0.2)" : `${accent}18`,
+          border: `1px solid ${isAct ? "rgba(255,255,255,0.3)" : `${accent}30`}`,
           color: isAct ? "#fff" : accent,
-          transition: "all 0.3s ease",
         }}>
-          <Icon size={20} strokeWidth={isAct ? 2.1 : 1.9} />
+          <Icon size={19} strokeWidth={isAct ? 2.1 : 1.85} />
         </span>
-
-        {/* Text */}
         <span style={{ flex: 1, minWidth: 0 }}>
           <span className="block font-bold leading-tight"
-            style={{
-              fontSize: 13,
-              color: isAct ? "#fff" : "var(--white)",
-              marginBottom: 3,
-              transition: "color 0.3s ease",
-            }}>
+            style={{ fontSize: 13, color: isAct ? "#fff" : "var(--white)", marginBottom: 2 }}>
             {svc.title}
           </span>
           <span className="block leading-snug"
-            style={{
-              fontSize: 11,
-              color: isAct ? "rgba(255,255,255,0.78)" : "var(--w55)",
-              transition: "color 0.3s ease",
-            }}>
+            style={{ fontSize: 11, color: isAct ? "rgba(255,255,255,0.75)" : "var(--w45)" }}>
             {shortDesc(svc.desc)}
           </span>
-        </span>
-
-        {/* Arrow */}
-        <span style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          width: 28, height: 28, borderRadius: 8, flexShrink: 0,
-          background: isAct ? "rgba(255,255,255,0.18)" : `${accent}14`,
-          border: `1px solid ${isAct ? "rgba(255,255,255,0.25)" : `${accent}22`}`,
-          color: isAct ? "#fff" : accent,
-          fontSize: 14, fontWeight: 700,
-          transition: "all 0.3s ease",
-        }}>
-          →
         </span>
       </motion.button>
     );
   };
 
   return (
-    <motion.div
-      ref={containerRef}
-      className="relative w-full"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {/* ── SVG connecting lines (measured, always accurate) ───────── */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        aria-hidden="true"
-        style={{ zIndex: 0, overflow: "visible" }}
-      >
-        {lines.map(({ x1, y1, x2, y2, idx }) => {
-          const svc   = services[idx];
-          if (!svc) return null;
-          const color = colorMap[svc.color];
-          const isAct = selected === idx;
-          const isH   = hov === idx;
-          const path  = `M${x1},${y1} L${x2},${y2}`;
-          const dur   = isAct ? "1.3s" : isH ? "2s" : "3s";
+    <div className="w-full" style={{ maxWidth: 680 }}>
 
+      {/* ── Desktop: radial orbital layout (lg+) ──────────────────── */}
+      <div className="relative hidden lg:block">
+
+        {/* SVG layer: ambient glow + orbit ring + connector lines */}
+        <svg
+          viewBox={`0 0 ${VW} ${VH}`}
+          style={{ width: "100%", display: "block" }}
+          aria-hidden="true"
+        >
+          {/* Ambient glow behind hub */}
+          <circle cx={CX} cy={CY} r={HUB_R + 50} fill="var(--blue)" opacity="0.055" />
+          <circle cx={CX} cy={CY} r={HUB_R + 90} fill="var(--blue)" opacity="0.025" />
+
+          {/* Outer orbit dashed ring */}
+          <circle cx={CX} cy={CY} r={ORBIT}
+            fill="none" stroke="var(--border)" strokeWidth="0.9"
+            strokeDasharray="5 11" opacity="0.35" />
+          {/* Inner subtle ring */}
+          <circle cx={CX} cy={CY} r={ORBIT - 20}
+            fill="none" stroke="var(--blue)" strokeWidth="0.4"
+            strokeDasharray="2 9" opacity="0.14" />
+
+          {/* Connector lines + travelling dots */}
+          {nodes.map(({ cx, cy, lx, ly, i, svc }) => {
+            const isAct = selected === i;
+            const isH   = hov === i;
+            const color = colorMap[svc.color];
+            const path  = `M${lx},${ly} L${cx},${cy}`;
+            const dur   = isAct ? "1.1s" : isH ? "1.8s" : "3s";
+            return (
+              <g key={`line-${i}`}>
+                {/* Glow behind active/hovered line */}
+                {(isAct || isH) && (
+                  <line x1={lx} y1={ly} x2={cx} y2={cy}
+                    stroke={color} strokeWidth="10" opacity="0.13"
+                    strokeLinecap="round" />
+                )}
+                <line
+                  x1={lx} y1={ly} x2={cx} y2={cy}
+                  stroke={isAct || isH ? color : "var(--border-strong)"}
+                  strokeWidth={isAct ? 1.8 : isH ? 1.3 : 0.9}
+                  strokeDasharray={isAct || isH ? "" : "5 10"}
+                  opacity={isAct ? 1 : isH ? 0.78 : 0.42}
+                  strokeLinecap="round"
+                  style={{ transition: "stroke 0.3s, stroke-width 0.3s, opacity 0.3s" }}
+                />
+                {/* Card endpoint dot */}
+                <circle cx={cx} cy={cy} r={isAct ? 4.5 : 3}
+                  fill={color} opacity={isAct ? 0.9 : 0.38} />
+                {/* Travelling dot A */}
+                <circle r={isAct ? 5 : 3.8} fill={color} opacity={isAct ? 0.95 : 0.6}>
+                  <animateMotion dur={dur} repeatCount="indefinite" path={path} />
+                </circle>
+                {/* Travelling dot B staggered */}
+                <circle r={isAct ? 3.2 : 2.4} fill={color} opacity={isAct ? 0.55 : 0.32}>
+                  <animateMotion dur={dur} repeatCount="indefinite" path={path}
+                    begin={`-${parseFloat(dur) * 0.48}s`} />
+                </circle>
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Hub — centered over SVG via absolute + percentage */}
+        <div style={{
+          position: "absolute",
+          left: `${(CX / VW) * 100}%`,
+          top:  `${(CY / VH) * 100}%`,
+          transform: "translate(-50%, -50%)",
+          zIndex: 2,
+        }}>
+          {/* Outer spinning dashed ring */}
+          <div style={{
+            position: "absolute", inset: -26, borderRadius: "50%",
+            border: "1px dashed var(--border-strong)", opacity: 0.32,
+            animation: "hub-cw 30s linear infinite",
+          }} />
+          {/* Inner counter-spinning ring */}
+          <div style={{
+            position: "absolute", inset: -12, borderRadius: "50%",
+            border: "0.8px dashed var(--blue)", opacity: 0.2,
+            animation: "hub-ccw 20s linear infinite",
+          }} />
+          {/* Hub body */}
+          <div style={{
+            width: HUB_R * 2, height: HUB_R * 2, borderRadius: "50%",
+            background: "linear-gradient(145deg, var(--bg2) 0%, var(--bg1) 100%)",
+            border: "2px solid var(--blue)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow:
+              "0 0 0 9px rgba(28,78,138,0.065), 0 0 64px rgba(28,78,138,0.2), inset 0 1px 0 rgba(255,255,255,0.18)",
+            position: "relative",
+          }}>
+            <div style={{
+              position: "absolute", inset: 11, borderRadius: "50%",
+              border: "1px dashed var(--blue)", opacity: 0.22,
+            }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo.avif" alt="Supportiva"
+              style={{ width: "60%", height: "60%", objectFit: "contain", position: "relative", zIndex: 1 }} />
+          </div>
+        </div>
+
+        {/* Service cards — absolutely positioned at orbital angles */}
+        {nodes.map(({ cx, cy, i, svc }) => {
+          const isAct  = selected === i;
+          const isH    = hov === i;
+          const accent = colorMap[svc.color];
+          const Icon   = SERVICE_ICONS[i];
           return (
-            <g key={`ln-${idx}`}>
-              {(isAct || isH) && (
-                <line x1={x1} y1={y1} x2={x2} y2={y2}
-                  stroke={color} strokeWidth="5"
-                  strokeLinecap="round" opacity="0.1" />
-              )}
-              <line x1={x1} y1={y1} x2={x2} y2={y2}
-                stroke={isAct || isH ? color : "var(--border-strong)"}
-                strokeWidth={isAct ? 2 : isH ? 1.5 : 1}
-                strokeLinecap="round"
-                strokeDasharray={isAct || isH ? "" : "5 7"}
-                opacity={isAct ? 1 : isH ? 0.85 : 0.5}
-                style={{ transition: "stroke 0.3s, stroke-width 0.3s, opacity 0.3s" }}
-              />
-              {/* Endpoint dot at card */}
-              <circle cx={x2} cy={y2}
-                r={isAct ? 4.5 : 3}
-                fill={color} opacity={isAct ? 0.9 : 0.45} />
-              {/* Animated traffic dot A */}
-              <circle r={isAct ? 5 : 4} fill={color} opacity={isAct ? 1 : 0.7}>
-                <animateMotion dur={dur} repeatCount="indefinite" path={path} />
-              </circle>
-              {/* Animated traffic dot B (staggered) */}
-              <circle r={isAct ? 3.5 : 2.8} fill={color} opacity={isAct ? 0.65 : 0.4}>
-                <animateMotion dur={dur} repeatCount="indefinite" path={path}
-                  begin={`-${parseFloat(dur) * 0.5}s`} />
-              </circle>
-            </g>
+            <motion.div
+              key={`card-${i}`}
+              style={{
+                position: "absolute",
+                left: `${(cx / VW) * 100}%`,
+                top:  `${(cy / VH) * 100}%`,
+                transform: "translate(-50%, -50%)",
+                width: 156,
+                zIndex: 3,
+              }}
+              animate={{ y: isAct ? 0 : [0, -5, 0] }}
+              transition={
+                isAct
+                  ? { duration: 0.25 }
+                  : { duration: 3.2 + i * 0.55, repeat: Infinity, ease: "easeInOut", delay: i * 0.38 }
+              }
+            >
+              <motion.button
+                type="button"
+                onClick={() => onSelect(isAct ? null : i)}
+                onMouseEnter={() => setHov(i)}
+                onMouseLeave={() => setHov(null)}
+                onFocus={() => setHov(i)}
+                onBlur={() => setHov(null)}
+                aria-pressed={isAct}
+                aria-label={svc.title}
+                className="w-full rounded-2xl outline-none focus-visible:ring-2 text-left relative overflow-hidden"
+                style={{
+                  padding: "12px 13px",
+                  background: isAct ? accent : "var(--glass-card)",
+                  border: `1.5px solid ${isAct ? accent : isH ? `${accent}66` : "var(--border-strong)"}`,
+                  boxShadow: isAct
+                    ? `0 16px 40px -8px ${accent}55, 0 4px 16px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.2)`
+                    : isH
+                    ? `0 10px 28px -6px ${accent}33, 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.65)`
+                    : "0 2px 10px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.65)",
+                  cursor: "pointer",
+                  transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s",
+                }}
+                animate={{ scale: isAct ? 1.05 : isH ? 1.03 : 1 }}
+                transition={{ type: "spring", stiffness: 380, damping: 28 }}
+              >
+                {/* Active shimmer overlay */}
+                {isAct && (
+                  <span className="absolute inset-0 pointer-events-none rounded-2xl"
+                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.13) 0%, transparent 55%)" }} />
+                )}
+                {/* Icon badge */}
+                <span style={{
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  width: 34, height: 34, borderRadius: 10, marginBottom: 9, flexShrink: 0,
+                  background: isAct ? "rgba(255,255,255,0.2)" : `${accent}18`,
+                  border: `1px solid ${isAct ? "rgba(255,255,255,0.3)" : `${accent}30`}`,
+                  color: isAct ? "#fff" : accent,
+                  transition: "all 0.25s",
+                }}>
+                  <Icon size={17} strokeWidth={isAct ? 2.1 : 1.9} />
+                </span>
+                {/* Title */}
+                <span className="block font-bold leading-tight"
+                  style={{
+                    fontSize: 12, marginBottom: 5,
+                    color: isAct ? "#fff" : "var(--white)",
+                    transition: "color 0.25s",
+                  }}>
+                  {svc.title}
+                </span>
+                {/* Short description */}
+                <span className="block leading-snug"
+                  style={{
+                    fontSize: 10,
+                    color: isAct ? "rgba(255,255,255,0.75)" : "var(--w45)",
+                    transition: "color 0.25s",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical" as const,
+                    overflow: "hidden",
+                  }}>
+                  {shortDesc(svc.desc)}
+                </span>
+              </motion.button>
+            </motion.div>
           );
         })}
-      </svg>
 
-      {/* ── Desktop: 3-column grid  │  Mobile: hub + 2-col card grid ─ */}
+        <style jsx>{`
+          @keyframes hub-cw  { to { transform: rotate( 360deg); } }
+          @keyframes hub-ccw { to { transform: rotate(-360deg); } }
+        `}</style>
+      </div>
 
-      {/* Desktop layout */}
-      <div
-        className="hidden lg:grid items-center"
-        style={{
-          gridTemplateColumns: "1fr auto 1fr",
-          gap: "clamp(20px, 3vw, 40px)",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        {/* Left column */}
-        <div className="flex flex-col gap-3">
-          {leftIdx.map(si => renderCard(si))}
-        </div>
-
+      {/* ── Mobile: hub + stacked cards (< lg) ────────────────────── */}
+      <div className="lg:hidden flex flex-col items-center gap-6">
         {/* Hub */}
-        <div ref={hubRef} className="flex flex-col items-center justify-center">
-          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {/* Outer spinning ring */}
-            <div style={{
-              position: "absolute",
-              width: "clamp(178px, 18vw, 214px)", height: "clamp(178px, 18vw, 214px)",
-              borderRadius: "50%",
-              border: "1px dashed var(--border-strong)",
-              opacity: 0.38,
-              animation: "hub-cw 22s linear infinite",
-            }} />
-            {/* Inner counter-spinning ring */}
-            <div style={{
-              position: "absolute",
-              width: "clamp(148px, 15vw, 178px)", height: "clamp(148px, 15vw, 178px)",
-              borderRadius: "50%",
-              border: "0.8px dashed var(--blue)",
-              opacity: 0.22,
-              animation: "hub-ccw 35s linear infinite",
-            }} />
-            {/* Hub body */}
-            <div style={{
-              width:  "clamp(116px, 12vw, 148px)",
-              height: "clamp(116px, 12vw, 148px)",
-              borderRadius: "50%",
-              background: "linear-gradient(140deg, var(--bg2), var(--bg1))",
-              border: "2px solid var(--blue)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow:
-                "0 0 0 8px rgba(28,78,138,0.07), 0 0 48px rgba(28,78,138,0.16), inset 0 1px 0 rgba(255,255,255,0.2)",
-              position: "relative",
-              zIndex: 1,
-            }}>
-              {/* Inner detail ring */}
-              <div style={{
-                position: "absolute", inset: 10, borderRadius: "50%",
-                border: "1px dashed var(--blue)", opacity: 0.28,
-              }} />
-              {/* Logo */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/logo.avif" alt="Supportiva"
-                style={{ width: "58%", height: "58%", objectFit: "contain", position: "relative", zIndex: 1 }}
-              />
-            </div>
+        <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{
+            position: "absolute", width: 164, height: 164, borderRadius: "50%",
+            border: "1px dashed var(--border-strong)", opacity: 0.32,
+            animation: "hub-cw 30s linear infinite",
+          }} />
+          <div style={{
+            width: 118, height: 118, borderRadius: "50%",
+            background: "linear-gradient(145deg, var(--bg2), var(--bg1))",
+            border: "2px solid var(--blue)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: "0 0 0 8px rgba(28,78,138,0.065), 0 0 44px rgba(28,78,138,0.18)",
+            position: "relative", zIndex: 1,
+          }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo.avif" alt="Supportiva"
+              style={{ width: "58%", height: "58%", objectFit: "contain" }} />
           </div>
         </div>
-
-        {/* Right column */}
-        <div className="flex flex-col gap-3">
-          {rightIdx.map(si => renderCard(si))}
-        </div>
-      </div>
-
-      {/* Desktop bottom row */}
-      <div
-        className="hidden lg:flex gap-3 mt-4"
-        style={{ justifyContent: "center", position: "relative", zIndex: 1 }}
-      >
-        {bottomIdx.map(si => (
-          <div key={si} style={{ flex: "1 1 0", maxWidth: 290 }}>
-            {renderCard(si)}
-          </div>
-        ))}
-      </div>
-
-      {/* Mobile layout: hub centred + 2-column card grid */}
-      <div className="lg:hidden flex flex-col items-center gap-5">
-        {/* Hub (inline, no ResizeObserver ref — lines not shown on mobile) */}
-        <div className="flex flex-col items-center justify-center">
-          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div style={{
-              position: "absolute", width: 150, height: 150, borderRadius: "50%",
-              border: "1px dashed var(--border-strong)", opacity: 0.35,
-              animation: "hub-cw 22s linear infinite",
-            }} />
-            <div style={{
-              width: 110, height: 110, borderRadius: "50%",
-              background: "linear-gradient(140deg, var(--bg2), var(--bg1))",
-              border: "2px solid var(--blue)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 0 0 6px rgba(28,78,138,0.07), 0 0 32px rgba(28,78,138,0.14)",
-              position: "relative", zIndex: 1,
-            }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/logo.avif" alt="Supportiva"
-                style={{ width: "56%", height: "56%", objectFit: "contain" }} />
-            </div>
-          </div>
-        </div>
-
-        {/* All 6 cards in a 2-column grid on mobile */}
+        {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-          {[...leftIdx, ...rightIdx, ...bottomIdx].map(si => renderCard(si))}
+          {(services as any[]).map((_, i) => renderMobileCard(i))}
         </div>
+        <style jsx>{`
+          @keyframes hub-cw { to { transform: rotate(360deg); } }
+        `}</style>
       </div>
 
-      {/* Keyframes */}
-      <style jsx>{`
-        @keyframes hub-cw  { to { transform: rotate(360deg);  } }
-        @keyframes hub-ccw { to { transform: rotate(-360deg); } }
-      `}</style>
-    </motion.div>
+    </div>
   );
 }
 
