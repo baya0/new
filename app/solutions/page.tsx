@@ -212,7 +212,9 @@ function NetworkHub({
           const Icon   = SERVICE_ICONS[i];
 
           return (
-            <motion.div
+            // Plain div handles position + centering — never animated so
+            // transform: translate(-50%,-50%) is never overwritten.
+            <div
               key={i}
               style={{
                 position: "absolute",
@@ -222,13 +224,16 @@ function NetworkHub({
                 width: `${CARD_PCT}%`,
                 zIndex: 3,
               }}
-              animate={{ y: isAct ? 0 : [0, "-1.5%", 0] }}
-              transition={
-                isAct
-                  ? { duration: 0.2 }
-                  : { duration: 3.2 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }
-              }
             >
+              {/* Separate motion.div owns only the float animation */}
+              <motion.div
+                animate={{ y: isAct ? 0 : [0, -6, 0] }}
+                transition={
+                  isAct
+                    ? { duration: 0.2 }
+                    : { duration: 3.2 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }
+                }
+              >
               <motion.button
                 type="button"
                 onClick={() => onSelect(isAct ? null : i)}
@@ -291,7 +296,8 @@ function NetworkHub({
                   {svc.title}
                 </span>
               </motion.button>
-            </motion.div>
+              </motion.div>
+            </div>
           );
         })}
 
