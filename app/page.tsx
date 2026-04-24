@@ -197,8 +197,8 @@ export default function HomePage() {
                 <Image
                   src={heroLogoSrc}
                   alt="Supportiva"
-                  width={900}
-                  height={900}
+                  width={1000}
+                  height={1000}
                   className="relative z-10 animate-float-slow"
                 />
               </div>
