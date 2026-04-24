@@ -96,8 +96,11 @@ function NetworkHub({
   const [hov, setHov] = useState<number | null>(null);
   const n = services.length;
 
-  // First node at the top (-90°), then clockwise
-  const angleOf = (i: number) => -90 + (360 / n) * i;
+  // Start at -120° so nodes land at 10, 2, 3, 4, 8, 9 o'clock:
+  // upper-left / upper-right / pure-right / lower-right / lower-left / pure-left
+  // This gives Staff Augmentation the clean 9 o'clock position and Network
+  // Security the symmetric 3 o'clock position — no awkward 10 o'clock card.
+  const angleOf = (i: number) => -120 + (360 / n) * i;
 
   return (
     <motion.div
