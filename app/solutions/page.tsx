@@ -79,10 +79,15 @@ function FadeIn({ children, className, delay = 0, y = 24 }: {
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
 
-// SVG coordinate system (0–100, percentage space)
-const HUB_R      = 14;    // hub radius (slightly larger, more prominent)
-const NODE_R     = 35;    // orbit distance from center to node center
-const NODE_EDGE  = 9.5;   // half-size of node card in SVG units (where lines stop)
+// SVG coordinate system: 0–100 (percentage space)
+// With 6 nodes at 60° spacing starting at -90°:
+//   i=0 → 12 o'clock  i=1 → 2 o'clock  i=2 → 4 o'clock
+//   i=3 →  6 o'clock  i=4 → 8 o'clock  i=5 → 10 o'clock
+// Perfect hexagonal symmetry — single anchors at top (Cloud) and bottom (IT Support),
+// mirrored pairs on each side.
+const HUB_R     = 14;    // hub circle radius
+const NODE_R    = 36;    // orbit radius (all 6 nodes sit on this circle)
+const NODE_EDGE = 9;     // half-card size in SVG units → controls where lines stop
 
 function NetworkHub({
   services,
@@ -96,21 +101,18 @@ function NetworkHub({
   const [hov, setHov] = useState<number | null>(null);
   const n = services.length;
 
-  // Start at -120° so nodes land at 10, 2, 3, 4, 8, 9 o'clock:
-  // upper-left / upper-right / pure-right / lower-right / lower-left / pure-left
-  // This gives Staff Augmentation the clean 9 o'clock position and Network
-  // Security the symmetric 3 o'clock position — no awkward 10 o'clock card.
-  const angleOf = (i: number) => -120 + (360 / n) * i;
+  // Standard top-first hexagonal — 60° equal spacing, anchors at 12 & 6 o'clock.
+  const angleOf = (i: number) => -90 + (360 / n) * i;
 
   return (
     <motion.div
-      className="relative w-full max-w-[560px] aspect-square mx-auto"
+      className="relative w-full max-w-[580px] aspect-square mx-auto"
       style={{ userSelect: "none", overflow: "visible" }}
-      initial={{ opacity: 0, scale: 0.92 }}
+      initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* ═══ SVG LAYER — hub, rings, connections, traffic dots ═══ */}
+      {/* ═══ SVG LAYER ═══════════════════════════════════════════════ */}
       <svg
         viewBox="0 0 100 100"
         preserveAspectRatio="xMidYMid meet"
@@ -119,172 +121,170 @@ function NetworkHub({
         aria-hidden="true"
       >
         <defs>
-          <radialGradient id="hub-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"  stopColor="var(--blue-light)" stopOpacity="0.30" />
-            <stop offset="70%" stopColor="var(--blue)"       stopOpacity="0.08" />
-            <stop offset="100%" stopColor="var(--blue)"      stopOpacity="0" />
+          <radialGradient id="hub-aura" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="var(--blue-light)" stopOpacity="0.38" />
+            <stop offset="60%"  stopColor="var(--blue)"       stopOpacity="0.07" />
+            <stop offset="100%" stopColor="var(--blue)"       stopOpacity="0"    />
           </radialGradient>
-          <linearGradient id="hub-fill" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient id="hub-fill" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%"   stopColor="var(--bg2)" />
             <stop offset="100%" stopColor="var(--bg1)" />
           </linearGradient>
+          <radialGradient id="hub-gloss" cx="38%" cy="28%" r="55%">
+            <stop offset="0%"   stopColor="rgba(255,255,255,0.22)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)"    />
+          </radialGradient>
         </defs>
 
-        {/* Outer decorative rings */}
-        <circle cx="50" cy="50" r="49"
-          fill="none" strokeWidth="0.12"
-          strokeDasharray="0.4 1.6"
-          style={{ stroke: "var(--border-strong)", opacity: 0.55 }} />
-        <motion.circle
-          cx="50" cy="50" r="46"
-          fill="none" strokeWidth="0.1"
-          strokeDasharray="0.3 2.2"
+        {/* Outermost faint decorative ring */}
+        <circle cx="50" cy="50" r="48"
+          fill="none" strokeWidth="0.1" strokeDasharray="0.3 1.8"
+          style={{ stroke: "var(--border)", opacity: 0.35 }} />
+
+        {/* Slowly counter-rotating ring */}
+        <motion.circle cx="50" cy="50" r="44.5"
+          fill="none" strokeWidth="0.08" strokeDasharray="0.25 2.8"
           animate={{ rotate: 360 }}
-          transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-          style={{ stroke: "var(--border-strong)", opacity: 0.4, transformOrigin: "50% 50%" }}
+          transition={{ duration: 110, repeat: Infinity, ease: "linear" }}
+          style={{ stroke: "var(--blue)", opacity: 0.18, transformOrigin: "50% 50%" }}
         />
-        <circle cx="50" cy="50" r={NODE_R + 2}
-          fill="none" strokeWidth="0.1"
-          style={{ stroke: "var(--border)", opacity: 0.45 }} />
 
-        {/* Soft ambient glow behind hub */}
-        <circle cx="50" cy="50" r={HUB_R + 8} fill="url(#hub-grad)" />
+        {/* ── ORBIT GUIDE RING — all nodes sit exactly on this path ── */}
+        <circle cx="50" cy="50" r={NODE_R}
+          fill="none" strokeWidth="0.32"
+          strokeDasharray="1.6 2.8"
+          style={{ stroke: "var(--border-strong)", opacity: 0.55 }} />
 
-        {/* Connection lines + traffic dots */}
+        {/* Soft ambient aura behind hub */}
+        <circle cx="50" cy="50" r={HUB_R + 10} fill="url(#hub-aura)" />
+
+        {/* ── CONNECTION LINES + TRAFFIC DOTS ── */}
         {services.map((svc: any, i: number) => {
-          const a = toRad(angleOf(i));
-          const nx = 50 + NODE_R * Math.cos(a);
-          const ny = 50 + NODE_R * Math.sin(a);
-          const hx = 50 + (HUB_R + 0.5) * Math.cos(a);
-          const hy = 50 + (HUB_R + 0.5) * Math.sin(a);
+          const a  = toRad(angleOf(i));
+          const hx = 50 + (HUB_R + 0.8) * Math.cos(a);
+          const hy = 50 + (HUB_R + 0.8) * Math.sin(a);
           const ex = 50 + (NODE_R - NODE_EDGE) * Math.cos(a);
           const ey = 50 + (NODE_R - NODE_EDGE) * Math.sin(a);
 
           const isAct = selected === i;
           const isH   = hov === i;
-          const lineColor = isAct || isH ? colorMap[svc.color] : "var(--border-strong)";
-          const lineOp    = isAct ? 0.95 : isH ? 0.75 : 0.55;
-          const linePath  = `M${hx},${hy} L${ex},${ey}`;
-          const dotDur    = isAct ? "1.3s" : isH ? "1.9s" : "3s";
+          const color = colorMap[svc.color];
+          const path  = `M${hx},${hy} L${ex},${ey}`;
+          const dur   = isAct ? "1.2s" : isH ? "1.8s" : "2.8s";
 
           return (
-            <g key={`line-${i}`} style={{ transition: "opacity 0.3s ease" }}>
-              {/* Subtle wide underline (only when lit) */}
+            <g key={`ln-${i}`}>
+              {/* Wide glow underlay (active / hovered) */}
               {(isAct || isH) && (
-                <line
-                  x1={hx} y1={hy} x2={ex} y2={ey}
-                  stroke={colorMap[svc.color]}
-                  strokeWidth="0.9"
-                  strokeLinecap="round"
-                  opacity="0.15"
-                />
+                <line x1={hx} y1={hy} x2={ex} y2={ey}
+                  stroke={color} strokeWidth="1.4"
+                  strokeLinecap="round" opacity="0.13" />
               )}
-              <line
-                x1={hx} y1={hy} x2={ex} y2={ey}
-                stroke={lineColor}
-                strokeWidth={isAct ? 0.35 : isH ? 0.3 : 0.22}
+              {/* Main line */}
+              <line x1={hx} y1={hy} x2={ex} y2={ey}
+                stroke={isAct || isH ? color : "var(--border-strong)"}
+                strokeWidth={isAct ? 0.48 : isH ? 0.38 : 0.28}
                 strokeLinecap="round"
-                opacity={lineOp}
+                opacity={isAct ? 1 : isH ? 0.85 : 0.62}
                 style={{ transition: "all 0.3s ease" }}
               />
-              {/* Traffic dots — two offset circles flowing hub → node */}
-              <circle
-                r={isAct ? 0.75 : 0.55}
-                fill={colorMap[svc.color]}
-                opacity={isAct ? 1 : 0.8}
-              >
-                <animateMotion dur={dotDur} repeatCount="indefinite" path={linePath} />
+              {/* Traffic dot A */}
+              <circle r={isAct ? 0.82 : 0.62} fill={color}
+                opacity={isAct ? 1 : 0.75}>
+                <animateMotion dur={dur} repeatCount="indefinite" path={path} />
               </circle>
-              <circle
-                r={isAct ? 0.55 : 0.4}
-                fill={colorMap[svc.color]}
-                opacity={isAct ? 0.7 : 0.45}
-              >
-                <animateMotion
-                  dur={dotDur}
-                  repeatCount="indefinite"
-                  path={linePath}
-                  begin={`-${parseFloat(dotDur) * 0.55}s`}
-                />
+              {/* Traffic dot B (staggered) */}
+              <circle r={isAct ? 0.56 : 0.44} fill={color}
+                opacity={isAct ? 0.7 : 0.45}>
+                <animateMotion dur={dur} repeatCount="indefinite" path={path}
+                  begin={`-${parseFloat(dur) * 0.5}s`} />
               </circle>
             </g>
           );
         })}
 
-        {/* Hub — rotating dashed ring + solid card + wordmark */}
-        <motion.circle
-          cx="50" cy="50" r={HUB_R + 2}
-          fill="none" strokeWidth="0.15" strokeDasharray="0.4 0.8"
+        {/* ── HUB ── */}
+        {/* Rotating dashed accent ring */}
+        <motion.circle cx="50" cy="50" r={HUB_R + 2.8}
+          fill="none" strokeWidth="0.18" strokeDasharray="0.55 1.1"
           animate={{ rotate: -360 }}
-          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-          style={{ stroke: "var(--blue)", opacity: 0.4, transformOrigin: "50% 50%" }}
+          transition={{ duration: 42, repeat: Infinity, ease: "linear" }}
+          style={{ stroke: "var(--blue)", opacity: 0.48, transformOrigin: "50% 50%" }}
         />
+        {/* Hub body */}
         <circle cx="50" cy="50" r={HUB_R}
-          fill="url(#hub-fill)"
-          stroke="var(--blue)" strokeWidth="0.35" />
-        <circle cx="50" cy="50" r={HUB_R - 1.5}
-          fill="none" stroke="var(--border)" strokeWidth="0.18"
-          strokeDasharray="0.3 0.6" opacity="0.6" />
+          fill="url(#hub-fill)" stroke="var(--blue)" strokeWidth="0.48" />
+        {/* Gloss top-left highlight */}
+        <circle cx="50" cy="50" r={HUB_R} fill="url(#hub-gloss)" />
+        {/* Inner detail ring 1 */}
+        <circle cx="50" cy="50" r={HUB_R - 2.2}
+          fill="none" stroke="var(--blue)" strokeWidth="0.12"
+          strokeDasharray="0.38 0.72" opacity="0.38" />
+        {/* Inner detail ring 2 */}
+        <circle cx="50" cy="50" r={HUB_R - 4.5}
+          fill="none" stroke="var(--blue-light)" strokeWidth="0.07"
+          opacity="0.28" />
       </svg>
 
-      {/* ═══ HTML LAYER — hub label (centered), node cards, text labels ═══ */}
-      {/* Hub label (centered over hub circle) */}
-      <div
-        className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center"
-      >
+      {/* ═══ HTML LAYER — hub label ═════════════════════════════════ */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
         <div
           className="font-black leading-none"
           style={{
             color: "var(--blue)",
-            fontSize: "clamp(20px, 4.2vw, 28px)",
+            fontSize: "clamp(22px, 4.5vw, 30px)",
             letterSpacing: "0.02em",
           }}
         >
           S
         </div>
-        <div
-          className="font-extrabold mt-1"
+        <div className="font-extrabold mt-[3px]"
           style={{
             color: "var(--w25)",
-            fontSize: "clamp(7px, 1.2vw, 8.5px)",
-            letterSpacing: "0.22em",
-            lineHeight: 1.2,
+            fontSize: "clamp(6.5px, 1.1vw, 8px)",
+            letterSpacing: "0.26em",
+            lineHeight: 1.4,
           }}
         >
           SUPPORTIVA
         </div>
-        <div
-          className="font-bold"
+        <div className="font-bold"
           style={{
             color: "var(--w25)",
-            fontSize: "clamp(7px, 1.2vw, 8.5px)",
-            letterSpacing: "0.22em",
-            lineHeight: 1.2,
+            fontSize: "clamp(6.5px, 1.1vw, 8px)",
+            letterSpacing: "0.26em",
+            lineHeight: 1.4,
           }}
         >
           CORE
         </div>
       </div>
 
-      {/* Node cards — icon + title integrated, richer hover / active states */}
+      {/* ═══ NODE CARDS ══════════════════════════════════════════════ */}
       {services.map((svc: any, i: number) => {
-        const a   = toRad(angleOf(i));
-        const cx  = 50 + NODE_R * Math.cos(a);
-        const cy  = 50 + NODE_R * Math.sin(a);
-        const Icon  = SERVICE_ICONS[i] ?? Server;
-        const isAct = selected === i;
-        const isH   = hov === i;
+        const a    = toRad(angleOf(i));
+        const cx   = 50 + NODE_R * Math.cos(a);
+        const cy   = 50 + NODE_R * Math.sin(a);
+        const Icon = SERVICE_ICONS[i] ?? Server;
+        const isAct  = selected === i;
+        const isH    = hov === i;
         const accent = colorMap[svc.color];
 
-        // Tooltip placement: appear on the radial-outward side of the card
-        const tipAbove  = cy < 40;
-        const tipBelow  = cy > 60;
-        const tipRight  = cx > 60 && !tipAbove && !tipBelow;
-        const tipLeft   = cx < 40 && !tipAbove && !tipBelow;
+        // Tooltip: place outward from hub, clamped to 4 zones
+        const tipTop    = cy < 28;
+        const tipBottom = cy > 72;
+        const tipRight  = cx > 62 && !tipTop && !tipBottom;
+        const tipLeft   = cx < 38 && !tipTop && !tipBottom;
+        // Top/bottom nodes → shift tooltip to the right so it stays visible
+        const tipDx = tipRight ? 12 : tipLeft ? -12 : 10;
+        const tipDy = tipTop ? 12 : tipBottom ? -12 : 0;
+        const tipAlignX = tipLeft ? "-100%" : "0";
+        const tipAlignY = tipTop ? "0" : tipBottom ? "-100%" : "-50%";
 
         return (
-          <div key={`node-${i}`} className="absolute inset-0 pointer-events-none">
-            {/* Card */}
+          <div key={`nd-${i}`} className="absolute inset-0 pointer-events-none">
+
+            {/* ── Card ── */}
             <motion.button
               type="button"
               onClick={() => onSelect(isAct ? null : i)}
@@ -294,84 +294,78 @@ function NetworkHub({
               onBlur={() => setHov(null)}
               aria-pressed={isAct}
               aria-label={svc.title}
-              className="absolute pointer-events-auto flex flex-col items-center justify-center rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2 group/node"
+              className="absolute pointer-events-auto flex flex-col items-center justify-center rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
               style={{
                 left: `${cx}%`,
-                top: `${cy}%`,
-                width: "clamp(88px, 17.5%, 112px)",
-                height: "clamp(84px, 16.5%, 104px)",
+                top:  `${cy}%`,
+                width:  "clamp(84px, 16.5%, 104px)",
+                height: "clamp(80px, 15.5%, 98px)",
                 transform: "translate(-50%, -50%)",
                 padding: "10px 8px 9px",
                 rowGap: 5,
-                background: isAct ? accent : "var(--bg2)",
-                border: `1.5px solid ${isAct ? accent : isH ? accent : "var(--border-strong)"}`,
+                background: isAct
+                  ? `linear-gradient(145deg, ${accent}f0, ${accent}cc)`
+                  : "var(--glass-card)",
+                border: `1.5px solid ${isAct ? accent : isH ? `${accent}99` : "var(--border-strong)"}`,
                 color: isAct ? "#fff" : accent,
                 boxShadow: isAct
-                  ? `0 14px 36px -8px ${accent}99, 0 4px 14px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.18)`
+                  ? `0 16px 44px -8px ${accent}88, 0 4px 18px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.22)`
                   : isH
-                    ? `0 10px 28px -8px ${accent}77, 0 3px 10px rgba(0,0,0,0.12)`
-                    : "var(--shadow)",
+                    ? `0 12px 36px -8px ${accent}66, 0 3px 12px rgba(0,0,0,0.09), inset 0 1px 0 rgba(255,255,255,0.6)`
+                    : "0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.7)",
                 transition:
-                  "background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease",
+                  "background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
               }}
-              animate={{ scale: isAct ? 1.1 : isH ? 1.06 : 1 }}
-              transition={{ type: "spring", stiffness: 320, damping: 22 }}
+              animate={{ scale: isAct ? 1.09 : isH ? 1.05 : 1 }}
+              transition={{ type: "spring", stiffness: 340, damping: 24 }}
             >
-              {/* Ambient glow behind card when lit */}
+              {/* Ambient glow */}
               {(isAct || isH) && (
-                <span
-                  aria-hidden
+                <span aria-hidden
                   className="absolute inset-0 rounded-2xl -z-10"
                   style={{
                     background: `radial-gradient(circle, ${accent}55, transparent 70%)`,
-                    filter: "blur(14px)",
-                    transform: "scale(1.5)",
+                    filter: "blur(18px)",
+                    transform: "scale(1.65)",
                   }}
                 />
               )}
-
-              {/* Pulsing ring on active */}
+              {/* Active pulsing ring */}
               {isAct && (
-                <span
-                  aria-hidden
+                <span aria-hidden
                   className="absolute inset-0 rounded-2xl pointer-events-none"
                   style={{
-                    border: `2px solid ${accent}`,
-                    animation: "ring-pulse 2s ease-out infinite",
+                    border: `2px solid ${accent}dd`,
+                    animation: "ring-pulse 2.2s ease-out infinite",
                   }}
                 />
               )}
-
-              {/* Top shine on active */}
+              {/* Top gloss on active */}
               {isAct && (
-                <span
-                  aria-hidden
+                <span aria-hidden
                   className="absolute inset-x-0 top-0 h-1/2 rounded-t-2xl pointer-events-none"
                   style={{
                     background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0))",
+                      "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0))",
                   }}
                 />
               )}
 
               <Icon
-                size={24}
+                size={22}
                 strokeWidth={isAct ? 2.2 : 1.9}
-                style={{
-                  transition: "all 0.3s ease",
-                  flexShrink: 0,
-                }}
+                style={{ transition: "all 0.3s ease", flexShrink: 0 }}
               />
 
-              {/* Integrated title (fixes the old alignment problem) */}
               <span
-                className="font-bold text-center leading-[1.15]"
+                className="font-semibold text-center"
                 style={{
-                  fontSize: "clamp(7.5px, 1vw, 9.5px)",
+                  fontSize: "clamp(7.5px, 0.9vw + 3px, 9.5px)",
+                  lineHeight: 1.2,
                   letterSpacing: "0.01em",
-                  color: isAct ? "#fff" : "var(--w85)",
+                  color: isAct ? "rgba(255,255,255,0.95)" : "var(--w55)",
                   transition: "color 0.3s ease",
-                  maxWidth: "100%",
+                  maxWidth: "92%",
                   wordBreak: "break-word",
                   hyphens: "auto",
                 }}
@@ -380,14 +374,10 @@ function NetworkHub({
               </span>
 
               {/* Status LED */}
-              <span
-                aria-hidden
-                className="absolute rounded-full"
+              <span aria-hidden className="absolute rounded-full"
                 style={{
-                  top: 7,
-                  right: 7,
-                  width: 6,
-                  height: 6,
+                  top: 6, right: 6,
+                  width: 5.5, height: 5.5,
                   background: isAct ? "rgba(255,255,255,0.95)" : accent,
                   boxShadow: isAct
                     ? "0 0 8px rgba(255,255,255,0.9)"
@@ -398,29 +388,30 @@ function NetworkHub({
               />
             </motion.button>
 
-            {/* Hover tooltip chip — shows short tag line on hover */}
+            {/* Hover tooltip */}
             <AnimatePresence>
               {isH && !isAct && (
                 <motion.div
                   key="tip"
-                  initial={{ opacity: 0, y: tipAbove ? 6 : tipBelow ? -6 : 0, x: tipLeft ? 6 : tipRight ? -6 : 0 }}
-                  animate={{ opacity: 1, y: 0, x: 0 }}
-                  exit={{ opacity: 0, y: tipAbove ? 6 : tipBelow ? -6 : 0 }}
-                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.85 }}
+                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute pointer-events-none z-20"
                   style={{
-                    left: `${cx + (tipRight ? 11 : tipLeft ? -11 : 0)}%`,
-                    top: `${cy + (tipAbove ? -12 : tipBelow ? 12 : 0)}%`,
-                    transform: `translate(${tipRight ? "0" : tipLeft ? "-100%" : "-50%"}, ${tipAbove ? "-100%" : tipBelow ? "0" : "-50%"})`,
+                    left:      `${cx + tipDx}%`,
+                    top:       `${cy + tipDy}%`,
+                    transform: `translate(${tipAlignX}, ${tipAlignY})`,
                   }}
                 >
                   <div
-                    className="px-3 py-1.5 rounded-lg text-[10.5px] font-bold tracking-[0.1em] uppercase whitespace-nowrap"
+                    className="px-3 py-1.5 rounded-xl text-[10px] font-bold tracking-[0.12em] uppercase whitespace-nowrap"
                     style={{
-                      background: "var(--bg2)",
-                      border: `1px solid ${accent}55`,
-                      color: accent,
-                      boxShadow: `0 6px 20px rgba(0,0,0,0.15), 0 0 0 1px ${accent}22 inset`,
+                      background: "var(--glass-card)",
+                      border:     `1px solid ${accent}44`,
+                      color:       accent,
+                      boxShadow:
+                        "0 8px 24px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.65)",
                     }}
                   >
                     {svc.tag}
@@ -432,16 +423,16 @@ function NetworkHub({
         );
       })}
 
-      {/* Keyframes */}
+      {/* Keyframe definitions */}
       <style jsx>{`
         @keyframes pulse-dot {
-          0%, 100% { opacity: 0.45; transform: scale(1); }
-          50%      { opacity: 1;    transform: scale(1.2); }
+          0%, 100% { opacity: 0.4;  transform: scale(1);    }
+          50%       { opacity: 1;    transform: scale(1.28); }
         }
         @keyframes ring-pulse {
-          0%   { opacity: 0.8; transform: scale(1); }
-          80%  { opacity: 0;   transform: scale(1.18); }
-          100% { opacity: 0;   transform: scale(1.22); }
+          0%   { opacity: 0.85; transform: scale(1);    }
+          75%  { opacity: 0;    transform: scale(1.22); }
+          100% { opacity: 0;    transform: scale(1.26); }
         }
       `}</style>
     </motion.div>
