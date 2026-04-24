@@ -80,9 +80,9 @@ function FadeIn({ children, className, delay = 0, y = 24 }: {
 const toRad = (deg: number) => (deg * Math.PI) / 180;
 
 // SVG coordinate system (0–100, percentage space)
-const HUB_R      = 12.5;  // hub radius
-const NODE_R     = 38;    // distance from center to node center
-const NODE_EDGE  = 7.5;   // half-size of node card in SVG units (where lines stop)
+const HUB_R      = 14;    // hub radius (slightly larger, more prominent)
+const NODE_R     = 35;    // orbit distance from center to node center
+const NODE_EDGE  = 9.5;   // half-size of node card in SVG units (where lines stop)
 
 function NetworkHub({
   services,
@@ -101,8 +101,8 @@ function NetworkHub({
 
   return (
     <motion.div
-      className="relative w-full max-w-[480px] aspect-square mx-auto"
-      style={{ userSelect: "none" }}
+      className="relative w-full max-w-[560px] aspect-square mx-auto"
+      style={{ userSelect: "none", overflow: "visible" }}
       initial={{ opacity: 0, scale: 0.92 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -263,7 +263,7 @@ function NetworkHub({
         </div>
       </div>
 
-      {/* Node cards */}
+      {/* Node cards — icon + title integrated, richer hover / active states */}
       {services.map((svc: any, i: number) => {
         const a   = toRad(angleOf(i));
         const cx  = 50 + NODE_R * Math.cos(a);
@@ -273,11 +273,11 @@ function NetworkHub({
         const isH   = hov === i;
         const accent = colorMap[svc.color];
 
-        // Label sits radially outward from the card. For top/bottom nodes
-        // the label goes above/below; for side nodes it sits beside.
-        const labelR = NODE_R + 12;
-        const lx = 50 + labelR * Math.cos(a);
-        const ly = 50 + labelR * Math.sin(a);
+        // Tooltip placement: appear on the radial-outward side of the card
+        const tipAbove  = cy < 40;
+        const tipBelow  = cy > 60;
+        const tipRight  = cx > 60 && !tipAbove && !tipBelow;
+        const tipLeft   = cx < 40 && !tipAbove && !tipBelow;
 
         return (
           <div key={`node-${i}`} className="absolute inset-0 pointer-events-none">
@@ -291,28 +291,28 @@ function NetworkHub({
               onBlur={() => setHov(null)}
               aria-pressed={isAct}
               aria-label={svc.title}
-              className="absolute pointer-events-auto flex items-center justify-center rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="absolute pointer-events-auto flex flex-col items-center justify-center rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-offset-2 group/node"
               style={{
                 left: `${cx}%`,
                 top: `${cy}%`,
-                width: "clamp(52px, 12%, 64px)",
-                height: "clamp(52px, 12%, 64px)",
+                width: "clamp(88px, 17.5%, 112px)",
+                height: "clamp(84px, 16.5%, 104px)",
                 transform: "translate(-50%, -50%)",
-                background: isAct
-                  ? accent
-                  : "var(--bg2)",
-                border: `1.5px solid ${isAct ? accent : "var(--border-strong)"}`,
+                padding: "10px 8px 9px",
+                rowGap: 5,
+                background: isAct ? accent : "var(--bg2)",
+                border: `1.5px solid ${isAct ? accent : isH ? accent : "var(--border-strong)"}`,
                 color: isAct ? "#fff" : accent,
                 boxShadow: isAct
-                  ? `0 10px 28px -6px ${accent}66, 0 4px 10px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.12)`
+                  ? `0 14px 36px -8px ${accent}99, 0 4px 14px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.18)`
                   : isH
-                    ? `0 6px 20px -6px ${accent}55, 0 2px 6px rgba(0,0,0,0.08)`
+                    ? `0 10px 28px -8px ${accent}77, 0 3px 10px rgba(0,0,0,0.12)`
                     : "var(--shadow)",
                 transition:
-                  "background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
+                  "background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease",
               }}
-              animate={{ scale: isAct ? 1.12 : isH ? 1.05 : 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              animate={{ scale: isAct ? 1.1 : isH ? 1.06 : 1 }}
+              transition={{ type: "spring", stiffness: 320, damping: 22 }}
             >
               {/* Ambient glow behind card when lit */}
               {(isAct || isH) && (
@@ -320,66 +320,125 @@ function NetworkHub({
                   aria-hidden
                   className="absolute inset-0 rounded-2xl -z-10"
                   style={{
-                    background: `radial-gradient(circle, ${accent}33, transparent 70%)`,
-                    filter: "blur(10px)",
-                    transform: "scale(1.35)",
+                    background: `radial-gradient(circle, ${accent}55, transparent 70%)`,
+                    filter: "blur(14px)",
+                    transform: "scale(1.5)",
                   }}
                 />
               )}
+
+              {/* Pulsing ring on active */}
+              {isAct && (
+                <span
+                  aria-hidden
+                  className="absolute inset-0 rounded-2xl pointer-events-none"
+                  style={{
+                    border: `2px solid ${accent}`,
+                    animation: "ring-pulse 2s ease-out infinite",
+                  }}
+                />
+              )}
+
+              {/* Top shine on active */}
+              {isAct && (
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 top-0 h-1/2 rounded-t-2xl pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0))",
+                  }}
+                />
+              )}
+
               <Icon
-                size={22}
+                size={24}
                 strokeWidth={isAct ? 2.2 : 1.9}
-                style={{ transition: "all 0.3s ease" }}
+                style={{
+                  transition: "all 0.3s ease",
+                  flexShrink: 0,
+                }}
               />
+
+              {/* Integrated title (fixes the old alignment problem) */}
+              <span
+                className="font-bold text-center leading-[1.15]"
+                style={{
+                  fontSize: "clamp(7.5px, 1vw, 9.5px)",
+                  letterSpacing: "0.01em",
+                  color: isAct ? "#fff" : "var(--w85)",
+                  transition: "color 0.3s ease",
+                  maxWidth: "100%",
+                  wordBreak: "break-word",
+                  hyphens: "auto",
+                }}
+              >
+                {svc.title}
+              </span>
+
               {/* Status LED */}
               <span
                 aria-hidden
                 className="absolute rounded-full"
                 style={{
-                  top: 6,
-                  right: 6,
-                  width: 5,
-                  height: 5,
+                  top: 7,
+                  right: 7,
+                  width: 6,
+                  height: 6,
                   background: isAct ? "rgba(255,255,255,0.95)" : accent,
                   boxShadow: isAct
-                    ? "0 0 6px rgba(255,255,255,0.9)"
-                    : `0 0 5px ${accent}`,
+                    ? "0 0 8px rgba(255,255,255,0.9)"
+                    : `0 0 6px ${accent}`,
                   opacity: 0.9,
                   animation: "pulse-dot 2s ease-in-out infinite",
                 }}
               />
             </motion.button>
 
-            {/* Label (below/outside the node, radially outward) */}
-            <div
-              className="absolute pointer-events-none text-center"
-              style={{
-                left: `${lx}%`,
-                top: `${ly}%`,
-                transform: "translate(-50%, -50%)",
-                width: 110,
-              }}
-            >
-              <div
-                className="font-bold leading-[1.15] tracking-wide"
-                style={{
-                  color: isAct ? accent : "var(--w85)",
-                  fontSize: "clamp(10.5px, 1.5vw, 12px)",
-                  transition: "color 0.3s ease",
-                }}
-              >
-                {svc.title}
-              </div>
-            </div>
+            {/* Hover tooltip chip — shows short tag line on hover */}
+            <AnimatePresence>
+              {isH && !isAct && (
+                <motion.div
+                  key="tip"
+                  initial={{ opacity: 0, y: tipAbove ? 6 : tipBelow ? -6 : 0, x: tipLeft ? 6 : tipRight ? -6 : 0 }}
+                  animate={{ opacity: 1, y: 0, x: 0 }}
+                  exit={{ opacity: 0, y: tipAbove ? 6 : tipBelow ? -6 : 0 }}
+                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute pointer-events-none z-20"
+                  style={{
+                    left: `${cx + (tipRight ? 11 : tipLeft ? -11 : 0)}%`,
+                    top: `${cy + (tipAbove ? -12 : tipBelow ? 12 : 0)}%`,
+                    transform: `translate(${tipRight ? "0" : tipLeft ? "-100%" : "-50%"}, ${tipAbove ? "-100%" : tipBelow ? "0" : "-50%"})`,
+                  }}
+                >
+                  <div
+                    className="px-3 py-1.5 rounded-lg text-[10.5px] font-bold tracking-[0.1em] uppercase whitespace-nowrap"
+                    style={{
+                      background: "var(--bg2)",
+                      border: `1px solid ${accent}55`,
+                      color: accent,
+                      boxShadow: `0 6px 20px rgba(0,0,0,0.15), 0 0 0 1px ${accent}22 inset`,
+                    }}
+                  >
+                    {svc.tag}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         );
       })}
 
-      {/* Keyframes for status LED pulse */}
+      {/* Keyframes */}
       <style jsx>{`
         @keyframes pulse-dot {
           0%, 100% { opacity: 0.45; transform: scale(1); }
           50%      { opacity: 1;    transform: scale(1.2); }
+        }
+        @keyframes ring-pulse {
+          0%   { opacity: 0.8; transform: scale(1); }
+          80%  { opacity: 0;   transform: scale(1.18); }
+          100% { opacity: 0;   transform: scale(1.22); }
         }
       `}</style>
     </motion.div>
@@ -597,9 +656,20 @@ export default function SolutionsPage() {
                       </ul>
                     )}
 
-                    <Link href="/contact">
-                      <Button size="lg">{s.cta ?? "Get In Touch →"}</Button>
-                    </Link>
+                    <div className="relative inline-block group/cta mt-2">
+                      <span
+                        aria-hidden
+                        className="absolute inset-0 rounded-xl opacity-0 group-hover/cta:opacity-100 transition-opacity duration-300 -z-10"
+                        style={{
+                          background: colorMap[s.services[selected].color],
+                          filter: "blur(16px)",
+                          transform: "scale(1.08) translateY(3px)",
+                        }}
+                      />
+                      <Link href="/contact">
+                        <Button size="lg">{s.cta ?? "Get In Touch →"}</Button>
+                      </Link>
+                    </div>
                   </motion.div>
 
                 )}
