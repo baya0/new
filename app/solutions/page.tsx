@@ -57,8 +57,8 @@ function FadeIn({ children, className, delay = 0, y = 24 }: {
 
 /* ══════════════════════════════════════════════════════════════════
    NETWORK HUB — radial orbital layout
-   6 cards at 60° intervals around a central branded hub.
-   Pure math positioning: no ResizeObserver needed.
+   Everything percentage-based so cards + hub scale with container.
+   Container uses aspectRatio so the SVG coordinate system matches.
    ══════════════════════════════════════════════════════════════════ */
 
 function NetworkHub({
@@ -72,183 +72,131 @@ function NetworkHub({
 }) {
   const [hov, setHov] = useState<number | null>(null);
 
-  // SVG coordinate space (viewBox)
-  const VW = 680, VH = 560;
-  const CX = 340, CY = 280; // hub center
-  const HUB_R = 65;         // hub circle radius
-  const ORBIT = 200;        // card-center distance from hub center
+  // All constants in SVG coordinate space (viewBox="0 0 VW VH").
+  // Cards and hub use percentage widths so they scale 1:1 with the SVG.
+  const VW = 700, VH = 640;
+  const CX = 350, CY = 320;
+  const HUB_R = 63;  // SVG units — hub body radius
+  const ORBIT = 240; // SVG units — distance from hub center to card center
 
-  // 6 nodes, 60° apart, starting at top (-90°)
+  // HUB_PCT and CARD_PCT must match: HUB_R*2/VW and card width / VW
+  const HUB_PCT  = (HUB_R * 2  / VW) * 100; // ≈ 18%
+  const CARD_PCT = (150        / VW) * 100; // ≈ 21.4%
+
   const nodes = (services as any[]).map((svc, i) => {
     const rad = (-90 + i * 60) * (Math.PI / 180);
-    const cx  = CX + ORBIT * Math.cos(rad);
-    const cy  = CY + ORBIT * Math.sin(rad);
     return {
-      cx, cy,
-      lx: CX + HUB_R * Math.cos(rad), // line start at hub edge
-      ly: CY + HUB_R * Math.sin(rad),
+      cx:  CX + ORBIT * Math.cos(rad),
+      cy:  CY + ORBIT * Math.sin(rad),
+      lx:  CX + HUB_R * Math.cos(rad),
+      ly:  CY + HUB_R * Math.sin(rad),
       svc, i,
     };
   });
 
   const shortDesc = (desc: string) => {
-    const s = desc.split(".")[0] + ".";
-    return s.length > 62 ? s.slice(0, 59) + "…" : s;
-  };
-
-  const renderMobileCard = (i: number) => {
-    const svc    = (services as any[])[i];
-    const isAct  = selected === i;
-    const isH    = hov === i;
-    const accent = colorMap[svc.color];
-    const Icon   = SERVICE_ICONS[i];
-    return (
-      <motion.button
-        key={i}
-        type="button"
-        onClick={() => onSelect(isAct ? null : i)}
-        onMouseEnter={() => setHov(i)}
-        onMouseLeave={() => setHov(null)}
-        aria-pressed={isAct}
-        aria-label={svc.title}
-        className="flex items-center gap-3 rounded-2xl text-left w-full outline-none focus-visible:ring-2"
-        style={{
-          padding: "13px 14px",
-          background: isAct ? accent : "var(--glass-card)",
-          border: `1.5px solid ${isAct ? accent : isH ? `${accent}66` : "var(--border-strong)"}`,
-          boxShadow: isAct
-            ? `0 12px 32px -8px ${accent}55, inset 0 1px 0 rgba(255,255,255,0.2)`
-            : isH
-            ? `0 8px 20px -4px ${accent}33, inset 0 1px 0 rgba(255,255,255,0.6)`
-            : "0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)",
-          transition: "all 0.25s",
-          cursor: "pointer",
-        }}
-        animate={{ scale: isAct ? 1.02 : 1 }}
-        transition={{ type: "spring", stiffness: 380, damping: 28 }}
-      >
-        <span style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          width: 42, height: 42, borderRadius: 12, flexShrink: 0,
-          background: isAct ? "rgba(255,255,255,0.2)" : `${accent}18`,
-          border: `1px solid ${isAct ? "rgba(255,255,255,0.3)" : `${accent}30`}`,
-          color: isAct ? "#fff" : accent,
-        }}>
-          <Icon size={19} strokeWidth={isAct ? 2.1 : 1.85} />
-        </span>
-        <span style={{ flex: 1, minWidth: 0 }}>
-          <span className="block font-bold leading-tight"
-            style={{ fontSize: 13, color: isAct ? "#fff" : "var(--white)", marginBottom: 2 }}>
-            {svc.title}
-          </span>
-          <span className="block leading-snug"
-            style={{ fontSize: 11, color: isAct ? "rgba(255,255,255,0.75)" : "var(--w45)" }}>
-            {shortDesc(svc.desc)}
-          </span>
-        </span>
-      </motion.button>
-    );
+    const first = desc.split(".")[0] + ".";
+    return first.length > 65 ? first.slice(0, 62) + "…" : first;
   };
 
   return (
-    <div className="w-full" style={{ maxWidth: 680 }}>
+    <div className="w-full" style={{ maxWidth: 660 }}>
 
-      {/* ── Desktop: radial orbital layout (lg+) ──────────────────── */}
-      <div className="relative hidden lg:block">
-
-        {/* SVG layer: ambient glow + orbit ring + connector lines */}
+      {/* ── Desktop: percentage-scaled radial layout ──────────────── */}
+      {/*
+          The container has an explicit aspect-ratio matching the viewBox.
+          Cards use width:CARD_PCT% and hub uses width:HUB_PCT% so every
+          element scales together as the container resizes — no more
+          fixed-px cards fighting a shrinking SVG.
+      */}
+      <div
+        className="hidden lg:block relative"
+        style={{ aspectRatio: `${VW} / ${VH}` }}
+      >
+        {/* SVG: glow, orbit rings, connector lines, travelling dots */}
         <svg
           viewBox={`0 0 ${VW} ${VH}`}
-          style={{ width: "100%", display: "block" }}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
           aria-hidden="true"
         >
-          {/* Ambient glow behind hub */}
-          <circle cx={CX} cy={CY} r={HUB_R + 50} fill="var(--blue)" opacity="0.055" />
-          <circle cx={CX} cy={CY} r={HUB_R + 90} fill="var(--blue)" opacity="0.025" />
+          {/* Ambient glow */}
+          <circle cx={CX} cy={CY} r="120" fill="var(--blue)" opacity="0.05" />
+          <circle cx={CX} cy={CY} r="175" fill="var(--blue)" opacity="0.022" />
 
-          {/* Outer orbit dashed ring */}
+          {/* Orbit rings */}
           <circle cx={CX} cy={CY} r={ORBIT}
             fill="none" stroke="var(--border)" strokeWidth="0.9"
-            strokeDasharray="5 11" opacity="0.35" />
-          {/* Inner subtle ring */}
-          <circle cx={CX} cy={CY} r={ORBIT - 20}
+            strokeDasharray="5 12" opacity="0.38" />
+          <circle cx={CX} cy={CY} r={ORBIT - 22}
             fill="none" stroke="var(--blue)" strokeWidth="0.4"
-            strokeDasharray="2 9" opacity="0.14" />
+            strokeDasharray="2 10" opacity="0.13" />
 
-          {/* Connector lines + travelling dots */}
-          {nodes.map(({ cx, cy, lx, ly, i, svc }) => {
+          {/* Per-node: connector line + travelling dots */}
+          {nodes.map(({ lx, ly, cx, cy, i, svc }) => {
             const isAct = selected === i;
             const isH   = hov === i;
             const color = colorMap[svc.color];
             const path  = `M${lx},${ly} L${cx},${cy}`;
-            const dur   = isAct ? "1.1s" : isH ? "1.8s" : "3s";
+            const dur   = isAct ? "1.1s" : isH ? "1.8s" : "3.2s";
             return (
-              <g key={`line-${i}`}>
-                {/* Glow behind active/hovered line */}
+              <g key={i}>
                 {(isAct || isH) && (
                   <line x1={lx} y1={ly} x2={cx} y2={cy}
-                    stroke={color} strokeWidth="10" opacity="0.13"
-                    strokeLinecap="round" />
+                    stroke={color} strokeWidth="10" opacity="0.12" strokeLinecap="round" />
                 )}
-                <line
-                  x1={lx} y1={ly} x2={cx} y2={cy}
+                <line x1={lx} y1={ly} x2={cx} y2={cy}
                   stroke={isAct || isH ? color : "var(--border-strong)"}
-                  strokeWidth={isAct ? 1.8 : isH ? 1.3 : 0.9}
+                  strokeWidth={isAct ? 1.8 : isH ? 1.3 : 0.85}
                   strokeDasharray={isAct || isH ? "" : "5 10"}
-                  opacity={isAct ? 1 : isH ? 0.78 : 0.42}
+                  opacity={isAct ? 1 : isH ? 0.75 : 0.4}
                   strokeLinecap="round"
                   style={{ transition: "stroke 0.3s, stroke-width 0.3s, opacity 0.3s" }}
                 />
-                {/* Card endpoint dot */}
                 <circle cx={cx} cy={cy} r={isAct ? 4.5 : 3}
-                  fill={color} opacity={isAct ? 0.9 : 0.38} />
-                {/* Travelling dot A */}
-                <circle r={isAct ? 5 : 3.8} fill={color} opacity={isAct ? 0.95 : 0.6}>
+                  fill={color} opacity={isAct ? 0.9 : 0.36} />
+                <circle r={isAct ? 4.5 : 3.5} fill={color} opacity={isAct ? 0.95 : 0.58}>
                   <animateMotion dur={dur} repeatCount="indefinite" path={path} />
                 </circle>
-                {/* Travelling dot B staggered */}
-                <circle r={isAct ? 3.2 : 2.4} fill={color} opacity={isAct ? 0.55 : 0.32}>
+                <circle r="2" fill={color} opacity={isAct ? 0.45 : 0.28}>
                   <animateMotion dur={dur} repeatCount="indefinite" path={path}
-                    begin={`-${parseFloat(dur) * 0.48}s`} />
+                    begin={`-${parseFloat(dur) * 0.5}s`} />
                 </circle>
               </g>
             );
           })}
         </svg>
 
-        {/* Hub — centered over SVG via absolute + percentage */}
+        {/* Hub — percentage-sized, centered */}
         <div style={{
           position: "absolute",
-          left: `${(CX / VW) * 100}%`,
-          top:  `${(CY / VH) * 100}%`,
+          left: "50%", top: `${(CY / VH) * 100}%`,
           transform: "translate(-50%, -50%)",
+          width: `${HUB_PCT}%`,
+          aspectRatio: "1",
           zIndex: 2,
         }}>
-          {/* Outer spinning dashed ring */}
           <div style={{
-            position: "absolute", inset: -26, borderRadius: "50%",
-            border: "1px dashed var(--border-strong)", opacity: 0.32,
-            animation: "hub-cw 30s linear infinite",
+            position: "absolute", inset: "-22%", borderRadius: "50%",
+            border: "1px dashed var(--border-strong)", opacity: 0.3,
+            animation: "hub-cw 32s linear infinite",
           }} />
-          {/* Inner counter-spinning ring */}
           <div style={{
-            position: "absolute", inset: -12, borderRadius: "50%",
-            border: "0.8px dashed var(--blue)", opacity: 0.2,
-            animation: "hub-ccw 20s linear infinite",
+            position: "absolute", inset: "-8%", borderRadius: "50%",
+            border: "0.8px dashed var(--blue)", opacity: 0.18,
+            animation: "hub-ccw 22s linear infinite",
           }} />
-          {/* Hub body */}
           <div style={{
-            width: HUB_R * 2, height: HUB_R * 2, borderRadius: "50%",
+            width: "100%", height: "100%", borderRadius: "50%",
             background: "linear-gradient(145deg, var(--bg2) 0%, var(--bg1) 100%)",
             border: "2px solid var(--blue)",
             display: "flex", alignItems: "center", justifyContent: "center",
             boxShadow:
-              "0 0 0 9px rgba(28,78,138,0.065), 0 0 64px rgba(28,78,138,0.2), inset 0 1px 0 rgba(255,255,255,0.18)",
+              "0 0 0 8% rgba(28,78,138,0.07), 0 0 56px rgba(28,78,138,0.2), inset 0 1px 0 rgba(255,255,255,0.2)",
             position: "relative",
           }}>
             <div style={{
-              position: "absolute", inset: 11, borderRadius: "50%",
-              border: "1px dashed var(--blue)", opacity: 0.22,
+              position: "absolute", inset: "12%", borderRadius: "50%",
+              border: "1px dashed var(--blue)", opacity: 0.2,
             }} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/logo.avif" alt="Supportiva"
@@ -256,28 +204,29 @@ function NetworkHub({
           </div>
         </div>
 
-        {/* Service cards — absolutely positioned at orbital angles */}
+        {/* Cards — percentage-sized, positioned at orbital angles */}
         {nodes.map(({ cx, cy, i, svc }) => {
           const isAct  = selected === i;
           const isH    = hov === i;
           const accent = colorMap[svc.color];
           const Icon   = SERVICE_ICONS[i];
+
           return (
             <motion.div
-              key={`card-${i}`}
+              key={i}
               style={{
                 position: "absolute",
                 left: `${(cx / VW) * 100}%`,
                 top:  `${(cy / VH) * 100}%`,
                 transform: "translate(-50%, -50%)",
-                width: 156,
+                width: `${CARD_PCT}%`,
                 zIndex: 3,
               }}
-              animate={{ y: isAct ? 0 : [0, -5, 0] }}
+              animate={{ y: isAct ? 0 : [0, "-1.5%", 0] }}
               transition={
                 isAct
-                  ? { duration: 0.25 }
-                  : { duration: 3.2 + i * 0.55, repeat: Infinity, ease: "easeInOut", delay: i * 0.38 }
+                  ? { duration: 0.2 }
+                  : { duration: 3.2 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }
               }
             >
               <motion.button
@@ -289,59 +238,57 @@ function NetworkHub({
                 onBlur={() => setHov(null)}
                 aria-pressed={isAct}
                 aria-label={svc.title}
-                className="w-full rounded-2xl outline-none focus-visible:ring-2 text-left relative overflow-hidden"
+                className="w-full rounded-2xl outline-none focus-visible:ring-2 relative overflow-hidden"
                 style={{
-                  padding: "12px 13px",
+                  padding: "10% 11%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  gap: "8%",
                   background: isAct ? accent : "var(--glass-card)",
                   border: `1.5px solid ${isAct ? accent : isH ? `${accent}66` : "var(--border-strong)"}`,
                   boxShadow: isAct
-                    ? `0 16px 40px -8px ${accent}55, 0 4px 16px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.2)`
+                    ? `0 12px 32px -6px ${accent}55, inset 0 1px 0 rgba(255,255,255,0.2)`
                     : isH
-                    ? `0 10px 28px -6px ${accent}33, 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.65)`
-                    : "0 2px 10px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.65)",
+                    ? `0 8px 24px -4px ${accent}33, inset 0 1px 0 rgba(255,255,255,0.6)`
+                    : "0 2px 8px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.65)",
                   cursor: "pointer",
                   transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s",
                 }}
-                animate={{ scale: isAct ? 1.05 : isH ? 1.03 : 1 }}
+                animate={{ scale: isAct ? 1.06 : isH ? 1.035 : 1 }}
                 transition={{ type: "spring", stiffness: 380, damping: 28 }}
               >
-                {/* Active shimmer overlay */}
                 {isAct && (
                   <span className="absolute inset-0 pointer-events-none rounded-2xl"
-                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.13) 0%, transparent 55%)" }} />
+                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%)" }} />
                 )}
-                {/* Icon badge */}
+                {/* Icon — percentage-sized */}
                 <span style={{
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  width: 34, height: 34, borderRadius: 10, marginBottom: 9, flexShrink: 0,
+                  width: "42%", aspectRatio: "1", borderRadius: "28%",
                   background: isAct ? "rgba(255,255,255,0.2)" : `${accent}18`,
                   border: `1px solid ${isAct ? "rgba(255,255,255,0.3)" : `${accent}30`}`,
                   color: isAct ? "#fff" : accent,
+                  flexShrink: 0,
                   transition: "all 0.25s",
                 }}>
-                  <Icon size={17} strokeWidth={isAct ? 2.1 : 1.9} />
+                  <Icon style={{ width: "55%", height: "55%" }} strokeWidth={isAct ? 2.1 : 1.9} />
                 </span>
-                {/* Title */}
-                <span className="block font-bold leading-tight"
-                  style={{
-                    fontSize: 12, marginBottom: 5,
-                    color: isAct ? "#fff" : "var(--white)",
-                    transition: "color 0.25s",
-                  }}>
+                {/* Title — clamp keeps it readable at all container sizes */}
+                <span style={{
+                  fontWeight: 700,
+                  lineHeight: 1.25,
+                  fontSize: "clamp(9px, 1.7vw, 13px)",
+                  color: isAct ? "#fff" : "var(--white)",
+                  transition: "color 0.25s",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical" as const,
+                  overflow: "hidden",
+                  width: "100%",
+                }}>
                   {svc.title}
-                </span>
-                {/* Short description */}
-                <span className="block leading-snug"
-                  style={{
-                    fontSize: 10,
-                    color: isAct ? "rgba(255,255,255,0.75)" : "var(--w45)",
-                    transition: "color 0.25s",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical" as const,
-                    overflow: "hidden",
-                  }}>
-                  {shortDesc(svc.desc)}
                 </span>
               </motion.button>
             </motion.div>
@@ -354,21 +301,20 @@ function NetworkHub({
         `}</style>
       </div>
 
-      {/* ── Mobile: hub + stacked cards (< lg) ────────────────────── */}
+      {/* ── Mobile: hub + full-info stacked cards ─────────────────── */}
       <div className="lg:hidden flex flex-col items-center gap-6">
-        {/* Hub */}
         <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{
-            position: "absolute", width: 164, height: 164, borderRadius: "50%",
-            border: "1px dashed var(--border-strong)", opacity: 0.32,
-            animation: "hub-cw 30s linear infinite",
+            position: "absolute", width: 168, height: 168, borderRadius: "50%",
+            border: "1px dashed var(--border-strong)", opacity: 0.3,
+            animation: "hub-cw 32s linear infinite",
           }} />
           <div style={{
-            width: 118, height: 118, borderRadius: "50%",
+            width: 120, height: 120, borderRadius: "50%",
             background: "linear-gradient(145deg, var(--bg2), var(--bg1))",
             border: "2px solid var(--blue)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 0 0 8px rgba(28,78,138,0.065), 0 0 44px rgba(28,78,138,0.18)",
+            boxShadow: "0 0 0 8px rgba(28,78,138,0.06), 0 0 44px rgba(28,78,138,0.18)",
             position: "relative", zIndex: 1,
           }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -376,9 +322,56 @@ function NetworkHub({
               style={{ width: "58%", height: "58%", objectFit: "contain" }} />
           </div>
         </div>
-        {/* Cards */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-          {(services as any[]).map((_, i) => renderMobileCard(i))}
+          {(services as any[]).map((svc, i) => {
+            const isAct  = selected === i;
+            const isH    = hov === i;
+            const accent = colorMap[svc.color];
+            const Icon   = SERVICE_ICONS[i];
+            return (
+              <motion.button
+                key={i}
+                type="button"
+                onClick={() => onSelect(isAct ? null : i)}
+                onMouseEnter={() => setHov(i)}
+                onMouseLeave={() => setHov(null)}
+                aria-pressed={isAct}
+                className="flex items-center gap-3 rounded-2xl text-left w-full outline-none focus-visible:ring-2"
+                style={{
+                  padding: "13px 14px",
+                  background: isAct ? accent : "var(--glass-card)",
+                  border: `1.5px solid ${isAct ? accent : isH ? `${accent}66` : "var(--border-strong)"}`,
+                  boxShadow: isAct
+                    ? `0 12px 32px -8px ${accent}55, inset 0 1px 0 rgba(255,255,255,0.2)`
+                    : "0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)",
+                  transition: "all 0.25s", cursor: "pointer",
+                }}
+                animate={{ scale: isAct ? 1.02 : 1 }}
+                transition={{ type: "spring", stiffness: 380, damping: 28 }}
+              >
+                <span style={{
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  width: 42, height: 42, borderRadius: 12, flexShrink: 0,
+                  background: isAct ? "rgba(255,255,255,0.2)" : `${accent}18`,
+                  border: `1px solid ${isAct ? "rgba(255,255,255,0.3)" : `${accent}30`}`,
+                  color: isAct ? "#fff" : accent,
+                }}>
+                  <Icon size={19} strokeWidth={isAct ? 2.1 : 1.85} />
+                </span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span className="block font-bold leading-tight"
+                    style={{ fontSize: 13, color: isAct ? "#fff" : "var(--white)", marginBottom: 2 }}>
+                    {svc.title}
+                  </span>
+                  <span className="block leading-snug"
+                    style={{ fontSize: 11, color: isAct ? "rgba(255,255,255,0.75)" : "var(--w45)" }}>
+                    {shortDesc(svc.desc)}
+                  </span>
+                </span>
+              </motion.button>
+            );
+          })}
         </div>
         <style jsx>{`
           @keyframes hub-cw { to { transform: rotate(360deg); } }
