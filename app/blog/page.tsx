@@ -50,6 +50,7 @@ export default function BlogPage() {
         <div className="blob blob-purple w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
         <div className="blob blob-blue w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
         <div className="blob blob-cyan w-[300px] h-[300px] top-20 left-1/4 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
+        <div className="absolute inset-0 dot-grid opacity-20" />
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
         
@@ -66,6 +67,7 @@ export default function BlogPage() {
       <section className="relative overflow-hidden section-deep" style={{ padding: "100px 24px 140px" }}>
         <div className="blob blob-blue w-[450px] h-[450px] top-60 -right-48 animate-blob" style={{ animationDelay: "2s" }} />
         <div className="blob blob-purple w-[350px] h-[350px] bottom-40 -left-40 animate-blob" style={{ animationDelay: "6s" }} />
+        <div className="absolute inset-0 dot-grid opacity-15" />
 
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Featured post */}
