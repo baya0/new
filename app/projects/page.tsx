@@ -514,19 +514,20 @@ export default function ProjectsPage() {
           {/* ── SPLIT VIEW ── */}
           <FadeIn delay={0.13}>
             {/*
-              No items-start → default stretch: both columns share the same
-              row height (right panel dictates it), so the sidebar always
-              matches the detail card exactly.
+              items-start: panels are independent heights.
+              Sidebar has a viewport-relative fixed height so it matches the
+              default right panel without growing when the detail expands.
             */}
-            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-start">
 
-              {/* LEFT — project list, stretches to match right panel height */}
+              {/* LEFT — fixed-height sidebar, scrolls internally */}
               <div
-                className="rounded-2xl overflow-hidden relative flex flex-col max-h-[52vh] lg:max-h-none"
+                className="rounded-2xl overflow-hidden relative flex flex-col"
                 style={{
                   background: "var(--glass-card)",
                   border: "1px solid var(--glass-card-border)",
                   boxShadow: "var(--shadow)",
+                  height: "clamp(500px, calc(100vh - 330px), 860px)",
                 }}
               >
                 {/* Panel header — fixed, never scrolls */}
@@ -542,13 +543,8 @@ export default function ProjectsPage() {
                   </span>
                 </div>
 
-                {/*
-                  flex-1 min-h-0: fills remaining panel height.
-                  On desktop the panel height = right panel height (grid stretch),
-                  so this grows to show as many projects as possible before scrolling.
-                */}
+                {/* List fills remaining sidebar height, scrolls when overflow */}
                 <div className="flex-1 min-h-0 relative">
-                  {/* Fade hint at bottom */}
                   <div
                     className="absolute bottom-0 left-0 right-0 h-10 z-10 pointer-events-none rounded-b-2xl"
                     style={{ background: "linear-gradient(to bottom, transparent, var(--glass-card))" }}
