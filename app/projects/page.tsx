@@ -527,7 +527,7 @@ export default function ProjectsPage() {
                   background: "var(--glass-card)",
                   border: "1px solid var(--glass-card-border)",
                   boxShadow: "var(--shadow)",
-                  height: "clamp(500px, calc(100vh - 330px), 860px)",
+                  height: "clamp(800px, calc(100vh - 330px), 860px)",
                 }}
               >
                 {/* Panel header — fixed, never scrolls */}
