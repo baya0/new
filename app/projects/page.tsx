@@ -418,12 +418,12 @@ export default function ProjectsPage() {
         {/* Server room image — fades out before the split view starts */}
         <div className="absolute inset-0 pointer-events-none">
           <Image
-            src="/images/backgrounds/servers.jpg"
+            src="/images/backgrounds/back1.jpg"
             alt=""
             fill
             className="object-cover object-top"
             style={{
-              opacity: dark ? 0.08 : 0.38,
+              opacity: dark ? 0.16 : 0.08,
               filter: "blur(1px) grayscale(15%)",
             }}
             priority

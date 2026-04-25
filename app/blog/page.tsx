@@ -2,8 +2,10 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/language-context";
+import Image from "next/image";
 import Link from "next/link";
 import { Clock, ArrowRight, BookOpen, Cloud, Server, Truck, Leaf, Send, User } from "lucide-react";
+import { useTheme } from "@/lib/theme-context";
 
 const catConfig: Record<string, { color: string; icon: typeof Cloud }> = {
   Cloud: { color: "var(--blue)", icon: Cloud },
@@ -41,6 +43,7 @@ function StaggerChild({ children, className, i }: { children: React.ReactNode; c
 export default function BlogPage() {
   const { t } = useLang();
   const b = t.blog;
+  const { dark } = useTheme();
   const posts = b.posts as unknown as any[];
   return (
     <>
@@ -51,6 +54,21 @@ export default function BlogPage() {
         <div className="blob blob-blue w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
         <div className="blob blob-cyan w-[300px] h-[300px] top-20 left-1/4 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
         <div className="absolute inset-0 dot-grid opacity-20" />
+        
+        {/* Server room image — fades out before the split view starts */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="/images/backgrounds/serversroom.jpg"
+            alt=""
+            fill
+            className="object-cover object-top"
+            style={{
+              opacity: dark ? 0.00 : 0.00,
+              filter: "blur(1px) grayscale(15%)",
+            }}
+            priority
+          />
+        </div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
         

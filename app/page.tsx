@@ -122,7 +122,7 @@ export default function HomePage() {
             fill
             className="object-cover object-center"
             style={{
-              opacity: dark ? 0.16 : 0.28,
+              opacity: dark ? 0.08 : 0.18,
               filter: "blur(1px) grayscale(15%)",
             }}
             priority
