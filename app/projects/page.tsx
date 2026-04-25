@@ -478,12 +478,12 @@ export default function ProjectsPage() {
             </p>
           </FadeIn>
 
-          {/* ── FILTER BAR — segmented control ── */}
+          {/* ── FILTER BAR — underline tabs, distinct from the pill-style navbar ── */}
           <FadeIn delay={0.07} className="mb-6">
-            <div className="overflow-x-auto -mx-1 px-1 pb-1">
+            <div className="overflow-x-auto -mx-1 px-1">
               <div
-                className="inline-flex p-1.5 rounded-2xl gap-1 min-w-max"
-                style={{ background: "var(--glass)", border: "1px solid var(--glass-border)" }}
+                className="inline-flex min-w-max border-b"
+                style={{ borderColor: "var(--border)" }}
               >
                 {CATEGORIES.map((cat) => {
                   const active = activeFilter === cat;
@@ -491,15 +491,19 @@ export default function ProjectsPage() {
                     <button
                       key={cat}
                       onClick={() => handleFilterChange(cat)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-semibold whitespace-nowrap transition-all duration-200"
-                      style={{
-                        background: active ? "var(--blue)" : "transparent",
-                        color: active ? "#fff" : "var(--w55)",
-                        boxShadow: active ? "var(--shadow-blue-lg)" : "none",
-                      }}
+                      className="relative flex items-center gap-1.5 px-4 py-2.5 text-[12px] font-semibold whitespace-nowrap transition-colors duration-200"
+                      style={{ color: active ? "var(--blue)" : "var(--w55)" }}
                     >
-                      <span style={{ opacity: active ? 1 : 0.6 }}>{CATEGORY_ICONS[cat]}</span>
+                      <span style={{ opacity: active ? 1 : 0.5 }}>{CATEGORY_ICONS[cat]}</span>
                       {cat}
+                      {active && (
+                        <motion.span
+                          layoutId="tab-underline"
+                          className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full"
+                          style={{ background: "var(--blue)" }}
+                          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                        />
+                      )}
                     </button>
                   );
                 })}
@@ -509,20 +513,25 @@ export default function ProjectsPage() {
 
           {/* ── SPLIT VIEW ── */}
           <FadeIn delay={0.13}>
-            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-start">
+            {/*
+              No items-start → default stretch: both columns share the same
+              row height (right panel dictates it), so the sidebar always
+              matches the detail card exactly.
+            */}
+            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5">
 
-              {/* LEFT — project list */}
+              {/* LEFT — project list, stretches to match right panel height */}
               <div
-                className="rounded-2xl overflow-hidden relative"
+                className="rounded-2xl overflow-hidden relative flex flex-col max-h-[52vh] lg:max-h-none"
                 style={{
                   background: "var(--glass-card)",
                   border: "1px solid var(--glass-card-border)",
                   boxShadow: "var(--shadow)",
                 }}
               >
-                {/* Panel header */}
+                {/* Panel header — fixed, never scrolls */}
                 <div
-                  className="px-4 py-3 border-b flex items-center gap-2"
+                  className="px-4 py-3 border-b flex-shrink-0"
                   style={{ borderColor: "var(--border)" }}
                 >
                   <span
@@ -533,35 +542,37 @@ export default function ProjectsPage() {
                   </span>
                 </div>
 
-                {/* Scrollable list — uses viewport height so it's tall but not page-breaking */}
-                <div
-                  className="p-2 space-y-0.5 overflow-y-auto"
-                  style={{ maxHeight: "65vh" }}
-                >
-                  {filtered.map((proj: any) => (
-                    <ProjectListItem
-                      key={proj.title}
-                      proj={proj}
-                      color={colorMap[proj.color] ?? "var(--blue)"}
-                      isSelected={proj.title === selected?.title}
-                      onClick={() => setSelectedTitle(proj.title)}
-                    />
-                  ))}
-                  {filtered.length === 0 && (
-                    <div
-                      className="flex items-center justify-center h-32 text-sm"
-                      style={{ color: "var(--w25)" }}
-                    >
-                      No projects in this category.
-                    </div>
-                  )}
+                {/*
+                  flex-1 min-h-0: fills remaining panel height.
+                  On desktop the panel height = right panel height (grid stretch),
+                  so this grows to show as many projects as possible before scrolling.
+                */}
+                <div className="flex-1 min-h-0 relative">
+                  {/* Fade hint at bottom */}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 h-10 z-10 pointer-events-none rounded-b-2xl"
+                    style={{ background: "linear-gradient(to bottom, transparent, var(--glass-card))" }}
+                  />
+                  <div className="h-full overflow-y-auto p-2 space-y-0.5">
+                    {filtered.map((proj: any) => (
+                      <ProjectListItem
+                        key={proj.title}
+                        proj={proj}
+                        color={colorMap[proj.color] ?? "var(--blue)"}
+                        isSelected={proj.title === selected?.title}
+                        onClick={() => setSelectedTitle(proj.title)}
+                      />
+                    ))}
+                    {filtered.length === 0 && (
+                      <div
+                        className="flex items-center justify-center h-32 text-sm"
+                        style={{ color: "var(--w25)" }}
+                      >
+                        No projects in this category.
+                      </div>
+                    )}
+                  </div>
                 </div>
-
-                {/* Bottom fade — hints at scrollability */}
-                <div
-                  className="absolute bottom-0 left-0 right-0 h-10 pointer-events-none rounded-b-2xl"
-                  style={{ background: "linear-gradient(to bottom, transparent, var(--glass-card))" }}
-                />
               </div>
 
               {/* RIGHT — project detail */}
