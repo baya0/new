@@ -381,16 +381,18 @@ export default function ProjectsPage() {
   const { dark } = useTheme();
 
   const [activeFilter, setActiveFilter] = useState<string>("All");
+  const items = p.items as unknown as any[];
+
   const [selectedTitle, setSelectedTitle] = useState<string>(
-    () => ((p.items as any[]).length > 0 ? (p.items as any[])[0].title : "")
+    () => (items.length > 0 ? items[0].title : "")
   );
 
   const filtered = useMemo(
     () =>
       activeFilter === "All"
-        ? (p.items as any[])
-        : (p.items as any[]).filter((proj) => getCategories(proj.tags).includes(activeFilter)),
-    [activeFilter, p.items]
+        ? items
+        : items.filter((proj) => getCategories(proj.tags).includes(activeFilter)),
+    [activeFilter, items]
   );
 
   useEffect(() => {
