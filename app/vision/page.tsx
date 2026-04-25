@@ -62,18 +62,18 @@ export default function VisionPage() {
             src="/images/backgrounds/serverroom2.jpg"
             alt=""
             fill
-            className="hero-server-img object-cover object-center"
-            style={{ 
-              opacity: dark ? 0.35 : 0.20, 
-              filter: "blur(1px) grayscale(15%)" 
+            className="object-cover object-center"
+            style={{
+              opacity: dark ? 0.18 : 0.24,
+              filter: "blur(1px) grayscale(15%)",
             }}
             priority
           />
-          {/* Gradient veil keeps text readable and unifies with brand palette */}
-          <div className="hero-server-bg absolute inset-0" style={{ 
-            background: dark 
-              ? "linear-gradient(180deg, rgba(28,78,138,0.25) 0%, rgba(15,17,21,0.92) 100%)"
-              : "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.96) 100%)"
+          {/* Gradient veil — purely inline so dark-mode CSS overrides don't fire */}
+          <div className="absolute inset-0" style={{
+            background: dark
+              ? "linear-gradient(180deg, rgba(14,23,32,0.42) 0%, rgba(14,23,32,0.92) 100%)"
+              : "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.95) 100%)",
           }} />
         </div> 
         
