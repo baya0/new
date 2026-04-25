@@ -418,9 +418,9 @@ export default function HomePage() {
                   <div className="mono-label mb-3" style={{ color: colorMap[item.color] }}>
                     0{i + 1} — Principle
                   </div>
-                  <h4 className="text-lg lg:text-xl font-bold mb-2 tracking-tight" style={{ color: "var(--white)" }}>
+                  <h3 className="text-lg lg:text-xl font-bold mb-2 tracking-tight" style={{ color: "var(--white)" }}>
                     {item.title}
-                  </h4>
+                  </h3>
                   <p className="text-sm lg:text-[15px] leading-[1.8]" style={{ color: "var(--w55)" }}>
                     {item.desc}
                   </p>

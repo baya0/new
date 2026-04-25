@@ -163,6 +163,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               {/* Theme toggle — pill with sliding indicator */}
               <button
                 onClick={() => setDark(!dark)}
+                aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
                 className="relative w-[52px] h-7 rounded-full flex items-center transition-all duration-300"
                 style={{
                   background: "var(--tint-blue)",
@@ -187,6 +188,8 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
             <button
               className="md:hidden ml-auto w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
               style={{ color: "var(--w55)" }}
             >
               <AnimatePresence mode="wait">
@@ -240,7 +243,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                       supportiva
                     </span>
                   </div>
-                  <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ color: "var(--w55)", background: "var(--bg3)" }}>
+                  <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ color: "var(--w55)", background: "var(--bg3)" }}>
                     <X size={16} />
                   </button>
                 </div>

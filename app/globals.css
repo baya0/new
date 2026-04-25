@@ -647,8 +647,8 @@ body {
 
 /* Unique: Ambient gradient breathing */
 @keyframes breathe {
-  0%, 100% { opacity: 0.8; filter: blur(100px) brightness(1); }
-  50% { opacity: 1; filter: blur(80px) brightness(1.15); }
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
 }
 
 /* ══════════ UTILITY ══════════ */
