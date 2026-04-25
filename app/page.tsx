@@ -55,7 +55,7 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 
 // ─── HERO LOGO PATH  ───────
 const HERO_LOGO_LIGHT_SRC = "/images/backgrounds/logolight.png";
-const HERO_LOGO_DARK_SRC = "/images/backgrounds/logodark.png";
+const HERO_LOGO_DARK_SRC = "/images/backgrounds/logodark4.png";
 
 /* ─────────── Client logo map ─────────── */
 // Falls back to styled text when no logo is set.
