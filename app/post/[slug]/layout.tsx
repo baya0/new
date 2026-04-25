@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { translations } from "@/lib/i18n";
-
-const BASE_URL = "https://www.supportiva.com";
+import { BASE_URL } from "@/lib/config";
 
 type BlogPost = {
   slug: string;
@@ -12,6 +11,10 @@ type BlogPost = {
 };
 
 const posts = translations.en.blog.posts as unknown as BlogPost[];
+
+export function generateStaticParams() {
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 type Props = {
   params: Promise<{ slug: string }>;

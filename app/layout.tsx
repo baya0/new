@@ -1,8 +1,22 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import Providers from "./providers";
+import { BASE_URL } from "@/lib/config";
 
-const BASE_URL = "https://www.supportiva.com";
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -48,7 +62,7 @@ export const metadata: Metadata = {
       "IT consulting, staff augmentation, datacenter infrastructure, and managed IT services. Trusted by Nike, Dow Chemical, Medtronic, Mercedes-Benz.",
     images: [
       {
-        url: "/images/logo.avif",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Supportiva — Enterprise IT Services",
@@ -60,7 +74,7 @@ export const metadata: Metadata = {
     title: "Supportiva — Enterprise IT Services",
     description:
       "IT consulting, staff augmentation, datacenter infrastructure, and managed IT services.",
-    images: ["/images/logo.avif"],
+    images: ["/opengraph-image"],
   },
 };
 
@@ -72,7 +86,6 @@ const organizationSchema = {
   logo: `${BASE_URL}/images/logo.avif`,
   description:
     "Enterprise IT consulting, staff augmentation, datacenter infrastructure, and managed IT services.",
-  foundingDate: "2013",
   areaServed: "Worldwide",
   contactPoint: {
     "@type": "ContactPoint",
@@ -84,14 +97,12 @@ const organizationSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
-          rel="stylesheet"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
