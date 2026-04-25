@@ -52,9 +52,7 @@ export default function BlogPage() {
         <div className="blob blob-cyan w-[300px] h-[300px] top-20 left-1/4 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
-          <div className="badge mb-6" style={{ background: "rgba(94,74,158,0.07)", borderColor: "rgba(94,74,158,0.12)", color: "var(--purple)" }}>
-            <BookOpen size={12} />{b.eyebrow}
-          </div>
+        
           <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-bold leading-[1.1] tracking-tight" style={{ color: "var(--white)" }}>
             {b.h1[0]}<br /><span className="gradient-text">{b.h1[1]}</span>
           </h1>

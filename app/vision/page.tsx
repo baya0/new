@@ -4,7 +4,9 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
+import { useTheme } from "@/lib/theme-context";
 import { Play } from "lucide-react";
+import Image from "next/image";
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)",
@@ -42,6 +44,7 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 export default function VisionPage() {
   const { t } = useLang();
   const v = t.vision;
+  const { dark } = useTheme();
 
   return (
     <>
@@ -53,6 +56,27 @@ export default function VisionPage() {
           <div className="blob blob-purple w-[420px] h-[420px] animate-blob" style={{ right: -120, bottom: 40, animationDelay: "-4s" }} />
           <div className="absolute inset-0 dot-grid opacity-30" />
         </div>
+       {/* Server room background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <Image
+            src="/images/backgrounds/serverroom2.jpg"
+            alt=""
+            fill
+            className="hero-server-img object-cover object-center"
+            style={{ 
+              opacity: dark ? 0.35 : 0.20, 
+              filter: "blur(1px) grayscale(15%)" 
+            }}
+            priority
+          />
+          {/* Gradient veil keeps text readable and unifies with brand palette */}
+          <div className="hero-server-bg absolute inset-0" style={{ 
+            background: dark 
+              ? "linear-gradient(180deg, rgba(28,78,138,0.25) 0%, rgba(15,17,21,0.92) 100%)"
+              : "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.96) 100%)"
+          }} />
+        </div> 
+        
 
         {/* Rotating orbit */}
         <div className="hidden lg:block absolute left-[-140px] bottom-[-140px] pointer-events-none">
@@ -61,27 +85,12 @@ export default function VisionPage() {
 
         <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
           <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.2em] uppercase py-4 mb-20" style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}>
-            <span className="flex items-center gap-3">
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--cyan)" }} />
-              Vision
-            </span>
-  
           </div>
 
           <div className="grid grid-cols-12 gap-6">
-            <div className="hidden lg:flex col-span-1 items-start pt-8">
-              <FadeIn delay={0.5}>
-                <div className="vertical-label">{v.eyebrow} — Manifesto</div>
-              </FadeIn>
-            </div>
+           
 
             <div className="col-span-12 lg:col-span-8">
-              <FadeIn>
-                <div className="mono-label mb-6 flex items-center gap-3" style={{ color: "var(--cyan)" }}>
-                  <span className="w-8 h-px" style={{ background: "var(--cyan)" }} />
-                  The Manifesto
-                </div>
-              </FadeIn>
               <h1 className="headline-xl mb-8">
                 {(() => {
                   const words = v.h1.split(" ");
@@ -114,7 +123,7 @@ export default function VisionPage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-5">
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Story</div>
+                
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {v.missionTitle.split(" ")[0]}
                   <br />
@@ -156,7 +165,7 @@ export default function VisionPage() {
         <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
           <FadeIn>
             <div className="mb-16">
-              <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Values</div>
+            
               <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                 {v.valuesLabel.toLowerCase()}.
               </h2>

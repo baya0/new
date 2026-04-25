@@ -425,21 +425,6 @@ export default function SolutionsPage() {
           <div className="absolute inset-0 dot-grid opacity-20" />
         </div>
 
-        <div className="relative z-10 max-w-[1360px] mx-auto w-full px-6 lg:px-10 pt-8">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between text-[10px] font-bold tracking-[0.2em] uppercase pb-4"
-            style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}
-          >
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--blue)" }} />
-              Solutions
-            </span>
-            <span className="hidden sm:block">{s.eyebrow?.toUpperCase() || "IT SERVICES"}</span>
-          </motion.div>
-        </div>
-
         <div className="flex-1 flex items-center relative z-10 px-6 lg:px-10 py-8 lg:py-0">
           <div className="w-full max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             
@@ -453,12 +438,7 @@ export default function SolutionsPage() {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.4 }}
                   >
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="w-6 h-px" style={{ background: "var(--blue)" }} />
-                      <span className="text-[11px] font-bold tracking-wider" style={{ color: "var(--blue)" }}>
-                        OUR SOLUTIONS
-                      </span>
-                    </div>
+                    
                     
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-5">
                       {headLine1}<br />

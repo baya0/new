@@ -54,7 +54,6 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 }
 
 // ─── HERO LOGO PATH  ───────
-// e.g. "/images/logo.png"  or  "/images/logo-full.png"
 const HERO_LOGO_LIGHT_SRC = "/images/backgrounds/logolight.png";
 const HERO_LOGO_DARK_SRC = "/images/backgrounds/logodark.png";
 
@@ -122,11 +121,18 @@ export default function HomePage() {
             alt=""
             fill
             className="hero-server-img object-cover object-center"
-            style={{ opacity: 0.10, filter: "blur(1px) grayscale(15%)" }}
+            style={{ 
+              opacity: dark ? 0.35 : 0.10, 
+              filter: "blur(1px) grayscale(15%)" 
+            }}
             priority
           />
           {/* Gradient veil keeps text readable and unifies with brand palette */}
-          <div className="hero-server-bg absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.96) 100%)" }} />
+          <div className="hero-server-bg absolute inset-0" style={{ 
+            background: dark 
+              ? "linear-gradient(180deg, rgba(28,78,138,0.25) 0%, rgba(15,17,21,0.92) 100%)"
+              : "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.96) 100%)"
+          }} />
         </div>
 
         {/* Ambient background */}
