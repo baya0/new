@@ -12,7 +12,6 @@ import {
   Calendar,
 } from "lucide-react";
 
-// Restore to CSS variables so both light and dark themes work correctly
 const colorMap: Record<string, string> = {
   blue: "var(--blue)",
   green: "var(--green)",
@@ -58,7 +57,7 @@ function FadeIn({
   children,
   className,
   delay = 0,
-  y = 20,
+  y = 16,
 }: {
   children: React.ReactNode;
   className?: string;
@@ -66,13 +65,13 @@ function FadeIn({
   y?: number;
 }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -91,9 +90,7 @@ function ProjectGallery({
 }) {
   const [current, setCurrent] = useState(0);
 
-  useEffect(() => {
-    setCurrent(0);
-  }, [title]);
+  useEffect(() => { setCurrent(0); }, [title]);
 
   const prev = useCallback(
     () => setCurrent((i) => (i - 1 + images.length) % images.length),
@@ -108,7 +105,6 @@ function ProjectGallery({
 
   return (
     <div>
-      {/* Main image */}
       <div
         className="relative w-full rounded-xl overflow-hidden"
         style={{ aspectRatio: "16/9", background: "var(--glass-deep)" }}
@@ -132,7 +128,6 @@ function ProjectGallery({
           </motion.div>
         </AnimatePresence>
 
-        {/* Counter */}
         {images.length > 1 && (
           <div
             className="absolute bottom-3 right-3 text-xs px-2.5 py-1 rounded-full font-semibold tabular-nums"
@@ -142,7 +137,6 @@ function ProjectGallery({
           </div>
         )}
 
-        {/* Arrows */}
         {images.length > 1 && (
           <>
             <button
@@ -163,7 +157,6 @@ function ProjectGallery({
         )}
       </div>
 
-      {/* Thumbnail strip */}
       {images.length > 1 && (
         <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
           {images.map((img, i) => (
@@ -203,13 +196,13 @@ function ProjectListItem({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-left group relative"
+      className="w-full flex items-start gap-3 p-3 rounded-xl transition-all duration-200 text-left group relative"
       style={{
         background: isSelected ? "var(--tint-blue)" : "transparent",
         border: `1px solid ${isSelected ? "var(--tint-blue-border)" : "transparent"}`,
       }}
     >
-      {/* Active left bar — uses the project's own brand color */}
+      {/* Active left bar */}
       {isSelected && (
         <div
           className="absolute left-0 top-3 bottom-3 w-[3px] rounded-r-full"
@@ -219,30 +212,37 @@ function ProjectListItem({
 
       {/* Thumbnail */}
       <div
-        className="relative w-[72px] h-[52px] rounded-lg overflow-hidden flex-shrink-0"
+        className="relative w-[76px] h-[56px] rounded-lg overflow-hidden flex-shrink-0 mt-0.5"
         style={{ background: "var(--glass-deep)" }}
       >
         {images[0] && (
-          <Image src={images[0]} alt="" fill className="object-cover" sizes="72px" />
+          <Image src={images[0]} alt="" fill className="object-cover" sizes="76px" />
         )}
       </div>
 
       {/* Info */}
       <div className="flex-1 min-w-0">
         <p
-          className="text-[10px] uppercase tracking-[0.18em] font-bold mb-0.5 truncate transition-colors duration-200"
+          className="text-[10px] uppercase tracking-[0.18em] font-bold mb-1 transition-colors duration-200"
           style={{ color: isSelected ? color : "var(--w25)" }}
         >
           {category}
         </p>
+        {/* Two lines max — no hard truncation */}
         <p
-          className="text-[13px] font-semibold leading-tight mb-1 truncate transition-colors duration-200"
-          style={{ color: isSelected ? "var(--white)" : "var(--w85)" }}
+          className="text-[13px] font-semibold leading-snug mb-1 transition-colors duration-200"
+          style={{
+            color: isSelected ? "var(--white)" : "var(--w85)",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
         >
           {proj.title}
         </p>
         {proj.keyResult && (
-          <p className="text-[11px] font-medium truncate" style={{ color: "var(--green)" }}>
+          <p className="text-[11px] font-medium" style={{ color: "var(--green)" }}>
             {proj.keyResult}
           </p>
         )}
@@ -250,7 +250,7 @@ function ProjectListItem({
 
       <ChevronRight
         size={13}
-        className="flex-shrink-0 transition-all duration-200"
+        className="flex-shrink-0 mt-1 transition-all duration-200"
         style={{
           color: isSelected ? color : "var(--border-strong)",
           transform: isSelected ? "translateX(1px)" : "none",
@@ -260,20 +260,11 @@ function ProjectListItem({
   );
 }
 
-function ProjectDetail({
-  proj,
-  color,
-}: {
-  proj: any;
-  color: string;
-}) {
+function ProjectDetail({ proj, color }: { proj: any; color: string }) {
   const { t } = useLang();
   const [expanded, setExpanded] = useState(false);
 
-  // Reset expanded state whenever the selected project changes
-  useEffect(() => {
-    setExpanded(false);
-  }, [proj.title]);
+  useEffect(() => { setExpanded(false); }, [proj.title]);
 
   const images = getProjectImages(proj);
   const hasMore = proj.fullDesc && proj.fullDesc !== proj.desc;
@@ -281,11 +272,11 @@ function ProjectDetail({
   return (
     <motion.div
       key={proj.title}
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl p-6 lg:p-8"
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      className="rounded-2xl p-6 lg:p-7"
       style={{
         background: "var(--glass-card)",
         border: "1px solid var(--glass-card-border)",
@@ -294,57 +285,45 @@ function ProjectDetail({
     >
       {/* Category badge */}
       <span
-        className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-4"
-        style={{
-          color,
-          border: "1px solid var(--border)",
-          background: "var(--glass)",
-        }}
+        className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-3"
+        style={{ color, border: "1px solid var(--border)", background: "var(--glass)" }}
       >
         {getProjectCategory(proj.tags)}
       </span>
 
-      {/* Title */}
       <h2
-        className="text-[20px] lg:text-[26px] font-black leading-tight mb-3"
+        className="text-[19px] lg:text-[24px] font-black leading-tight mb-2"
         style={{ color: "var(--white)" }}
       >
         {proj.title}
       </h2>
 
-      {/* Location + year */}
       <div
-        className="flex flex-wrap items-center gap-4 mb-5 text-[12px]"
+        className="flex flex-wrap items-center gap-4 mb-4 text-[12px]"
         style={{ color: "var(--w25)" }}
       >
-        <span className="flex items-center gap-1.5">
-          <MapPin size={11} />
-          {proj.location}
-        </span>
+        <span className="flex items-center gap-1.5"><MapPin size={11} />{proj.location}</span>
         {proj.year && (
-          <span className="flex items-center gap-1.5">
-            <Calendar size={11} />
-            {proj.year}
-          </span>
+          <span className="flex items-center gap-1.5"><Calendar size={11} />{proj.year}</span>
         )}
       </div>
 
       {/* Description — short or full */}
       <p
-        className="text-[14px] lg:text-[15px] leading-[1.85] mb-4"
+        className="text-[14px] leading-[1.85] mb-3"
         style={{ color: "var(--w55)" }}
       >
         {expanded ? proj.fullDesc : proj.desc}
       </p>
 
-      {/* Bullet points — shown when expanded */}
+      {/* Bullet points */}
       <AnimatePresence>
         {expanded && proj.bullets && (
           <motion.ul
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden space-y-2 mb-4"
+            className="overflow-hidden space-y-2 mb-3"
           >
             {(proj.bullets as string[]).map((b: string, i: number) => (
               <motion.li
@@ -355,10 +334,7 @@ function ProjectDetail({
                 className="flex gap-3 items-start text-[13px] leading-relaxed"
                 style={{ color: "var(--w55)" }}
               >
-                <span
-                  className="w-1.5 h-1.5 rounded-full mt-[6px] shrink-0"
-                  style={{ background: color }}
-                />
+                <span className="w-1.5 h-1.5 rounded-full mt-[6px] shrink-0" style={{ background: color }} />
                 {b}
               </motion.li>
             ))}
@@ -366,11 +342,11 @@ function ProjectDetail({
         )}
       </AnimatePresence>
 
-      {/* Read more / show less toggle */}
+      {/* Read more toggle */}
       {hasMore && (
         <button
           onClick={() => setExpanded((v) => !v)}
-          className="inline-flex items-center gap-1.5 text-[13px] font-bold mb-6 transition-opacity duration-200 hover:opacity-70"
+          className="inline-flex items-center gap-1.5 text-[13px] font-bold mb-5 transition-opacity hover:opacity-70"
           style={{ color }}
         >
           {expanded ? t.projects.showLess : t.projects.readMore}
@@ -379,7 +355,7 @@ function ProjectDetail({
       )}
 
       {/* Image gallery */}
-      <div className={hasMore ? "" : "mt-2"}>
+      <div className={hasMore ? "" : "mt-1"}>
         <ProjectGallery images={images} title={proj.title} color={color} />
       </div>
 
@@ -389,11 +365,7 @@ function ProjectDetail({
           <span
             key={i}
             className="text-[11px] px-3 py-1.5 rounded-full font-medium"
-            style={{
-              background: "var(--glass)",
-              border: "1px solid var(--border)",
-              color: "var(--w55)",
-            }}
+            style={{ background: "var(--glass)", border: "1px solid var(--border)", color: "var(--w55)" }}
           >
             {tag}
           </span>
@@ -417,123 +389,99 @@ export default function ProjectsPage() {
     () =>
       activeFilter === "All"
         ? (p.items as any[])
-        : (p.items as any[]).filter((proj) =>
-            getCategories(proj.tags).includes(activeFilter)
-          ),
+        : (p.items as any[]).filter((proj) => getCategories(proj.tags).includes(activeFilter)),
     [activeFilter, p.items]
   );
 
-  // Auto-select first item when filter changes
   useEffect(() => {
     if (filtered.length > 0) setSelectedTitle(filtered[0].title);
   }, [activeFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const selected =
-    filtered.find((proj) => proj.title === selectedTitle) ??
-    filtered[0] ??
-    null;
+  const selected = filtered.find((proj) => proj.title === selectedTitle) ?? filtered[0] ?? null;
   const selectedColor = selected ? (colorMap[selected.color] ?? "var(--blue)") : "var(--blue)";
 
-  const handleFilterChange = useCallback((cat: string) => {
-    setActiveFilter(cat);
-  }, []);
+  const handleFilterChange = useCallback((cat: string) => setActiveFilter(cat), []);
 
   return (
     <>
-      {/* HERO */}
+      {/*
+        UNIFIED SECTION — hero heading + projects split-view in one continuous block.
+        The server room image fades out by ~55% height so the split view cards
+        sit cleanly on the section background.
+      */}
       <section
-        className="relative overflow-hidden hero-bg"
-        style={{ padding: "32px 0 100px" }}
+        className="relative section-deep overflow-hidden"
+        style={{ padding: "56px 0 96px" }}
       >
+        {/* Server room image — fades out before the split view starts */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="aurora" />
-          <div
-            className="blob blob-blue w-[600px] h-[600px] animate-blob"
-            style={{ right: -180, top: -120 }}
-          />
-          <div
-            className="blob blob-cyan w-[420px] h-[420px] animate-blob"
-            style={{ left: -120, bottom: 40, animationDelay: "-4s" }}
-          />
-          <div className="absolute inset-0 dot-grid opacity-30" />
-        </div>
-
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <Image
             src="/images/backgrounds/servers.jpg"
             alt=""
             fill
-            className="hero-server-img object-cover object-center"
+            className="object-cover object-top"
             style={{
-              opacity: dark ? 0.1 : 0.4,
+              opacity: dark ? 0.08 : 0.38,
               filter: "blur(1px) grayscale(15%)",
             }}
             priority
           />
+          {/* Gradient: transparent at top → solid section bg at ~55% */}
           <div
-            className="hero-server-bg absolute inset-0"
+            className="absolute inset-0"
             style={{
               background: dark
-                ? "linear-gradient(180deg, rgba(28,78,138,0.25) 0%, rgba(15,17,21,0.92) 100%)"
-                : "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.96) 100%)",
+                ? "linear-gradient(180deg, rgba(17,28,42,0) 0%, rgba(17,28,42,0.55) 28%, var(--glass-deep) 52%)"
+                : "linear-gradient(180deg, rgba(227,228,234,0) 0%, rgba(227,228,234,0.6) 28%, var(--glass-deep) 52%)",
             }}
           />
         </div>
 
-        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center text-[11px] font-bold tracking-[0.2em] uppercase py-4 mb-16"
-            style={{ color: "var(--w25)", borderBottom: "1px solid var(--border)" }}
+        {/* Ambient decorations */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="aurora" />
+          <div
+            className="blob blob-blue w-[500px] h-[500px] animate-blob"
+            style={{ right: -160, top: -100 }}
           />
-
-          <div className="max-w-2xl">
-            <FadeIn delay={0.1}>
-              <h1 className="headline-xl mb-8 bg-gradient-to-r from-white via-blue-50 to-cyan-50 bg-clip-text text-transparent">
-                Real projects,
-                <br />
-                <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                  real results.
-                </span>
-              </h1>
-            </FadeIn>
-            <FadeIn delay={0.2}>
-              <p
-                className="text-[16px] lg:text-[18px] leading-[1.8]"
-                style={{ color: "var(--w55)" }}
-              >
-                {p.sub}
-              </p>
-            </FadeIn>
-          </div>
+          <div
+            className="blob blob-cyan w-[360px] h-[360px] animate-blob"
+            style={{ left: -100, top: 60, animationDelay: "-4s" }}
+          />
+          <div className="absolute inset-0 dot-grid opacity-20" />
         </div>
-      </section>
 
-      {/* PROJECTS — SPLIT VIEW */}
-      <section className="section-deep" style={{ padding: "80px 0 120px" }}>
         <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
 
-          {/* Section eyebrow only — no extra heading */}
+          {/* ── COMPACT HEADER ── */}
           <FadeIn className="mb-8">
             <p
-              className="text-[11px] font-bold tracking-[0.25em] uppercase"
+              className="text-[11px] font-bold tracking-[0.25em] uppercase mb-3"
               style={{ color: "var(--blue)" }}
             >
-              Explore Our Projects
+              Our Projects
+            </p>
+            <h1
+              className="font-black leading-tight mb-3"
+              style={{ fontSize: "clamp(28px, 4vw, 48px)", color: "var(--white)" }}
+            >
+              Real projects,{" "}
+              <span style={{ color: "var(--blue)" }}>real results.</span>
+            </h1>
+            <p
+              className="text-[15px] leading-relaxed max-w-xl"
+              style={{ color: "var(--w55)" }}
+            >
+              {p.sub}
             </p>
           </FadeIn>
 
-          {/* Filter bar — segmented control */}
-          <FadeIn delay={0.06} className="mb-8">
+          {/* ── FILTER BAR — segmented control ── */}
+          <FadeIn delay={0.07} className="mb-6">
             <div className="overflow-x-auto -mx-1 px-1 pb-1">
               <div
                 className="inline-flex p-1.5 rounded-2xl gap-1 min-w-max"
-                style={{
-                  background: "var(--glass)",
-                  border: "1px solid var(--glass-border)",
-                }}
+                style={{ background: "var(--glass)", border: "1px solid var(--glass-border)" }}
               >
                 {CATEGORIES.map((cat) => {
                   const active = activeFilter === cat;
@@ -548,9 +496,7 @@ export default function ProjectsPage() {
                         boxShadow: active ? "var(--shadow-blue-lg)" : "none",
                       }}
                     >
-                      <span style={{ opacity: active ? 1 : 0.6 }}>
-                        {CATEGORY_ICONS[cat]}
-                      </span>
+                      <span style={{ opacity: active ? 1 : 0.6 }}>{CATEGORY_ICONS[cat]}</span>
                       {cat}
                     </button>
                   );
@@ -559,32 +505,37 @@ export default function ProjectsPage() {
             </div>
           </FadeIn>
 
-          {/* Split view */}
-          <FadeIn delay={0.12}>
-            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4 lg:gap-5 items-start">
+          {/* ── SPLIT VIEW ── */}
+          <FadeIn delay={0.13}>
+            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-start">
 
               {/* LEFT — project list */}
               <div
-                className="rounded-2xl overflow-hidden"
+                className="rounded-2xl overflow-hidden relative"
                 style={{
                   background: "var(--glass-card)",
                   border: "1px solid var(--glass-card-border)",
                   boxShadow: "var(--shadow)",
                 }}
               >
+                {/* Panel header */}
                 <div
-                  className="px-4 py-3 border-b"
+                  className="px-4 py-3 border-b flex items-center gap-2"
                   style={{ borderColor: "var(--border)" }}
                 >
-                  <p
+                  <span
                     className="text-[10px] uppercase tracking-[0.18em] font-bold"
                     style={{ color: "var(--w25)" }}
                   >
                     {filtered.length} Project{filtered.length !== 1 ? "s" : ""}
-                  </p>
+                  </span>
                 </div>
 
-                <div className="p-2 space-y-0.5 overflow-y-auto lg:max-h-[600px]">
+                {/* Scrollable list — uses viewport height so it's tall but not page-breaking */}
+                <div
+                  className="p-2 space-y-0.5 overflow-y-auto"
+                  style={{ maxHeight: "65vh" }}
+                >
                   {filtered.map((proj: any) => (
                     <ProjectListItem
                       key={proj.title}
@@ -603,6 +554,12 @@ export default function ProjectsPage() {
                     </div>
                   )}
                 </div>
+
+                {/* Bottom fade — hints at scrollability */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-10 pointer-events-none rounded-b-2xl"
+                  style={{ background: "linear-gradient(to bottom, transparent, var(--glass-card))" }}
+                />
               </div>
 
               {/* RIGHT — project detail */}
@@ -616,15 +573,13 @@ export default function ProjectsPage() {
                     />
                   ) : (
                     <div
-                      className="rounded-2xl flex items-center justify-center min-h-[420px]"
+                      className="rounded-2xl flex items-center justify-center min-h-[360px]"
                       style={{
                         background: "var(--glass-card)",
                         border: "1px solid var(--glass-card-border)",
                       }}
                     >
-                      <p className="text-sm" style={{ color: "var(--w25)" }}>
-                        Select a project
-                      </p>
+                      <p className="text-sm" style={{ color: "var(--w25)" }}>Select a project</p>
                     </div>
                   )}
                 </AnimatePresence>
@@ -632,8 +587,8 @@ export default function ProjectsPage() {
             </div>
           </FadeIn>
 
-          {/* CTA */}
-          <FadeIn delay={0.18} className="text-center mt-16">
+          {/* ── CTA ── */}
+          <FadeIn delay={0.18} className="text-center mt-14">
             <Link href="/contact">
               <Button size="lg">{p.cta}</Button>
             </Link>
