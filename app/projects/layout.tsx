@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { BASE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Projects & Case Studies",
   description:
     "From Nike Turkey's 9-site migration to datacenter builds — see Supportiva's portfolio of enterprise IT projects delivered across 9 countries.",
-  alternates: { canonical: "https://www.supportiva.com/projects" },
+  alternates: { canonical: `${BASE_URL}/projects` },
   openGraph: {
     title: "Projects & Case Studies | Supportiva",
     description:
       "From Nike Turkey's 9-site migration to datacenter builds — enterprise IT projects delivered worldwide.",
-    url: "https://www.supportiva.com/projects",
+    url: `${BASE_URL}/projects`,
     type: "website",
   },
   twitter: {

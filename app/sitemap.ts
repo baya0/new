@@ -1,7 +1,6 @@
 import { MetadataRoute } from "next";
 import { translations } from "@/lib/i18n";
-
-const BASE_URL = "https://www.supportiva.com";
+import { BASE_URL } from "@/lib/config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = translations.en.blog.posts as unknown as Array<{ slug: string }>;

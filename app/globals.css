@@ -136,7 +136,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
   background: var(--bg0);
   color: var(--white);
   -webkit-font-smoothing: antialiased;
@@ -672,7 +672,7 @@ body {
 
 /* Big serif display number (editorial feel) */
 .display-num {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
   font-weight: 700;
   font-style: normal;
   font-size: clamp(28px, 4vw, 56px);
@@ -760,7 +760,7 @@ body {
 
 /* Serif pull quote */
 .pull-quote {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
   font-style: normal;
   font-weight: 500;
   line-height: 1.4;
@@ -777,7 +777,7 @@ body {
 
 /* Monospace meta label */
 .mono-label {
-  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  font-family: var(--font-jetbrains-mono), 'SF Mono', ui-monospace, monospace;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
