@@ -177,6 +177,8 @@ export const translations = {
           bullets: ["BOM Validation: Verified devices, PDUs, and cables", "Cable Survey & Labeling: Pre-check survey, labeling all existing switches and patch panel connections", "Device Decommissioning: Removed main MDF rack network devices", "Rack & Stack: Installed brand-new switches", "Rack Redesign: Tidied up racks for a clean, organized look", "Patchwork: Established connections between switches and patch panels", "Smoke Testing: System checks to confirm all store systems were operational"],
           tags: ["Migration", "9 Sites", "Rack & Stack"],
           location: "Turkey — 9 Cities",
+          year: "2023",
+          keyResult: "9 sites · multinational teams",
         },
         {
           icon: "💻", color: "green", image: "/images/projects/l1-support.jpg",
@@ -184,7 +186,9 @@ export const translations = {
           desc: "24-month migration project in Istanbul, Turkey.",
           fullDesc: "Our team of help desk support engineers successfully concluded a 24-month migration project in Istanbul, Turkey, for our client. Throughout this period, their primary responsibility involved assisting the client's end users by supplying them with devices equipped with the new Windows 11 image.",
           tags: ["L1 Support", "Windows 11", "24 months"],
-          location: "Istanbul, Turkey", 
+          location: "Istanbul, Turkey",
+          year: "2022 – 2024",
+          keyResult: "24-month engagement",
         },
         {
           icon: "🔌", color: "amber", image: "/images/projects/cabling-design.jpg",
@@ -193,6 +197,8 @@ export const translations = {
           fullDesc: "Just provide us with the cabling patch matrix, and our expert team will transform it into a masterpiece as we finalize this project at the client's data center.",
           tags: ["Cabling", "Datacenter", "Design"],
           location: "Client Datacenter",
+          year: "2023",
+          keyResult: "Zero-defect delivery",
         },
         {
           icon: "♻", color: "cyan", image: "/images/projects/go-green.jpg",
@@ -201,6 +207,8 @@ export const translations = {
           fullDesc: "As network equipment nears the end of its useful life, our role as a reliable partner intensifies in minimizing electronic waste and lessening environmental harm. We prioritize secure data deletion to safeguard confidential information before entrusting devices to our esteemed recycling collaborator, who guarantees their eco-friendly disposal.",
           tags: ["Go Green", "Decommission", "Secure Wipe"],
           location: "Multiple Sites",
+          year: "2023",
+          keyResult: "Secure e-waste disposal",
         },
         {
           icon: "🔥", color: "blue", image: "/images/projects/palo-alto.jpg",
@@ -209,6 +217,8 @@ export const translations = {
           fullDesc: "Our Infra team successfully finished installing Palo Alto firewalls at the client data center. A part of the installation process was to mount the devices to the rack mount kit and rack it.",
           tags: ["Firewall", "Palo Alto", "Datacenter"],
           location: "Client Datacenter",
+          year: "2024",
+          keyResult: "Enhanced perimeter security",
         },
         {
           icon: "📡", color: "green", image: "/images/projects/network-upgrade.jpg",
@@ -218,6 +228,8 @@ export const translations = {
           bullets: ["Received and configured various network devices", "Installed and secured Cisco access points for better coverage", "Worked closely with the client to meet their specific needs and ensure minimal disruption during the upgrade"],
           tags: ["Cisco", "WiFi", "Manufacturing"],
           location: "Manufacturing Site",
+          year: "2024",
+          keyResult: "Full site coverage",
         },
         {
           icon: "🖥", color: "amber", image: "/images/projects/rack-stack.jpg",
@@ -226,6 +238,8 @@ export const translations = {
           fullDesc: "Our Infra squad racked & stacked 60 servers at the client data center in Turkey — Istanbul.",
           tags: ["Rack & Stack", "60 Servers", "Datacenter"],
           location: "Istanbul, Turkey",
+          year: "2023",
+          keyResult: "60 servers deployed",
         },
         {
           icon: "📶", color: "cyan", image: "/images/projects/wifi-survey.jpg",
@@ -234,6 +248,8 @@ export const translations = {
           fullDesc: "Our team of skilled wireless engineers conducted a comprehensive WiFi survey at the client's manufacturing site, resulting in meticulously crafted WiFi Heatmaps for unparalleled site coverage optimization.",
           tags: ["WiFi Survey", "Heatmap", "Manufacturing"],
           location: "Manufacturing Site",
+          year: "2024",
+          keyResult: "Heatmap delivered",
         },
         {
           icon: "📦", color: "purple", image: "/images/projects/device-rental.jpg",
@@ -242,6 +258,8 @@ export const translations = {
           fullDesc: "The delivery of new devices to our client was unfortunately delayed. However, at Supportiva, we were quick to respond to this challenge. By providing a range of network devices for rent, we were able to significantly save our client both time and headaches. This stopgap solution enabled the client to activate their site seamlessly while awaiting the arrival of the delayed shipment.",
           tags: ["Rental", "Network", "Support"],
           location: "Client Site",
+          year: "2023",
+          keyResult: "Zero-downtime activation",
         },
         {
           icon: "🪟", color: "blue", image: "/images/projects/win11-migration.jpg",
@@ -250,6 +268,8 @@ export const translations = {
           fullDesc: "Exciting times at Supportiva as we recently wrapped up a seamless migration from Windows 10 to Windows 11 for one of our esteemed clients, upgrading a total of 36 devices! This project was a significant milestone, reflecting our commitment to providing top-notch IT services and solutions.",
           tags: ["Windows 11", "36 Devices", "Migration"],
           location: "Client Site",
+          year: "2024",
+          keyResult: "36 devices migrated",
         },
       ],
       readMore: "Read the full case",
