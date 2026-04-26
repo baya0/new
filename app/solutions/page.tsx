@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
+import { useTheme } from "@/lib/theme-context";
 import {
   CheckCircle2,
   Cloud,
@@ -21,6 +23,11 @@ import {
 const SERVICE_ICONS: LucideIcon[] = [
   Cloud, Server, ShieldCheck, LifeBuoy, Cable, Users,
 ];
+
+/* ── Hero background images (theme-aware) ──────────────────────────────
+   Swap the file names if you want a different shot per theme.        */
+const HERO_BG_LIGHT_SRC = "/images/backgrounds/cables.jpg";
+const HERO_BG_DARK_SRC  = "/images/backgrounds/serverroom2.jpg";
 
 /* ── Color helpers ─────────────────────────────────────────────── */
 const colorMap: Record<string, string> = {
@@ -392,9 +399,11 @@ function NetworkHub({
 
 export default function SolutionsPage() {
   const { t } = useLang();
+  const { dark } = useTheme();
   const s = t.solutions;
   const [selected, setSelected] = useState<number | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const heroBgSrc = dark ? HERO_BG_DARK_SRC : HERO_BG_LIGHT_SRC;
 
   // On mobile: auto-scroll to the detail panel when a slice is tapped
   useEffect(() => {
@@ -421,6 +430,27 @@ export default function SolutionsPage() {
         className="relative overflow-hidden hero-bg"
         style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
       >
+        {/* Theme-aware background image — same pattern as the homepage hero */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <Image
+            key={heroBgSrc}
+            src={heroBgSrc}
+            alt=""
+            fill
+            className="hero-server-img object-cover object-center"
+            style={{ opacity: 0.10, filter: "blur(1px) grayscale(15%)" }}
+            priority
+          />
+          {/* Gradient veil keeps text readable and unifies with brand palette */}
+          <div
+            className="hero-server-bg absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.96) 100%)",
+            }}
+          />
+        </div>
+
         {/* Background decorations */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="aurora" />
