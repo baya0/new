@@ -434,15 +434,15 @@ export default function SolutionsPage() {
             fill
             className="object-cover object-center"
             style={{
-              opacity: dark ? 0.18 : 0.24,
-              filter: "blur(1px) grayscale(15%)",
+              opacity: dark ? 0.18 : 0.42,
+              filter: "blur(1px) grayscale(20%)",
             }}
             priority
           />
           <div className="absolute inset-0" style={{
             background: dark
               ? "linear-gradient(180deg, rgba(14,23,32,0.42) 0%, rgba(14,23,32,0.92) 100%)"
-              : "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.95) 100%)",
+              : "linear-gradient(180deg, rgba(236,237,241,0.30) 0%, rgba(236,237,241,0.88) 100%)",
           }} />
         </div>
 
