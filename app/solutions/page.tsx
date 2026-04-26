@@ -4,6 +4,8 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
+import { useTheme } from "@/lib/theme-context";
+import Image from "next/image";
 import {
   CheckCircle2,
   Cloud,
@@ -395,6 +397,7 @@ function NetworkHub({
 
 export default function SolutionsPage() {
   const { t } = useLang();
+  const { dark } = useTheme();
   const s = t.solutions;
   const [selected, setSelected] = useState<number | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -423,6 +426,24 @@ export default function SolutionsPage() {
           <div className="blob blob-blue w-[500px] h-[500px] animate-blob" style={{ right: -150, top: -100 }} />
           <div className="blob blob-cyan w-[400px] h-[400px] animate-blob" style={{ left: -100, bottom: 50, animationDelay: "-4s" }} />
           <div className="absolute inset-0 dot-grid opacity-20" />
+        </div>
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <Image
+            src="/images/backgrounds/serverroom2.jpg"
+            alt=""
+            fill
+            className="object-cover object-center"
+            style={{
+              opacity: dark ? 0.18 : 0.24,
+              filter: "blur(1px) grayscale(15%)",
+            }}
+            priority
+          />
+          <div className="absolute inset-0" style={{
+            background: dark
+              ? "linear-gradient(180deg, rgba(14,23,32,0.42) 0%, rgba(14,23,32,0.92) 100%)"
+              : "linear-gradient(180deg, rgba(28,78,138,0.06) 0%, rgba(236,237,241,0.95) 100%)",
+          }} />
         </div>
 
         <div className="flex-1 flex items-center relative z-10 px-6 lg:px-10 py-8 lg:py-0">
