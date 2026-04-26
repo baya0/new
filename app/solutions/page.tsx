@@ -5,7 +5,6 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { useTheme } from "@/lib/theme-context";
-import Image from "next/image";
 import {
   CheckCircle2,
   Cloud,
@@ -427,24 +426,21 @@ export default function SolutionsPage() {
           <div className="blob blob-cyan w-[400px] h-[400px] animate-blob" style={{ left: -100, bottom: 50, animationDelay: "-4s" }} />
           <div className="absolute inset-0 dot-grid opacity-20" />
         </div>
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <Image
-            src="/images/backgrounds/serverroom2.jpg"
-            alt=""
-            fill
-            className="object-cover object-center"
-            style={{
-              opacity: dark ? 0.18 : 0.42,
-              filter: "blur(1px) grayscale(20%)",
-            }}
-            priority
-          />
-          <div className="absolute inset-0" style={{
-            background: dark
-              ? "linear-gradient(180deg, rgba(14,23,32,0.42) 0%, rgba(14,23,32,0.92) 100%)"
-              : "linear-gradient(180deg, rgba(236,237,241,0.30) 0%, rgba(236,237,241,0.88) 100%)",
-          }} />
-        </div>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: "url('/images/backgrounds/serverroom2.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: dark ? 0.22 : 0.45,
+            filter: "blur(1px) grayscale(20%)",
+          }}
+        />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: dark
+            ? "linear-gradient(180deg, rgba(14,23,32,0.55) 0%, rgba(14,23,32,0.94) 100%)"
+            : "linear-gradient(180deg, rgba(236,237,241,0.28) 0%, rgba(236,237,241,0.82) 100%)",
+        }} />
 
         <div className="flex-1 flex items-center relative z-10 px-6 lg:px-10 py-8 lg:py-0">
           <div className="w-full max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
