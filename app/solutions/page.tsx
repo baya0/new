@@ -429,10 +429,10 @@ export default function SolutionsPage() {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: "url('/images/backgrounds/serverroom2.jpg')",
+            backgroundImage: "url('/images/backgrounds/back5.jpg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            opacity: dark ? 0.22 : 0.45,
+            opacity: dark ? 0.92 : 0.65,
             filter: "blur(1px) grayscale(20%)",
           }}
         />
