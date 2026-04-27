@@ -372,6 +372,25 @@ async function seed() {
       continue
     }
 
+    const fullDescriptionBlocks = source.fullDesc
+      ? [
+          {
+            _type: 'block',
+            _key: randomKey(),
+            style: 'normal',
+            markDefs: [],
+            children: [
+              {
+                _type: 'span',
+                _key: randomKey(),
+                text: source.fullDesc,
+                marks: [],
+              },
+            ],
+          },
+        ]
+      : []
+
     const doc: { _type: string; [key: string]: unknown } = {
       _type: 'project',
       order: meta.order,
@@ -379,8 +398,8 @@ async function seed() {
       slug: { _type: 'slug', current: meta.slug },
       icon: source.icon,
       color: source.color,
-      desc: source.desc,
-      fullDesc: source.fullDesc,
+      description: source.desc,
+      fullDescription: fullDescriptionBlocks,
       tags: meta.tags,
       location: meta.location,
       year: meta.year,

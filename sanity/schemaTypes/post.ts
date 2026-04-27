@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity'
 
-export default defineType({
+export const post = defineType({
   name: 'post',
-  title: 'Post',
+  title: 'Blog Post',
   type: 'document',
   fields: [
     defineField({
@@ -15,20 +15,41 @@ export default defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: { source: 'title', maxLength: 200 },
+      options: { source: 'title' },
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: [{ type: 'author' }],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'thumbnail',
+      title: 'Thumbnail Image',
+      type: 'image',
+      options: { hotspot: true },
     }),
     defineField({
       name: 'excerpt',
       title: 'Excerpt',
+      description: 'Short description shown on the blog listing page',
       type: 'text',
       rows: 3,
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'thumbnail',
-      title: 'Thumbnail',
-      type: 'image',
-      options: { hotspot: true },
+      name: 'body',
+      title: 'Body Content',
+      type: 'array',
+      of: [
+        { type: 'block' },
+        {
+          type: 'image',
+          options: { hotspot: true },
+        },
+      ],
     }),
     defineField({
       name: 'category',
@@ -38,8 +59,9 @@ export default defineType({
         list: [
           { title: 'Cloud', value: 'Cloud' },
           { title: 'Network', value: 'Network' },
-          { title: 'Infrastructure', value: 'Infrastructure' },
+          { title: 'Security', value: 'Security' },
           { title: 'Migration', value: 'Migration' },
+          { title: 'Infrastructure', value: 'Infrastructure' },
           { title: 'Sustainability', value: 'Sustainability' },
         ],
       },
@@ -47,38 +69,28 @@ export default defineType({
     defineField({
       name: 'readTime',
       title: 'Read Time',
+      description: 'e.g. 3 min read',
       type: 'string',
     }),
     defineField({
       name: 'publishedAt',
       title: 'Published At',
       type: 'datetime',
-    }),
-    defineField({
-      name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: [{ type: 'author' }],
-    }),
-    defineField({
-      name: 'body',
-      title: 'Body',
-      type: 'array',
-      of: [
-        { type: 'block' },
-        { type: 'image', options: { hotspot: true } },
-      ],
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'seoTitle',
       title: 'SEO Title',
+      description: 'Overrides the title for search engines if needed',
       type: 'string',
     }),
     defineField({
       name: 'seoDescription',
       title: 'SEO Description',
+      description: 'Shown in Google search results — keep under 160 characters',
       type: 'text',
-      rows: 3,
+      rows: 2,
+      validation: (Rule) => Rule.max(160),
     }),
   ],
   preview: {

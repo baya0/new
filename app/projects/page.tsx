@@ -21,14 +21,26 @@ type SanityProject = {
   color?: string;
   image?: unknown;
   images?: unknown[];
-  desc?: string;
-  fullDesc?: string;
+  description?: string;
+  fullDescription?: Array<{ children?: Array<{ text?: string }> }>;
   bullets?: string[];
   tags?: string[];
   location?: string;
   year?: string;
   keyResult?: string;
 };
+
+function blocksToPlainText(blocks?: SanityProject["fullDescription"]): string {
+  if (!blocks || !Array.isArray(blocks)) return "";
+  return blocks
+    .map((block) =>
+      (block.children ?? [])
+        .map((child) => child.text ?? "")
+        .join(""),
+    )
+    .filter(Boolean)
+    .join("\n\n");
+}
 
 function imgUrl(src: unknown): string | null {
   if (!src) return null;
@@ -62,6 +74,7 @@ export default async function ProjectsPage() {
       ? [mainImageUrl, ...galleryUrls]
       : galleryUrls;
 
+    const fullText = blocksToPlainText(p.fullDescription);
     return {
       slug: p.slug,
       icon: p.icon ?? "",
@@ -69,8 +82,8 @@ export default async function ProjectsPage() {
       image: mainImageUrl ?? undefined,
       images: allImages.length ? allImages : undefined,
       title: p.title,
-      desc: p.desc ?? "",
-      fullDesc: p.fullDesc ?? p.desc ?? "",
+      desc: p.description ?? "",
+      fullDesc: fullText || p.description || "",
       bullets: p.bullets ?? [],
       tags: p.tags ?? [],
       location: p.location ?? "",

@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity'
 
-export default defineType({
+export const project = defineType({
   name: 'project',
   title: 'Project',
   type: 'document',
@@ -15,13 +15,20 @@ export default defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: { source: 'title', maxLength: 200 },
+      options: { source: 'title' },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'order',
-      title: 'Display Order',
-      type: 'number',
+      name: 'image',
+      title: 'Project Image',
+      type: 'image',
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: 'images',
+      title: 'Image Gallery',
+      type: 'array',
+      of: [{ type: 'image', options: { hotspot: true } }],
     }),
     defineField({
       name: 'icon',
@@ -30,7 +37,7 @@ export default defineType({
     }),
     defineField({
       name: 'color',
-      title: 'Color',
+      title: 'Accent Color',
       type: 'string',
       options: {
         list: [
@@ -43,32 +50,23 @@ export default defineType({
       },
     }),
     defineField({
-      name: 'image',
-      title: 'Image',
-      type: 'image',
-      options: { hotspot: true },
-    }),
-    defineField({
-      name: 'images',
-      title: 'Images Gallery',
-      type: 'array',
-      of: [{ type: 'image', options: { hotspot: true } }],
-    }),
-    defineField({
-      name: 'desc',
+      name: 'description',
       title: 'Short Description',
+      description: 'Shown on the projects listing page',
       type: 'text',
-      rows: 2,
+      rows: 3,
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'fullDesc',
+      name: 'fullDescription',
       title: 'Full Description',
-      type: 'text',
-      rows: 6,
+      type: 'array',
+      of: [{ type: 'block' }],
     }),
     defineField({
       name: 'bullets',
       title: 'Bullet Points',
+      description: 'Optional list of highlights shown when expanded',
       type: 'array',
       of: [{ type: 'string' }],
     }),
@@ -92,7 +90,26 @@ export default defineType({
     defineField({
       name: 'keyResult',
       title: 'Key Result',
+      description: 'One line summary e.g. 9 sites · multinational teams',
       type: 'string',
+    }),
+    defineField({
+      name: 'order',
+      title: 'Display Order',
+      description: 'Lower number shows first',
+      type: 'number',
+    }),
+    defineField({
+      name: 'seoTitle',
+      title: 'SEO Title',
+      type: 'string',
+    }),
+    defineField({
+      name: 'seoDescription',
+      title: 'SEO Description',
+      type: 'text',
+      rows: 2,
+      validation: (Rule) => Rule.max(160),
     }),
   ],
   orderings: [

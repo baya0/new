@@ -47,13 +47,15 @@ export const getAllProjects = groq`*[_type == "project"] | order(order asc) {
   color,
   image,
   images,
-  desc,
-  fullDesc,
+  description,
+  fullDescription,
   bullets,
   tags,
   location,
   year,
-  keyResult
+  keyResult,
+  seoTitle,
+  seoDescription
 }`
 
 export const getProjectBySlug = groq`*[_type == "project" && slug.current == $slug][0] {
@@ -65,13 +67,15 @@ export const getProjectBySlug = groq`*[_type == "project" && slug.current == $sl
   color,
   image,
   images,
-  desc,
-  fullDesc,
+  description,
+  fullDescription,
   bullets,
   tags,
   location,
   year,
-  keyResult
+  keyResult,
+  seoTitle,
+  seoDescription
 }`
 
 export const getAuthorBySlug = groq`*[_type == "author" && slug.current == $slug][0] {
