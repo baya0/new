@@ -62,6 +62,7 @@ export const post = defineType({
           { title: 'Security', value: 'Security' },
           { title: 'Migration', value: 'Migration' },
           { title: 'Infrastructure', value: 'Infrastructure' },
+          { title: 'Sustainability', value: 'Sustainability' },
         ],
       },
     }),
@@ -92,4 +93,7 @@ export const post = defineType({
       validation: (Rule) => Rule.max(160),
     }),
   ],
+  preview: {
+    select: { title: 'title', subtitle: 'category', media: 'thumbnail' },
+  },
 })

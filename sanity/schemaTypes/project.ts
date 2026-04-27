@@ -23,7 +23,31 @@ export const project = defineType({
       title: 'Project Image',
       type: 'image',
       options: { hotspot: true },
-      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'images',
+      title: 'Image Gallery',
+      type: 'array',
+      of: [{ type: 'image', options: { hotspot: true } }],
+    }),
+    defineField({
+      name: 'icon',
+      title: 'Icon (emoji)',
+      type: 'string',
+    }),
+    defineField({
+      name: 'color',
+      title: 'Accent Color',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Blue', value: 'blue' },
+          { title: 'Green', value: 'green' },
+          { title: 'Amber', value: 'amber' },
+          { title: 'Cyan', value: 'cyan' },
+          { title: 'Purple', value: 'purple' },
+        ],
+      },
     }),
     defineField({
       name: 'description',
@@ -38,6 +62,13 @@ export const project = defineType({
       title: 'Full Description',
       type: 'array',
       of: [{ type: 'block' }],
+    }),
+    defineField({
+      name: 'bullets',
+      title: 'Bullet Points',
+      description: 'Optional list of highlights shown when expanded',
+      type: 'array',
+      of: [{ type: 'string' }],
     }),
     defineField({
       name: 'tags',
@@ -81,4 +112,14 @@ export const project = defineType({
       validation: (Rule) => Rule.max(160),
     }),
   ],
+  orderings: [
+    {
+      title: 'Display Order',
+      name: 'orderAsc',
+      by: [{ field: 'order', direction: 'asc' }],
+    },
+  ],
+  preview: {
+    select: { title: 'title', subtitle: 'location', media: 'image' },
+  },
 })

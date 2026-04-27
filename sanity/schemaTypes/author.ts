@@ -41,4 +41,7 @@ export const author = defineType({
       type: 'url',
     }),
   ],
+  preview: {
+    select: { title: 'name', subtitle: 'role', media: 'avatar' },
+  },
 })
