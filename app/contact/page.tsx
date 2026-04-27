@@ -30,10 +30,33 @@ export default function ContactPage() {
   const { t } = useLang();
   const c = t.contact;
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", company: "", service: "", message: "" });
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setSubmitted(true); };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setErrorMsg(data.error || "Something went wrong. Please try again.");
+        return;
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -187,17 +210,31 @@ export default function ContactPage() {
                     {/* Submit */}
                     <motion.button
                       type="submit"
-                      whileHover={{ scale: 1.01, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl text-[14px] font-bold text-white transition-all duration-300"
+                      disabled={submitting}
+                      whileHover={submitting ? undefined : { scale: 1.01, y: -2 }}
+                      whileTap={submitting ? undefined : { scale: 0.98 }}
+                      className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl text-[14px] font-bold text-white transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                       style={{
                         background: "var(--gradient-brand)",
                         boxShadow: "0 2px 0 rgba(0,0,0,0.15), 0 4px 12px rgba(28,78,138,0.18)",
                       }}
                     >
                       <Send size={16} />
-                      {c.form.btn}
+                      {submitting ? "Sending…" : c.form.btn}
                     </motion.button>
+
+                    {errorMsg && (
+                      <div
+                        className="text-sm font-medium px-4 py-3 rounded-xl"
+                        style={{
+                          background: "rgba(220, 38, 38, 0.08)",
+                          border: "1px solid rgba(220, 38, 38, 0.25)",
+                          color: "#ef4444",
+                        }}
+                      >
+                        {errorMsg}
+                      </div>
+                    )}
                   </form>
                 </div>
               )}

@@ -1,0 +1,214 @@
+"use client";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { useLang } from "@/lib/language-context";
+import Image from "next/image";
+import Link from "next/link";
+import { Clock, ArrowRight, BookOpen, Cloud, Server, Truck, Leaf, Send, User, Network, Wifi } from "lucide-react";
+import { useTheme } from "@/lib/theme-context";
+
+export type BlogPostView = {
+  slug: string;
+  title: string;
+  desc: string;
+  cat: string;
+  date: string;
+  read: string;
+  author: { name: string; slug: string | null; avatarUrl: string | null } | null;
+};
+
+const catConfig: Record<string, { color: string; icon: typeof Cloud }> = {
+  Cloud: { color: "var(--blue)", icon: Cloud },
+  Infrastructure: { color: "var(--cyan)", icon: Server },
+  Migration: { color: "var(--amber)", icon: Truck },
+  Sustainability: { color: "var(--green)", icon: Leaf },
+  Network: { color: "var(--purple)", icon: Network },
+  // Arabic category names
+  "السحابة": { color: "var(--blue)", icon: Cloud },
+  "البنية التحتية": { color: "var(--cyan)", icon: Server },
+  "الهجرة": { color: "var(--amber)", icon: Truck },
+  "الاستدامة": { color: "var(--green)", icon: Leaf },
+  // Turkish category names
+  "Bulut": { color: "var(--blue)", icon: Cloud },
+  "Altyapı": { color: "var(--cyan)", icon: Server },
+  "Göç": { color: "var(--amber)", icon: Truck },
+  "Sürdürülebilirlik": { color: "var(--green)", icon: Leaf },
+};
+
+function AnimatedSection({ children, className }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div ref={ref} initial={{ opacity: 0, y: 32 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
+  );
+}
+
+function StaggerChild({ children, className, i }: { children: React.ReactNode; className?: string; i: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  return (
+    <motion.div ref={ref} initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>
+  );
+}
+
+export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
+  const { t } = useLang();
+  const b = t.blog;
+  const { dark } = useTheme();
+  return (
+    <>
+      {/* Hero */}
+      <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 120px" }}>
+        <div className="aurora" />
+        <div className="blob blob-purple w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
+        <div className="blob blob-blue w-[400px] h-[400px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "4s" }} />
+        <div className="blob blob-cyan w-[300px] h-[300px] top-20 left-1/4 animate-blob" style={{ animationDelay: "8s", opacity: 0.3 }} />
+        <div className="absolute inset-0 dot-grid opacity-20" />
+
+        {/* Server room image — fades out before the split view starts */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="/images/backgrounds/serversroom.jpg"
+            alt=""
+            fill
+            className="object-cover object-top"
+            style={{
+              opacity: dark ? 0.00 : 0.00,
+              filter: "blur(1px) grayscale(15%)",
+            }}
+            priority
+          />
+        </div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-6xl mx-auto relative z-10">
+
+          <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-bold leading-[1.1] tracking-tight" style={{ color: "var(--white)" }}>
+            {b.h1[0]}<br /><span className="gradient-text">{b.h1[1]}</span>
+          </h1>
+          <p className="mt-6 text-base lg:text-lg leading-relaxed max-w-xl" style={{ color: "var(--w55)" }}>{b.sub}</p>
+          <div className="accent-line w-24 mt-8" style={{ background: "linear-gradient(90deg, var(--purple), var(--blue), transparent)" }} />
+        </motion.div>
+      </section>
+
+      <div className="section-divider" />
+
+      <section className="relative overflow-hidden section-deep" style={{ padding: "100px 24px 140px" }}>
+        <div className="blob blob-blue w-[450px] h-[450px] top-60 -right-48 animate-blob" style={{ animationDelay: "2s" }} />
+        <div className="blob blob-purple w-[350px] h-[350px] bottom-40 -left-40 animate-blob" style={{ animationDelay: "6s" }} />
+        <div className="absolute inset-0 dot-grid opacity-15" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Featured post */}
+          {posts.length > 0 && (
+          <AnimatedSection>
+            <Link href={`/post/${posts[0].slug}`}>
+            <div className="float-panel glow-border rounded-3xl overflow-hidden mb-12 group cursor-pointer">
+              <div className="grid grid-cols-1 md:grid-cols-2">
+                <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(28,78,138,0.06), rgba(94,74,158,0.03), var(--glass-card))` }}>
+                  {/* To add featured image: <Image src="/images/blog/featured.jpg" alt="Featured post" fill className="object-cover" /> */}
+                  <div className="absolute top-5 left-5"><div className="badge text-[10px]">FEATURED</div></div>
+                </div>
+                <div className="p-8 lg:p-10 flex flex-col justify-center">
+                  {(() => {
+                    const cfg = catConfig[posts[0].cat];
+                    const Icon = cfg?.icon ?? Cloud;
+                    return (
+                      <div className="tag mb-4 w-fit" style={{ background: `${cfg?.color ?? "var(--blue)"}0D`, color: cfg?.color ?? "var(--blue)", border: `1px solid ${cfg?.color ?? "var(--blue)"}20` }}>
+                        <Icon size={11} />{posts[0].cat}
+                      </div>
+                    );
+                  })()}
+                  <h2 className="text-xl font-bold mb-3 leading-tight relative z-10" style={{ color: "var(--white)" }}>{posts[0].title}</h2>
+                  <p className="text-sm leading-[1.8] mb-5 relative z-10" style={{ color: "var(--w55)" }}>{posts[0].desc}</p>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}>
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
+                        <User size={10} style={{ color: "var(--blue)" }} />
+                      </div>
+                      {posts[0].author?.name ?? b.author}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--w25)" }}><Clock size={12} />{posts[0].date}</span>
+                    <span className="text-xs font-medium" style={{ color: "var(--w25)" }}>{posts[0].read}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-6 text-sm font-bold transition-all duration-300 group-hover:gap-3 relative z-10" style={{ color: "var(--blue)" }}>
+                    Read article <ArrowRight size={14} />
+                  </div>
+                </div>
+              </div>
+            </div>
+            </Link>
+          </AnimatedSection>
+          )}
+
+          {/* Posts grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+            {posts.slice(1).map((post, i) => {
+              const cfg = catConfig[post.cat];
+              const cc = cfg?.color ?? "var(--blue)";
+              const Icon = cfg?.icon ?? Cloud;
+              return (
+                <StaggerChild key={post.slug} i={i}>
+                  <Link href={`/post/${post.slug}`}>
+                  <div className="glass-card overflow-hidden cursor-pointer group h-full">
+                    <div className="h-44 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${cc}0A, var(--glass-card))` }}>
+                      <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${cc}, transparent)` }} />
+                      {/* To add post image: <Image src={`/images/blog/post-${i + 2}.jpg`} alt={post.title} fill className="object-cover" /> */}
+                    </div>
+                    <div className="p-6">
+                      <div className="tag mb-3 w-fit" style={{ background: `${cc}0D`, color: cc, border: `1px solid ${cc}20` }}>
+                        <Icon size={10} />{post.cat}
+                      </div>
+                      <h3 className="text-sm font-bold leading-snug mb-2 relative z-10" style={{ color: "var(--white)" }}>{post.title}</h3>
+                      <p className="text-xs leading-relaxed mb-4 relative z-10" style={{ color: "var(--w55)" }}>{post.desc}</p>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)" }}>
+                          <User size={8} style={{ color: "var(--blue)" }} />
+                        </div>
+                        <span className="text-[10px] font-medium" style={{ color: "var(--w25)" }}>{post.author?.name ?? b.author}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--w25)" }}><Clock size={10} />{post.date}</span>
+                          <span className="text-[10px] font-medium" style={{ color: "var(--w25)" }}>{post.read}</span>
+                        </div>
+                        <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" style={{ color: cc }} />
+                      </div>
+                    </div>
+                  </div>
+                  </Link>
+                </StaggerChild>
+              );
+            })}
+          </div>
+
+          {/* Newsletter */}
+          <AnimatedSection>
+            <div className="mt-24 float-panel glow-border rounded-3xl p-8 lg:p-10 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--gradient-brand)" }} />
+              <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
+                    <Send size={22} style={{ color: "var(--blue)" }} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold mb-1" style={{ color: "var(--white)" }}>Stay in the loop</h3>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--w55)" }}>Get the latest IT insights from our field engineers, straight to your inbox.</p>
+                  </div>
+                </div>
+                <div className="flex gap-3 w-full md:w-auto">
+                  <input type="email" placeholder="your@company.com" className="form-input flex-1 md:w-60" />
+                  <button className="px-6 py-3 rounded-xl text-sm font-bold text-white shrink-0 transition-all duration-300 hover:-translate-y-0.5"
+                    style={{ background: "var(--gradient-brand)", boxShadow: "0 2px 0 rgba(0,0,0,0.15), 0 4px 12px rgba(28,78,138,0.18)" }}>
+                    Subscribe
+                  </button>
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+    </>
+  );
+}
