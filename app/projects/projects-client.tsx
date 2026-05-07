@@ -276,7 +276,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl p-6 lg:p-7"
+      className="rounded-2xl p-6 lg:p-7 w-full"
       style={{
         background: "var(--glass-card)",
         border: "1px solid var(--glass-card-border)",
@@ -513,20 +513,20 @@ export default function ProjectsClient({ items }: { items: any[] }) {
           {/* ── SPLIT VIEW ── */}
           <FadeIn delay={0.13}>
             {/*
-              items-start: panels are independent heights.
-              Sidebar has a viewport-relative fixed height so it matches the
-              default right panel without growing when the detail expands.
+              items-stretch: panels share the same row height. When the right
+              detail panel grows (e.g. on "Read more"), the left sidebar grows
+              with it. The list inside the sidebar scrolls when it overflows.
             */}
-            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-stretch">
 
-              {/* LEFT — fixed-height sidebar, scrolls internally */}
+              {/* LEFT — sidebar matches right panel height, scrolls internally */}
               <div
-                className="rounded-2xl overflow-hidden relative flex flex-col"
+                className="rounded-2xl overflow-hidden relative flex flex-col h-full"
                 style={{
                   background: "var(--glass-card)",
                   border: "1px solid var(--glass-card-border)",
                   boxShadow: "var(--shadow)",
-                  height: "clamp(800px, calc(100vh - 330px), 860px)",
+                  minHeight: "clamp(420px, 60vh, 720px)",
                 }}
               >
                 {/* Panel header — fixed, never scrolls */}
@@ -570,8 +570,8 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                 </div>
               </div>
 
-              {/* RIGHT — project detail */}
-              <div>
+              {/* RIGHT — project detail (drives the row height) */}
+              <div className="h-full flex">
                 <AnimatePresence mode="wait">
                   {selected ? (
                     <ProjectDetail
@@ -581,10 +581,11 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                     />
                   ) : (
                     <div
-                      className="rounded-2xl flex items-center justify-center min-h-[360px]"
+                      className="rounded-2xl flex items-center justify-center w-full"
                       style={{
                         background: "var(--glass-card)",
                         border: "1px solid var(--glass-card-border)",
+                        minHeight: "clamp(420px, 60vh, 720px)",
                       }}
                     >
                       <p className="text-sm" style={{ color: "var(--w25)" }}>Select a project</p>
