@@ -6,8 +6,42 @@
  * any document whose slug already exists.
  *
  * Run with:
- *   SANITY_WRITE_TOKEN=<token> npx tsx sanity/seed.ts
+ *   npm run seed
+ * (reads .env.local automatically — make sure SANITY_WRITE_TOKEN is set there)
  */
+
+// Load .env.local before anything else imports `./env`. Node 20+ has a
+// built-in --env-file flag but tsx doesn't always forward it, so we parse
+// the file ourselves to keep the script portable across Node versions.
+import { readFileSync, existsSync } from 'node:fs'
+import { resolve } from 'node:path'
+
+function loadEnvFile(path: string) {
+  if (!existsSync(path)) return
+  const contents = readFileSync(path, 'utf8')
+  for (const rawLine of contents.split(/\r?\n/)) {
+    const line = rawLine.trim()
+    if (!line || line.startsWith('#')) continue
+    const eq = line.indexOf('=')
+    if (eq === -1) continue
+    const key = line.slice(0, eq).trim()
+    let value = line.slice(eq + 1).trim()
+    // Strip surrounding quotes (single or double).
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1)
+    }
+    if (!(key in process.env)) {
+      process.env[key] = value
+    }
+  }
+}
+
+const cwd = process.cwd()
+loadEnvFile(resolve(cwd, '.env.local'))
+loadEnvFile(resolve(cwd, '.env'))
 
 import { createClient } from '@sanity/client'
 import { translations } from '../lib/i18n'
