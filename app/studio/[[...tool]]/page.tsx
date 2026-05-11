@@ -7,16 +7,15 @@
  * https://github.com/sanity-io/next-sanity
  */
 
-import { NextStudio } from 'next-sanity/studio'
-import config from '../../../sanity.config'
+import Studio from './Studio'
 
 // Sanity Studio is a client-only app — it uses window, IndexedDB, drag-and-
-// drop APIs, etc. Marking the route dynamic stops Next.js from trying to
-// prerender it at build time (which throws "window is not defined").
+// drop APIs, etc. Render it inside a dedicated "use client" component so
+// Next.js never tries to evaluate Studio internals on the server.
 export const dynamic = 'force-dynamic'
 
 export { metadata, viewport } from 'next-sanity/studio'
 
 export default function StudioPage() {
-  return <NextStudio config={config} />
+  return <Studio />
 }
