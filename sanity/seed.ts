@@ -10,9 +10,10 @@
  * (reads .env.local automatically — make sure SANITY_WRITE_TOKEN is set there)
  */
 
-// Load .env.local before anything else imports `./env`. Node 20+ has a
-// built-in --env-file flag but tsx doesn't always forward it, so we parse
-// the file ourselves to keep the script portable across Node versions.
+// ESM imports are hoisted, so we cannot rely on a runtime dotenv loader to
+// populate process.env before `./env` is evaluated. Instead, we parse
+// .env.local ourselves and read each variable directly from process.env in
+// this file — no dependency on `./env`.
 import { readFileSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 
@@ -26,7 +27,6 @@ function loadEnvFile(path: string) {
     if (eq === -1) continue
     const key = line.slice(0, eq).trim()
     let value = line.slice(eq + 1).trim()
-    // Strip surrounding quotes (single or double).
     if (
       (value.startsWith('"') && value.endsWith('"')) ||
       (value.startsWith("'") && value.endsWith("'"))
@@ -45,12 +45,32 @@ loadEnvFile(resolve(cwd, '.env'))
 
 import { createClient } from '@sanity/client'
 import { translations } from '../lib/i18n'
-import { apiVersion, dataset, projectId } from './env'
 
+function requireEnv(name: string): string {
+  const v = process.env[name]
+  if (!v) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Missing environment variable: ${name}\n` +
+        `Set it in .env.local (or your shell) and re-run "npm run seed".`,
+    )
+    process.exit(1)
+  }
+  return v
+}
+
+const projectId = requireEnv('NEXT_PUBLIC_SANITY_PROJECT_ID')
+const dataset = requireEnv('NEXT_PUBLIC_SANITY_DATASET')
+const apiVersion =
+  process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2026-04-27'
 const token = process.env.SANITY_WRITE_TOKEN || process.env.SANITY_AUTH_TOKEN
 if (!token) {
   // eslint-disable-next-line no-console
-  console.error('Missing SANITY_WRITE_TOKEN environment variable.')
+  console.error(
+    'Missing SANITY_WRITE_TOKEN environment variable.\n' +
+      'Generate one in sanity.io/manage → API → Tokens (Editor permission),\n' +
+      'then add it to .env.local as SANITY_WRITE_TOKEN=sk...',
+  )
   process.exit(1)
 }
 
