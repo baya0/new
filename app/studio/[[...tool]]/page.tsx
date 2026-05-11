@@ -1,20 +1,28 @@
-/**
- * This route is responsible for the built-in authoring environment using Sanity Studio.
- * All routes under your studio path is handled by this file using Next.js' catch-all routes:
- * https://nextjs.org/docs/routing/dynamic-routes#catch-all-routes
- *
- * You can learn more about the next-sanity package here:
- * https://github.com/sanity-io/next-sanity
- */
+import type { Metadata, Viewport } from 'next'
 
 import Studio from './Studio'
 
 // Sanity Studio is a client-only app — it uses window, IndexedDB, drag-and-
-// drop APIs, etc. Render it inside a dedicated "use client" component so
-// Next.js never tries to evaluate Studio internals on the server.
+// drop APIs, etc. We render it inside a "use client" component (Studio.tsx)
+// so Next.js never evaluates Studio internals on the server.
+//
+// We also define metadata/viewport locally rather than re-exporting from
+// `next-sanity/studio`, because that import has top-level code that
+// references `window` and throws during SSR.
+
 export const dynamic = 'force-dynamic'
 
-export { metadata, viewport } from 'next-sanity/studio'
+export const metadata: Metadata = {
+  title: 'Sanity Studio',
+  robots: { index: false, follow: false },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  interactiveWidget: 'resizes-content',
+}
 
 export default function StudioPage() {
   return <Studio />
