@@ -2,7 +2,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { type Lang } from "@/lib/i18n";
-import { Linkedin, Instagram, Facebook, Twitter, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import { Linkedin, Instagram, Facebook, Twitter } from "@/components/ui/BrandIcons";
 
 const PAGE_HREFS: Record<string, string> = {
   "IT Consulting": "/solutions", "Staff Augmentation": "/solutions",
