@@ -3,7 +3,8 @@ import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
-import { CheckCircle2, Clock, MapPin, Phone, Mail, Globe, Linkedin, Instagram, Facebook, Twitter, MessageSquare, ArrowUpRight, Send } from "lucide-react";
+import { CheckCircle2, Clock, MapPin, Phone, Mail, Globe, MessageSquare, ArrowUpRight, Send } from "lucide-react";
+import { Linkedin, Instagram, Facebook, Twitter } from "@/components/ui/BrandIcons";
 
 const contactIcons: Record<string, typeof Mail> = {
   "Email": Mail, "Phone": Phone, "Address": MapPin, "Locations": Globe,
