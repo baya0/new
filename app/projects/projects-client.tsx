@@ -234,6 +234,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
             alt={proj.title}
             fill
             className="object-cover"
+            style={{ objectPosition: "center 30%" }}
             sizes="(max-width: 1024px) 100vw, 70vw"
           />
         </div>
