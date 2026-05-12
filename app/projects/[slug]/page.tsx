@@ -6,6 +6,7 @@ import {
   getAllProjectSlugs,
   getProjectBySlug,
 } from "@/sanity/lib/queries";
+import { fetchLocalized, getServerLang } from "@/sanity/lib/i18n-fetch";
 import { BASE_URL } from "@/lib/config";
 import ProjectDetailClient, { type ProjectView } from "./project-client";
 
@@ -75,10 +76,11 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const proj = await client.fetch<SanityProject | null>(
+  const language = await getServerLang();
+  const proj = await fetchLocalized<SanityProject>(
     getProjectBySlug,
     { slug },
-    { next: { revalidate: 3600 } },
+    language,
   );
 
   if (!proj) {
@@ -120,11 +122,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProjectDetailPage({ params }: Props) {
   const { slug } = await params;
+  const language = await getServerLang();
 
-  const proj = await client.fetch<SanityProject | null>(
+  const proj = await fetchLocalized<SanityProject>(
     getProjectBySlug,
     { slug },
-    { next: { revalidate: 3600 } },
+    language,
   );
   if (!proj) return notFound();
 
