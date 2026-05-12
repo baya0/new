@@ -152,12 +152,12 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--blue); }
 
-/* ── PROJECTS SPLIT-VIEW — bounded height, internal scroll ── */
+/* ── PROJECTS SPLIT-VIEW — bounded row, list scrolls internally ── */
 @media (min-width: 1024px) {
   .projects-split {
-    height: 78vh;
-    min-height: 560px;
-    max-height: 760px;
+    height: 72vh;
+    min-height: 540px;
+    max-height: 720px;
   }
   .projects-list-panel,
   .projects-detail-cell {
@@ -166,8 +166,6 @@ body {
   }
   .projects-detail-card {
     height: 100%;
-    overflow-y: auto;
-    min-height: 0;
   }
 }
 

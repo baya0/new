@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { useTheme } from "@/lib/theme-context";
 import {
-  MapPin, ChevronLeft, ChevronRight, ChevronDown, ChevronUp,
+  MapPin, ChevronRight, ArrowRight,
   LayoutGrid, ArrowLeftRight, Server, Headphones, Network, Leaf,
   Calendar,
 } from "lucide-react";
@@ -76,106 +76,6 @@ function FadeIn({
     >
       {children}
     </motion.div>
-  );
-}
-
-function ProjectGallery({
-  images,
-  title,
-  color,
-}: {
-  images: string[];
-  title: string;
-  color: string;
-}) {
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => { setCurrent(0); }, [title]);
-
-  const prev = useCallback(
-    () => setCurrent((i) => (i - 1 + images.length) % images.length),
-    [images.length]
-  );
-  const next = useCallback(
-    () => setCurrent((i) => (i + 1) % images.length),
-    [images.length]
-  );
-
-  if (!images.length) return null;
-
-  return (
-    <div>
-      <div
-        className="relative w-full rounded-xl overflow-hidden"
-        style={{ aspectRatio: "16/9", background: "var(--glass-deep)" }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
-          >
-            <Image
-              src={images[current]}
-              alt={`${title} — ${current + 1}`}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 70vw"
-            />
-          </motion.div>
-        </AnimatePresence>
-
-        {images.length > 1 && (
-          <div
-            className="absolute bottom-3 right-3 text-xs px-2.5 py-1 rounded-full font-semibold tabular-nums"
-            style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)", color: "#fff" }}
-          >
-            {current + 1} / {images.length}
-          </div>
-        )}
-
-        {images.length > 1 && (
-          <>
-            <button
-              onClick={prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-              style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)" }}
-            >
-              <ChevronLeft size={18} className="text-white" />
-            </button>
-            <button
-              onClick={next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-              style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)" }}
-            >
-              <ChevronRight size={18} className="text-white" />
-            </button>
-          </>
-        )}
-      </div>
-
-      {images.length > 1 && (
-        <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
-          {images.map((img, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              className="relative flex-shrink-0 w-16 h-11 rounded-lg overflow-hidden transition-all duration-200"
-              style={{
-                opacity: i === current ? 1 : 0.4,
-                outline: i === current ? `2px solid ${color}` : "2px solid transparent",
-                outlineOffset: "2px",
-              }}
-            >
-              <Image src={img} alt="" fill className="object-cover" sizes="64px" />
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -262,12 +162,8 @@ function ProjectListItem({
 
 function ProjectDetail({ proj, color }: { proj: any; color: string }) {
   const { t } = useLang();
-  const [expanded, setExpanded] = useState(false);
-
-  useEffect(() => { setExpanded(false); }, [proj.title]);
-
   const images = getProjectImages(proj);
-  const hasMore = proj.fullDesc && proj.fullDesc !== proj.desc;
+  const hero = images[0];
 
   return (
     <motion.div
@@ -276,7 +172,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-      className="projects-detail-card rounded-2xl p-6 lg:p-7 w-full"
+      className="projects-detail-card rounded-2xl p-6 lg:p-7 w-full flex flex-col"
       style={{
         background: "var(--glass-card)",
         border: "1px solid var(--glass-card-border)",
@@ -285,7 +181,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
     >
       {/* Category badge */}
       <span
-        className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-3"
+        className="self-start inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-3"
         style={{ color, border: "1px solid var(--border)", background: "var(--glass)" }}
       >
         {getProjectCategory(proj.tags)}
@@ -302,74 +198,72 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
         className="flex flex-wrap items-center gap-4 mb-4 text-[12px]"
         style={{ color: "var(--w25)" }}
       >
-        <span className="flex items-center gap-1.5"><MapPin size={11} />{proj.location}</span>
+        {proj.location && (
+          <span className="flex items-center gap-1.5"><MapPin size={11} />{proj.location}</span>
+        )}
         {proj.year && (
           <span className="flex items-center gap-1.5"><Calendar size={11} />{proj.year}</span>
         )}
       </div>
 
-      {/* Description — short or full */}
+      {/* Short teaser description — 3 lines max, no expand */}
       <p
-        className="text-[14px] leading-[1.85] mb-3"
-        style={{ color: "var(--w55)" }}
+        className="text-[14px] leading-[1.85] mb-5"
+        style={{
+          color: "var(--w55)",
+          display: "-webkit-box",
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+        }}
       >
-        {expanded ? proj.fullDesc : proj.desc}
+        {proj.desc}
       </p>
 
-      {/* Bullet points */}
-      <AnimatePresence>
-        {expanded && proj.bullets && (
-          <motion.ul
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden space-y-2 mb-3"
-          >
-            {(proj.bullets as string[]).map((b: string, i: number) => (
-              <motion.li
-                key={i}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.04 }}
-                className="flex gap-3 items-start text-[13px] leading-relaxed"
-                style={{ color: "var(--w55)" }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full mt-[6px] shrink-0" style={{ background: color }} />
-                {b}
-              </motion.li>
-            ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
-
-      {/* Read more toggle */}
-      {hasMore && (
-        <button
-          onClick={() => setExpanded((v) => !v)}
-          className="inline-flex items-center gap-1.5 text-[13px] font-bold mb-5 transition-opacity hover:opacity-70"
-          style={{ color }}
+      {/* Single hero image — fixed compact height so the card stays balanced */}
+      {hero && (
+        <div
+          className="relative w-full rounded-xl overflow-hidden mb-5"
+          style={{
+            height: "clamp(180px, 28vh, 280px)",
+            background: "var(--glass-deep)",
+          }}
         >
-          {expanded ? t.projects.showLess : t.projects.readMore}
-          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-        </button>
+          <Image
+            src={hero}
+            alt={proj.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 70vw"
+          />
+        </div>
       )}
 
-      {/* Image gallery */}
-      <div className={hasMore ? "" : "mt-1"}>
-        <ProjectGallery images={images} title={proj.title} color={color} />
-      </div>
-
       {/* Tech tags */}
-      <div className="flex flex-wrap gap-2 mt-5">
-        {(proj.tags as string[]).map((tag, i) => (
-          <span
-            key={i}
-            className="text-[11px] px-3 py-1.5 rounded-full font-medium"
-            style={{ background: "var(--glass)", border: "1px solid var(--border)", color: "var(--w55)" }}
-          >
-            {tag}
-          </span>
-        ))}
+      {proj.tags?.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {(proj.tags as string[]).slice(0, 5).map((tag, i) => (
+            <span
+              key={i}
+              className="text-[11px] px-3 py-1.5 rounded-full font-medium"
+              style={{ background: "var(--glass)", border: "1px solid var(--border)", color: "var(--w55)" }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Push CTA to bottom so cards feel consistent regardless of desc length */}
+      <div className="mt-auto pt-2">
+        <Link
+          href={`/projects/${proj.slug}`}
+          className="inline-flex items-center gap-2 text-[13px] font-bold transition-all duration-200 hover:gap-3"
+          style={{ color }}
+        >
+          {t.projects.readMore}
+          <ArrowRight size={14} />
+        </Link>
       </div>
     </motion.div>
   );
