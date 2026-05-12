@@ -276,7 +276,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl p-6 lg:p-7 w-full"
+      className="rounded-2xl p-6 lg:p-7 w-full lg:h-full lg:overflow-y-auto"
       style={{
         background: "var(--glass-card)",
         border: "1px solid var(--glass-card-border)",
@@ -517,16 +517,15 @@ export default function ProjectsClient({ items }: { items: any[] }) {
               detail panel grows (e.g. on "Read more"), the left sidebar grows
               with it. The list inside the sidebar scrolls when it overflows.
             */}
-            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-stretch lg:h-[clamp(560px,78vh,760px)]">
 
-              {/* LEFT — sidebar matches right panel height, scrolls internally */}
+              {/* LEFT — bounded height; list scrolls internally so the page never grows */}
               <div
-                className="rounded-2xl overflow-hidden relative flex flex-col h-full"
+                className="rounded-2xl overflow-hidden relative flex flex-col h-[460px] lg:h-full"
                 style={{
                   background: "var(--glass-card)",
                   border: "1px solid var(--glass-card-border)",
                   boxShadow: "var(--shadow)",
-                  minHeight: "clamp(420px, 60vh, 720px)",
                 }}
               >
                 {/* Panel header — fixed, never scrolls */}
@@ -581,11 +580,10 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                     />
                   ) : (
                     <div
-                      className="rounded-2xl flex items-center justify-center w-full"
+                      className="rounded-2xl flex items-center justify-center w-full h-[460px] lg:h-full"
                       style={{
                         background: "var(--glass-card)",
                         border: "1px solid var(--glass-card-border)",
-                        minHeight: "clamp(420px, 60vh, 720px)",
                       }}
                     >
                       <p className="text-sm" style={{ color: "var(--w25)" }}>Select a project</p>
