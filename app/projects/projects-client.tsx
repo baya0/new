@@ -276,7 +276,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl p-6 lg:p-7 w-full lg:h-full lg:overflow-y-auto"
+      className="projects-detail-card rounded-2xl p-6 lg:p-7 w-full"
       style={{
         background: "var(--glass-card)",
         border: "1px solid var(--glass-card-border)",
@@ -517,11 +517,11 @@ export default function ProjectsClient({ items }: { items: any[] }) {
               detail panel grows (e.g. on "Read more"), the left sidebar grows
               with it. The list inside the sidebar scrolls when it overflows.
             */}
-            <div className="grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-stretch lg:h-[clamp(560px,78vh,760px)]">
+            <div className="projects-split grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-stretch">
 
               {/* LEFT — bounded height; list scrolls internally so the page never grows */}
               <div
-                className="rounded-2xl overflow-hidden relative flex flex-col h-[460px] lg:h-full"
+                className="projects-list-panel rounded-2xl overflow-hidden relative flex flex-col h-[460px]"
                 style={{
                   background: "var(--glass-card)",
                   border: "1px solid var(--glass-card-border)",
@@ -569,8 +569,8 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                 </div>
               </div>
 
-              {/* RIGHT — project detail (drives the row height) */}
-              <div className="h-full flex">
+              {/* RIGHT — bounded cell; detail card scrolls internally */}
+              <div className="projects-detail-cell flex">
                 <AnimatePresence mode="wait">
                   {selected ? (
                     <ProjectDetail
@@ -580,7 +580,7 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                     />
                   ) : (
                     <div
-                      className="rounded-2xl flex items-center justify-center w-full h-[460px] lg:h-full"
+                      className="projects-detail-card rounded-2xl flex items-center justify-center w-full h-[460px]"
                       style={{
                         background: "var(--glass-card)",
                         border: "1px solid var(--glass-card-border)",

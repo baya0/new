@@ -152,6 +152,25 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--blue); }
 
+/* ── PROJECTS SPLIT-VIEW — bounded height, internal scroll ── */
+@media (min-width: 1024px) {
+  .projects-split {
+    height: 78vh;
+    min-height: 560px;
+    max-height: 760px;
+  }
+  .projects-list-panel,
+  .projects-detail-cell {
+    height: 100%;
+    min-height: 0;
+  }
+  .projects-detail-card {
+    height: 100%;
+    overflow-y: auto;
+    min-height: 0;
+  }
+}
+
 /* ══════════ SURFACE SYSTEM ══════════ */
 
 .glass {
