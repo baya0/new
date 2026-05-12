@@ -3,8 +3,11 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { Home, ArrowLeft } from "lucide-react";
+import { useLang } from "@/lib/language-context";
 
 export default function NotFound() {
+  const { t } = useLang();
+  const n = t.notFound;
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-6 text-center relative overflow-hidden" style={{ background: "var(--bg0)" }}>
       {/* Background effects */}
@@ -18,13 +21,13 @@ export default function NotFound() {
         className="relative"
       >
         <div className="text-[140px] font-extrabold leading-none mb-2 gradient-text" style={{ opacity: 0.15 }}>404</div>
-        <h1 className="text-4xl font-extrabold mb-4 -mt-8" style={{ color: "var(--white)" }}>Page Not Found</h1>
+        <h1 className="text-4xl font-extrabold mb-4 -mt-8" style={{ color: "var(--white)" }}>{n.title}</h1>
         <p className="text-base mb-8 max-w-md mx-auto" style={{ color: "var(--w55)" }}>
-          The page you&apos;re looking for doesn&apos;t exist or has been moved. Let&apos;s get you back on track.
+          {n.sub}
         </p>
         <div className="flex gap-3 justify-center">
-          <Link href="/"><Button><Home size={16} /> Back to Home</Button></Link>
-          <Button variant="secondary" onClick={() => window.history.back()}><ArrowLeft size={16} /> Go Back</Button>
+          <Link href="/"><Button><Home size={16} /> {n.backHome}</Button></Link>
+          <Button variant="secondary" onClick={() => window.history.back()}><ArrowLeft size={16} /> {n.goBack}</Button>
         </div>
       </motion.div>
     </div>

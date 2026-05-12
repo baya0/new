@@ -106,7 +106,7 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(28,78,138,0.06), rgba(94,74,158,0.03), var(--glass-card))` }}>
                   {/* To add featured image: <Image src="/images/blog/featured.jpg" alt="Featured post" fill className="object-cover" /> */}
-                  <div className="absolute top-5 left-5"><div className="badge text-[10px]">FEATURED</div></div>
+                  <div className="absolute top-5 left-5"><div className="badge text-[10px]">{b.featured}</div></div>
                 </div>
                 <div className="p-8 lg:p-10 flex flex-col justify-center">
                   {(() => {
@@ -133,7 +133,7 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
                     <span className="text-xs font-medium" style={{ color: "var(--w25)" }}>{posts[0].read}</span>
                   </div>
                   <div className="flex items-center gap-1.5 mt-6 text-sm font-bold transition-all duration-300 group-hover:gap-3 relative z-10" style={{ color: "var(--blue)" }}>
-                    Read article <ArrowRight size={14} />
+                    {b.readArticle} <ArrowRight size={14} />
                   </div>
                 </div>
               </div>
@@ -193,8 +193,8 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
                     <Send size={22} style={{ color: "var(--blue)" }} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold mb-1" style={{ color: "var(--white)" }}>Stay in the loop</h3>
-                    <p className="text-sm leading-relaxed" style={{ color: "var(--w55)" }}>Get the latest IT insights from our field engineers, straight to your inbox.</p>
+                    <h3 className="text-lg font-bold mb-1" style={{ color: "var(--white)" }}>{b.newsletterTitle}</h3>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--w55)" }}>{b.newsletterSub}</p>
                   </div>
                 </div>
                 <div className="flex gap-3 w-full md:w-auto">

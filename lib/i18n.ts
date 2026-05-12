@@ -63,6 +63,13 @@ export const translations = {
         { val: "9", label: "Locations", sub: "US, Europe & beyond" },
       ],
       whyLabel: "WHY SUPPORTIVA",
+      whyUsLabel: "Why Us",
+      fieldNote: "Field Note — Nike Turkey Migration",
+      readCase: "Read the case",
+      getInTouchLabel: "Get In Touch",
+      responseTime: "Response time — under 24 hrs",
+      letsBuild: "Let's build something",
+      worthKeeping: "worth keeping.",
       whyTitle: "Your Strategic Partner For Real Digital Transformation.",
       whySub: "At Supportiva, we deliver exceptional IT services that drive business growth. Customized solutions that empower your business.",
       whyBtn: "Our Vision →",
@@ -87,6 +94,7 @@ export const translations = {
       h1: "Empowering Your Business with Data-Driven Solutions",
       sub: "Every service is built to keep your business ahead with reliable, modern technology.",
       label: "OUR SERVICES",
+      ctaFallback: "Get In Touch →",
       services: [
         {
           icon: "☁", color: "blue", title: "Cloud Migration",
@@ -313,6 +321,10 @@ export const translations = {
       backToBlog: "Back to Blog",
       recentPosts: "Recent Posts",
       seeAll: "See All",
+      featured: "FEATURED",
+      readArticle: "Read article",
+      newsletterTitle: "Stay in the loop",
+      newsletterSub: "Get the latest IT insights from our field engineers, straight to your inbox.",
       posts: [
         { cat: "Infrastructure", slug: "unveiling-the-future-with-wifi-7-ruijie-s-rg-rap73hd-leads-the-charge", title: "Unveiling the Future with WiFi 7: Ruijie's RG-RAP73HD Leads the Charge", desc: "WiFi 7 is here and it's changing the game. Explore how Ruijie's latest access point delivers next-gen wireless performance with an innovative SFP+ port for fiber connectivity.", date: "Mar 1, 2024", read: "2 min read",
           body: [
@@ -401,6 +413,7 @@ export const translations = {
         email: "Work Email",
         company: "Company",
         service: "Service Needed",
+        selectService: "Select a service...",
         message: "Message",
         services: ["IT Consulting & Strategy", "Staff Augmentation", "Datacenter Infrastructure", "Managed IT Services"],
         btn: "Send Message →",
@@ -412,6 +425,12 @@ export const translations = {
         { icon: "🌍", label: "Locations", val: "9 offices — US & Europe" },
       ],
       resp: "We typically respond within 4 business hours.",
+    },
+    notFound: {
+      title: "Page Not Found",
+      sub: "The page you're looking for doesn't exist or has been moved. Let's get you back on track.",
+      backHome: "Back to Home",
+      goBack: "Go Back",
     },
     footer: {
       tagline: "Transforming businesses through expert IT services.",
@@ -476,6 +495,13 @@ export const translations = {
         { val: "9", label: "مواقع عالمية", sub: "الولايات المتحدة وأوروبا وأبعد" },
       ],
       whyLabel: "لماذا سبورتيفا",
+      whyUsLabel: "لماذا نحن",
+      fieldNote: "ملاحظة ميدانية — هجرة نايك تركيا",
+      readCase: "اقرأ الحالة",
+      getInTouchLabel: "تواصل معنا",
+      responseTime: "زمن الرد — أقل من 24 ساعة",
+      letsBuild: "لنبني شيئًا",
+      worthKeeping: "يستحق البقاء.",
       whyTitle: "شريكك الاستراتيجي للتحول الرقمي الحقيقي.",
       whySub: "نلتزم بتقديم خدمات IT استثنائية تدفع نمو أعمالك. حلول مخصصة تناسب احتياجاتك الفريدة.",
       whyBtn: "رؤيتنا →",
@@ -499,6 +525,7 @@ export const translations = {
       h1: "تمكين أعمالك بحلول تقنية متطورة",
       sub: "كل خدمة مصممة لإبقاء أعمالك في المقدمة.",
       label: "خدماتنا",
+      ctaFallback: "تواصل معنا →",
       services: [
         { icon: "☁", color: "blue", title: "الهجرة السحابية", desc: "نحدّث بنيتك التحتية بعمليات هجرة سحابية بدون توقف إلى AWS وAzure. مهندسونا المعتمدون يتولون الاستراتيجية والتنفيذ والتحسين بعد الهجرة.", tag: "AWS · Azure · هجين", bullets: ["تقييم جاهزية السحابة", "هجرة بدون توقف", "سحابة هجينة ومتعددة", "تحسين التكلفة والأداء"] },
         { icon: "🏗", color: "amber", title: "مراكز البيانات", desc: "ثق في سبورتيفا لتصميم وتنفيذ وتحسين مراكز البيانات من التصميم إلى النشر.", tag: "تصميم · نشر · تحسين", bullets: ["تركيب الرفوف والخوادم", "تصميم الطاقة والتبريد", "تخطيط السعة", "اختبار الدخان والتسليم"] },
@@ -594,6 +621,10 @@ export const translations = {
       backToBlog: "العودة إلى المدونة",
       recentPosts: "أحدث المقالات",
       seeAll: "عرض الكل",
+      featured: "مميز",
+      readArticle: "اقرأ المقال",
+      newsletterTitle: "ابقَ على اطلاع",
+      newsletterSub: "احصل على أحدث رؤى تقنية المعلومات من مهندسينا الميدانيين، مباشرة في بريدك الإلكتروني.",
       posts: [
         { cat: "البنية التحتية", title: "استشراف المستقبل مع WiFi 7: Ruijie RG-RAP73HD يقود المسيرة", desc: "WiFi 7 هنا ويغير قواعد اللعبة. اكتشف كيف تقدم نقطة الوصول الأحدث من Ruijie أداءً لاسلكيًا للجيل التالي.", date: "1 مارس 2024", read: "دقيقتان" },
         { cat: "السحابة", title: "Microsoft Copilot: مستقبل الإنتاجية", desc: "كيف يحول المساعد الذكي من Microsoft طريقة عمل الشركات — مدمج في Word وExcel وOutlook وTeams.", date: "21 فبراير 2024", read: "دقيقتان" },
@@ -606,7 +637,7 @@ export const translations = {
     contact: {
       eyebrow: "اتصل بنا", h1: ["لنبني شيئاً", "استثنائياً"],
       sub: "مستعد لتحويل بنيتك التحتية؟ فريقنا يرد خلال 24 ساعة.",
-      form: { name: "الاسم الكامل", email: "البريد الإلكتروني للعمل", company: "الشركة", service: "الخدمة المطلوبة", message: "الرسالة", services: ["الاستشارات وتخطيط IT", "تعزيز الكوادر", "مراكز البيانات", "خدمات IT المُدارة"], btn: "إرسال الرسالة →" },
+      form: { name: "الاسم الكامل", email: "البريد الإلكتروني للعمل", company: "الشركة", service: "الخدمة المطلوبة", selectService: "اختر خدمة...", message: "الرسالة", services: ["الاستشارات وتخطيط IT", "تعزيز الكوادر", "مراكز البيانات", "خدمات IT المُدارة"], btn: "إرسال الرسالة →" },
       info: [
         { icon: "📞", label: "الهاتف", val: "+1 724 906 3303" },
         { icon: "✉", label: "البريد الإلكتروني", val: "info@supportiva.net" },
@@ -614,6 +645,12 @@ export const translations = {
         { icon: "🌍", label: "المواقع", val: "9 مكاتب — الولايات المتحدة وأوروبا" },
       ],
       resp: "نرد عادةً خلال 4 ساعات عمل.",
+    },
+    notFound: {
+      title: "الصفحة غير موجودة",
+      sub: "الصفحة التي تبحث عنها غير موجودة أو تم نقلها. لنعيدك إلى المسار الصحيح.",
+      backHome: "العودة إلى الرئيسية",
+      goBack: "رجوع",
     },
     footer: {
       tagline: "نحوّل الأعمال من خلال خدمات تقنية المعلومات ",
@@ -678,6 +715,13 @@ export const translations = {
         { val: "9", label: "Küresel Lokasyonlar", sub: "ABD, Avrupa ve ötesi" },
       ],
       whyLabel: "NEDEN SUPPORTİVA",
+      whyUsLabel: "Neden Biz",
+      fieldNote: "Saha Notu — Nike Türkiye Göçü",
+      readCase: "Vakayı Oku",
+      getInTouchLabel: "İletişime Geçin",
+      responseTime: "Yanıt süresi — 24 saatten az",
+      letsBuild: "Birlikte bir şey inşa edelim",
+      worthKeeping: "kalıcı olacak bir şey.",
       whyTitle: "Gerçek Dijital Dönüşüm için Stratejik Ortağınız.",
       whySub: "Supportiva olarak işletme büyümesini destekleyen olağanüstü BT hizmetleri sunmaya kararlıyız.",
       whyBtn: "Vizyonumuz →",
@@ -701,6 +745,7 @@ export const translations = {
       h1: "İşletmenizi Veri Odaklı Çözümlerle Güçlendiriyoruz",
       sub: "Her hizmet işletmenizi güvenilir ve modern teknolojiyle ileride tutmak için tasarlanmıştır.",
       label: "HİZMETLERİMİZ",
+      ctaFallback: "İletişime Geçin →",
       services: [
         { icon: "☁", color: "blue", title: "Bulut Göçü", desc: "AWS ve Azure'a sıfır kesinti süreli göçlerle altyapınızı modernize ediyoruz. Sertifikalı bulut mimarlarımız strateji, uygulama ve göç sonrası optimizasyonu üstlenir.", tag: "AWS · Azure · Hibrit", bullets: ["Bulut hazırlık değerlendirmesi", "Sıfır kesintili göç", "Hibrit & çoklu bulut", "Maliyet ve performans optimizasyonu"] },
         { icon: "🏗", color: "amber", title: "Veri Merkezi Altyapısı", desc: "Veri merkezi altyapınızı mimarlandırmak, uygulamak ve optimize etmek için Supportiva'ya güvenin.", tag: "Tasarım · Dağıtım · Optimizasyon", bullets: ["Rack ve kurulum mühendisliği", "Güç ve soğutma tasarımı", "Kapasite planlaması", "Duman testi ve teslim"] },
@@ -796,6 +841,10 @@ export const translations = {
       backToBlog: "Bloga Dön",
       recentPosts: "Son Yazılar",
       seeAll: "Tümünü Gör",
+      featured: "ÖNE ÇIKAN",
+      readArticle: "Makaleyi Oku",
+      newsletterTitle: "Güncel Kalın",
+      newsletterSub: "Saha mühendislerimizden en güncel BT içgörülerini doğrudan gelen kutunuza alın.",
       posts: [
         { cat: "Altyapı", title: "WiFi 7 ile Geleceğe Bakış: Ruijie RG-RAP73HD Öncülük Ediyor", desc: "WiFi 7 burada ve oyunu değiştiriyor. Ruijie'nin en yeni erişim noktasının fiber bağlantı için SFP+ portuyla nasıl fark yarattığını keşfedin.", date: "1 Mart 2024", read: "2 dk okuma" },
         { cat: "Bulut", title: "Microsoft Copilot: Üretkenliğin Geleceği", desc: "Microsoft'un yapay zeka destekli Copilot'u Word, Excel, Outlook ve Teams'e entegre olarak iş dünyasını nasıl dönüştürüyor.", date: "21 Şubat 2024", read: "2 dk okuma" },
@@ -808,7 +857,7 @@ export const translations = {
     contact: {
       eyebrow: "İletişim", h1: ["Birlikte Olağanüstü", "Bir Şey İnşa Edelim"],
       sub: "BT altyapınızı dönüştürmeye hazır mısınız? Ekibimiz 24 saat içinde yanıt verir.",
-      form: { name: "Ad Soyad", email: "Kurumsal E-posta", company: "Şirket", service: "İhtiyaç Duyulan Hizmet", message: "Mesaj", services: ["BT Danışmanlığı ve Stratejisi", "Personel Güçlendirme", "Veri Merkezi Altyapısı", "Yönetilen BT Hizmetleri"], btn: "Mesaj Gönder →" },
+      form: { name: "Ad Soyad", email: "Kurumsal E-posta", company: "Şirket", service: "İhtiyaç Duyulan Hizmet", selectService: "Bir hizmet seçin...", message: "Mesaj", services: ["BT Danışmanlığı ve Stratejisi", "Personel Güçlendirme", "Veri Merkezi Altyapısı", "Yönetilen BT Hizmetleri"], btn: "Mesaj Gönder →" },
       info: [
         { icon: "📞", label: "Telefon", val: "+1 724 906 3303" },
         { icon: "✉", label: "E-posta", val: "info@supportiva.net" },
@@ -816,6 +865,12 @@ export const translations = {
         { icon: "🌍", label: "Lokasyonlar", val: "9 ofis — ABD ve Avrupa" },
       ],
       resp: "Genellikle 4 iş saati içinde yanıt veriyoruz.",
+    },
+    notFound: {
+      title: "Sayfa Bulunamadı",
+      sub: "Aradığınız sayfa mevcut değil veya taşınmış. Sizi tekrar yola koyalım.",
+      backHome: "Ana Sayfaya Dön",
+      goBack: "Geri Dön",
     },
     footer: {
       tagline: "İşletmeleri uzman BT hizmetleriyle dönüştürüyoruz.",
