@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Linkedin } from "@/components/ui/BrandIcons";
-import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { getAuthorBySlug } from "@/sanity/lib/queries";
+import { fetchLocalized, getServerLang } from "@/sanity/lib/i18n-fetch";
 import { BASE_URL } from "@/lib/config";
 
 export const revalidate = 3600;
@@ -25,10 +25,11 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const author = await client.fetch<SanityAuthor | null>(
+  const language = await getServerLang();
+  const author = await fetchLocalized<SanityAuthor>(
     getAuthorBySlug,
     { slug },
-    { next: { revalidate: 3600 } },
+    language,
   );
 
   if (!author) {
@@ -54,10 +55,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProfilePage({ params }: Props) {
   const { slug } = await params;
-  const author = await client.fetch<SanityAuthor | null>(
+  const language = await getServerLang();
+  const author = await fetchLocalized<SanityAuthor>(
     getAuthorBySlug,
     { slug },
-    { next: { revalidate: 3600 } },
+    language,
   );
 
   if (!author) return notFound();

@@ -7,6 +7,7 @@ import {
   getPostBySlug,
   getRecentPosts,
 } from "@/sanity/lib/queries";
+import { fetchLocalized, getServerLang } from "@/sanity/lib/i18n-fetch";
 import { BASE_URL } from "@/lib/config";
 import PostClient, {
   type PostView,
@@ -28,6 +29,7 @@ type SanityPost = {
   _id: string;
   title: string;
   slug: string;
+  language?: string;
   excerpt?: string;
   category?: string;
   readTime?: string;
@@ -71,10 +73,11 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await client.fetch<SanityPost | null>(
+  const language = await getServerLang();
+  const post = await fetchLocalized<SanityPost>(
     getPostBySlug,
     { slug },
-    { next: { revalidate: 3600 } },
+    language,
   );
 
   if (!post) {
@@ -117,17 +120,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
+  const language = await getServerLang();
 
-  const post = await client.fetch<SanityPost | null>(
+  const post = await fetchLocalized<SanityPost>(
     getPostBySlug,
     { slug },
-    { next: { revalidate: 3600 } },
+    language,
   );
   if (!post) return notFound();
 
   const recent = await client.fetch<SanityRelatedPost[]>(
     getRecentPosts,
-    { slug },
+    { slug, language: post.language ?? "en" },
     { next: { revalidate: 3600 } },
   );
 

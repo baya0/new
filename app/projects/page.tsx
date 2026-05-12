@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { getAllProjects } from "@/sanity/lib/queries";
+import { getServerLang } from "@/sanity/lib/i18n-fetch";
 import ProjectsClient from "./projects-client";
 
 export const revalidate = 3600;
@@ -52,13 +53,23 @@ function imgUrl(src: unknown): string | null {
 }
 
 export default async function ProjectsPage() {
+  const language = await getServerLang();
   let projects: SanityProject[] = [];
   try {
     projects = await client.fetch<SanityProject[]>(
       getAllProjects,
-      {},
+      { language },
       { next: { revalidate: 3600 } },
     );
+    // If the chosen language has no projects yet, fall back to English so the
+    // catalog isn't empty before the editor has translated anything.
+    if (projects.length === 0 && language !== "en") {
+      projects = await client.fetch<SanityProject[]>(
+        getAllProjects,
+        { language: "en" },
+        { next: { revalidate: 3600 } },
+      );
+    }
   } catch {
     projects = [];
   }

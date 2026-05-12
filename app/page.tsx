@@ -58,13 +58,16 @@ const HERO_LOGO_LIGHT_SRC = "/images/backgrounds/logolight.png";
 const HERO_LOGO_DARK_SRC = "/images/backgrounds/logodark4.png";
 
 /* ─────────── Client logo map ─────────── */
-// Falls back to styled text when no logo is set.
+// Brand names are NEVER translated — they're trademarks. Always rendered in
+// English so the keys here always match the marquee list below.
 const CLIENT_LOGOS: Record<string, string | null> = {
   "Dow":           "/images/clients/Dow.png",
   "Medtronic":     "/images/clients/Medtronic.png",
   "Mercedes-Benz": "/images/clients/Mercedes.png",
   "Viatris":       "/images/clients/Viatris.png",
 };
+
+const TRUSTED_CLIENTS = ["Dow", "Medtronic", "Mercedes-Benz", "Viatris"] as const;
 
 function ClientLogo({ name }: { name: string }) {
   const src = CLIENT_LOGOS[name] ?? null;
@@ -216,10 +219,10 @@ export default function HomePage() {
         <div className="relative z-10 py-6 border-t border-b" style={{ borderColor: "var(--border)" }}>
           {/* Trusted-by label */}
           <div className="absolute left-1/2 -top-3 -translate-x-1/2 px-3 text-[10px] font-bold tracking-[0.2em] uppercase" style={{ background: "var(--bg0)", color: "var(--w25)" }}>
-            Trusted By
+            {th.trustedBy}
           </div>
           <div className="marquee-track">
-            {[...th.clients, "—", ...th.clients, "—", ...th.clients, "—"].map((c, i) =>
+            {[...TRUSTED_CLIENTS, "—", ...TRUSTED_CLIENTS, "—", ...TRUSTED_CLIENTS, "—"].map((c, i) =>
               c === "—" ? (
                 <span key={i} className="shrink-0 text-[24px] lg:text-[36px] font-bold" style={{ color: "var(--blue)" }}>—</span>
               ) : (

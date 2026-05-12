@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { getAllPosts } from "@/sanity/lib/queries";
+import { getServerLang } from "@/sanity/lib/i18n-fetch";
 import BlogClient, { type BlogPostView } from "./blog-client";
 
 export const revalidate = 3600;
@@ -40,13 +41,21 @@ function formatDate(iso?: string): string {
 }
 
 export default async function BlogPage() {
+  const language = await getServerLang();
   let posts: SanityPost[] = [];
   try {
     posts = await client.fetch<SanityPost[]>(
       getAllPosts,
-      {},
+      { language },
       { next: { revalidate: 3600 } },
     );
+    if (posts.length === 0 && language !== "en") {
+      posts = await client.fetch<SanityPost[]>(
+        getAllPosts,
+        { language: "en" },
+        { next: { revalidate: 3600 } },
+      );
+    }
   } catch {
     posts = [];
   }

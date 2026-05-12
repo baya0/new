@@ -319,7 +319,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                 className="inline-flex items-center gap-2 text-sm font-semibold transition-all duration-200 hover:gap-3"
                 style={{ color: "var(--w55)" }}
               >
-                <ArrowLeft size={16} /> Back to Projects
+                <ArrowLeft size={16} /> {t.projects.backToProjects}
               </Link>
               <span
                 className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-[0.2em] uppercase"
@@ -329,7 +329,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                   border: "1px solid var(--border)",
                 }}
               >
-                {proj.category}
+                {t.projects.categories[proj.category.toLowerCase() as keyof typeof t.projects.categories] ?? proj.category}
               </span>
             </div>
           </FadeIn>
@@ -339,7 +339,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
               className="text-[11px] font-bold tracking-[0.25em] uppercase mb-3 inline-flex items-center gap-2"
               style={{ color: cc }}
             >
-              <Sparkles size={12} /> Case Study
+              <Sparkles size={12} /> {t.projects.caseStudy}
             </p>
           </FadeIn>
 
@@ -383,21 +383,21 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
               {proj.location && (
                 <MetaTile
                   icon={<MapPin size={16} />}
-                  label="Location"
+                  label={t.projects.location}
                   value={proj.location}
                 />
               )}
               {proj.year && (
                 <MetaTile
                   icon={<Calendar size={16} />}
-                  label="Year"
+                  label={t.projects.year}
                   value={proj.year}
                 />
               )}
               {proj.keyResult && (
                 <MetaTile
                   icon={<CheckCircle2 size={16} />}
-                  label="Key Result"
+                  label={t.projects.outcome}
                   value={proj.keyResult}
                   accent="var(--green)"
                 />
@@ -449,7 +449,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                   className="text-[11px] font-bold tracking-[0.25em] uppercase mb-3"
                   style={{ color: cc }}
                 >
-                  Overview
+                  {t.projects.overview}
                 </p>
 
                 {proj.fullDesc &&
@@ -476,7 +476,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                         className="text-[11px] font-bold tracking-[0.25em] uppercase"
                         style={{ color: cc }}
                       >
-                        What we did
+                        {t.projects.whatWeDid}
                       </p>
                       <span
                         className="h-px flex-1"
@@ -541,7 +541,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                     className="text-[10px] font-bold tracking-[0.25em] uppercase mb-4"
                     style={{ color: "var(--w25)" }}
                   >
-                    At a Glance
+                    {t.projects.atAGlance}
                   </p>
 
                   <dl className="space-y-3">
@@ -551,7 +551,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                           className="text-[12px] flex items-center gap-2"
                           style={{ color: "var(--w55)" }}
                         >
-                          <MapPin size={12} /> Location
+                          <MapPin size={12} /> {t.projects.location}
                         </dt>
                         <dd
                           className="text-[12px] font-semibold text-right"
@@ -567,7 +567,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                           className="text-[12px] flex items-center gap-2"
                           style={{ color: "var(--w55)" }}
                         >
-                          <Calendar size={12} /> Year
+                          <Calendar size={12} /> {t.projects.year}
                         </dt>
                         <dd
                           className="text-[12px] font-semibold"
@@ -583,7 +583,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                           className="text-[10px] font-bold tracking-[0.18em] uppercase mb-1.5"
                           style={{ color: "var(--w25)" }}
                         >
-                          Outcome
+                          {t.projects.outcome}
                         </dt>
                         <dd
                           className="text-[13px] font-semibold leading-snug"
@@ -610,7 +610,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                       className="text-[10px] font-bold tracking-[0.25em] uppercase mb-3 flex items-center gap-2"
                       style={{ color: "var(--w25)" }}
                     >
-                      <TagIcon size={11} /> Services
+                      <TagIcon size={11} /> {t.projects.services}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {proj.tags.map((tag, i) => (
@@ -642,20 +642,20 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                     className="text-[14px] font-bold mb-1.5"
                     style={{ color: "var(--white)" }}
                   >
-                    Got a similar challenge?
+                    {t.projects.similarChallenge}
                   </p>
                   <p
                     className="text-[12px] mb-4 leading-relaxed"
                     style={{ color: "var(--w55)" }}
                   >
-                    Tell us about your project — we typically reply within a day.
+                    {t.projects.similarChallengeSub}
                   </p>
                   <Link
                     href="/contact"
                     className="inline-flex items-center gap-2 text-[13px] font-bold transition-all duration-200 hover:gap-3"
                     style={{ color: cc }}
                   >
-                    Start a conversation <ArrowRight size={14} />
+                    {t.projects.startConversation} <ArrowRight size={14} />
                   </Link>
                 </div>
               </aside>
@@ -682,7 +682,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                 className="text-[11px] font-bold tracking-[0.25em] uppercase mb-3"
                 style={{ color: cc }}
               >
-                Next Step
+                {t.projects.nextStep}
               </p>
               <h3
                 className="font-black leading-tight mb-3"
@@ -691,14 +691,13 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                   color: "var(--white)",
                 }}
               >
-                Ready for results like these?
+                {t.projects.readyHeadline}
               </h3>
               <p
                 className="text-[14px] mb-7 max-w-xl mx-auto leading-relaxed"
                 style={{ color: "var(--w55)" }}
               >
-                Talk to our engineering team about your migration, datacenter, or
-                network project.
+                {t.projects.readySub}
               </p>
               <Link href="/contact">
                 <Button size="lg">{t.projects.cta}</Button>

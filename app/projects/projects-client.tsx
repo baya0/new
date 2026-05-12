@@ -32,6 +32,12 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Sustainability: <Leaf size={13} />,
 };
 
+// Translate an English category key into the user's language.
+// Falls back to the English key (handles the "General" fallback from getProjectCategory).
+function categoryLabel(key: string, cats: Record<string, string>): string {
+  return cats[key.toLowerCase()] ?? key;
+}
+
 function getCategories(tags: readonly string[]): string[] {
   const cats: string[] = [];
   const s = tags.join(" ").toLowerCase();
@@ -90,6 +96,7 @@ function ProjectListItem({
   isSelected: boolean;
   onClick: () => void;
 }) {
+  const { t } = useLang();
   const category = getProjectCategory(proj.tags);
   const images = getProjectImages(proj);
 
@@ -126,7 +133,7 @@ function ProjectListItem({
           className="text-[10px] uppercase tracking-[0.18em] font-bold mb-1 transition-colors duration-200"
           style={{ color: isSelected ? color : "var(--w25)" }}
         >
-          {category}
+          {categoryLabel(category, t.projects.categories)}
         </p>
         {/* Two lines max — no hard truncation */}
         <p
@@ -184,7 +191,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
         className="self-start inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-3"
         style={{ color, border: "1px solid var(--border)", background: "var(--glass)" }}
       >
-        {getProjectCategory(proj.tags)}
+        {categoryLabel(getProjectCategory(proj.tags), t.projects.categories)}
       </span>
 
       <h2
@@ -355,14 +362,14 @@ export default function ProjectsClient({ items }: { items: any[] }) {
               className="text-[11px] font-bold tracking-[0.25em] uppercase mb-3"
               style={{ color: "var(--blue)" }}
             >
-              Our Projects
+              {p.eyebrow}
             </p>
             <h1
               className="font-black leading-tight mb-3"
               style={{ fontSize: "clamp(28px, 4vw, 48px)", color: "var(--white)" }}
             >
-              Real projects,{" "}
-              <span style={{ color: "var(--blue)" }}>real results.</span>
+              {p.h1Lead}{" "}
+              <span style={{ color: "var(--blue)" }}>{p.h1Highlight}</span>
             </h1>
             <p
               className="text-[15px] leading-relaxed max-w-xl"
@@ -389,7 +396,7 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                       style={{ color: active ? "var(--blue)" : "var(--w55)" }}
                     >
                       <span style={{ opacity: active ? 1 : 0.5 }}>{CATEGORY_ICONS[cat]}</span>
-                      {cat}
+                      {categoryLabel(cat, p.categories)}
                       {active && (
                         <motion.span
                           layoutId="tab-underline"
@@ -432,7 +439,7 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                     className="text-[10px] uppercase tracking-[0.18em] font-bold"
                     style={{ color: "var(--w25)" }}
                   >
-                    {filtered.length} Project{filtered.length !== 1 ? "s" : ""}
+                    {filtered.length} {filtered.length === 1 ? p.countOne : p.countMany}
                   </span>
                 </div>
 
@@ -457,7 +464,7 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                         className="flex items-center justify-center h-32 text-sm"
                         style={{ color: "var(--w25)" }}
                       >
-                        No projects in this category.
+                        {p.emptyCategory}
                       </div>
                     )}
                   </div>
@@ -481,7 +488,7 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                         border: "1px solid var(--glass-card-border)",
                       }}
                     >
-                      <p className="text-sm" style={{ color: "var(--w25)" }}>Select a project</p>
+                      <p className="text-sm" style={{ color: "var(--w25)" }}>{p.emptyDetail}</p>
                     </div>
                   )}
                 </AnimatePresence>

@@ -140,7 +140,7 @@ export default function PostClient({
         <div className="max-w-3xl mx-auto relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-semibold mb-8 transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>
-              <ArrowLeft size={16} /> Back to Blog
+              <ArrowLeft size={16} /> {b.backToBlog}
             </Link>
 
             <div className="tag mb-5 w-fit" style={{ background: `${cc}0D`, color: cc, border: `1px solid ${cc}20` }}>
@@ -210,8 +210,8 @@ export default function PostClient({
           <AnimatedSection>
             <div className="mt-16">
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-lg font-bold" style={{ color: "var(--white)" }}>Recent Posts</h3>
-                <Link href="/blog" className="text-sm font-bold transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>See All</Link>
+                <h3 className="text-lg font-bold" style={{ color: "var(--white)" }}>{b.recentPosts}</h3>
+                <Link href="/blog" className="text-sm font-bold transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>{b.seeAll}</Link>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {relatedPosts.map((rp) => {

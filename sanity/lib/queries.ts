@@ -1,9 +1,15 @@
 import { groq } from 'next-sanity'
 
-export const getAllPosts = groq`*[_type == "post"] | order(publishedAt desc) {
+// All queries that fetch translatable documents accept a $language parameter.
+// Documents that have no `language` field set (legacy content authored before
+// the i18n plugin was enabled) are treated as English so the catalog never
+// goes blank after the plugin ships.
+
+export const getAllPosts = groq`*[_type == "post" && coalesce(language, "en") == $language] | order(publishedAt desc) {
   _id,
   title,
   "slug": slug.current,
+  language,
   excerpt,
   thumbnail,
   category,
@@ -16,10 +22,11 @@ export const getAllPosts = groq`*[_type == "post"] | order(publishedAt desc) {
   }
 }`
 
-export const getPostBySlug = groq`*[_type == "post" && slug.current == $slug][0] {
+export const getPostBySlug = groq`*[_type == "post" && slug.current == $slug && coalesce(language, "en") == $language][0] {
   _id,
   title,
   "slug": slug.current,
+  language,
   excerpt,
   thumbnail,
   category,
@@ -38,10 +45,11 @@ export const getPostBySlug = groq`*[_type == "post" && slug.current == $slug][0]
   }
 }`
 
-export const getAllProjects = groq`*[_type == "project"] | order(order asc) {
+export const getAllProjects = groq`*[_type == "project" && coalesce(language, "en") == $language] | order(order asc) {
   _id,
   title,
   "slug": slug.current,
+  language,
   order,
   icon,
   color,
@@ -58,10 +66,11 @@ export const getAllProjects = groq`*[_type == "project"] | order(order asc) {
   seoDescription
 }`
 
-export const getProjectBySlug = groq`*[_type == "project" && slug.current == $slug][0] {
+export const getProjectBySlug = groq`*[_type == "project" && slug.current == $slug && coalesce(language, "en") == $language][0] {
   _id,
   title,
   "slug": slug.current,
+  language,
   order,
   icon,
   color,
@@ -78,20 +87,22 @@ export const getProjectBySlug = groq`*[_type == "project" && slug.current == $sl
   seoDescription
 }`
 
-export const getAuthorBySlug = groq`*[_type == "author" && slug.current == $slug][0] {
+export const getAuthorBySlug = groq`*[_type == "author" && slug.current == $slug && coalesce(language, "en") == $language][0] {
   _id,
   name,
   "slug": slug.current,
+  language,
   role,
   bio,
   avatar,
   linkedin
 }`
 
-export const getRecentPosts = groq`*[_type == "post" && slug.current != $slug] | order(publishedAt desc) [0...3] {
+export const getRecentPosts = groq`*[_type == "post" && slug.current != $slug && coalesce(language, "en") == $language] | order(publishedAt desc) [0...3] {
   _id,
   title,
   "slug": slug.current,
+  language,
   excerpt,
   thumbnail,
   category,
