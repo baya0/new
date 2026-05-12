@@ -184,7 +184,7 @@ export default function ContactPage() {
                         className="form-input"
                         style={{ borderRadius: 16 }}
                       >
-                        <option value="">Select a service...</option>
+                        <option value="">{c.form.selectService}</option>
                         {c.form.services.map((sv, i) => <option key={i} value={sv}>{sv}</option>)}
                       </select>
                     </div>

@@ -542,7 +542,7 @@ export default function SolutionsPage() {
                     )}
 
                     <Link href="/contact">
-                      <Button size="lg">{s.cta || "Get In Touch →"}</Button>
+                      <Button size="lg">{s.ctaFallback}</Button>
                     </Link>
                   </motion.div>
                 )}

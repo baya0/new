@@ -243,7 +243,7 @@ export default function HomePage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-4">
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Who We Are</div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>{th.whoWeAreTitle}</div>
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {th.whoWeAreTitle}.
                 </h2>
@@ -292,7 +292,7 @@ export default function HomePage() {
           <div className="flex items-end justify-between flex-wrap gap-6 mb-12">
             <div>
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Our Services</div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>{th.ourServicesTitle}</div>
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
                   {th.servicesTitle}.
                 </h2>
@@ -325,7 +325,7 @@ export default function HomePage() {
           <FadeIn>
             <div className="mono-label mb-12 flex items-center gap-4" style={{ color: "var(--amber)" }}>
               <span className="w-8 h-px" style={{ background: "var(--amber)" }} />
-              Field Note — Nike Turkey Migration
+              {th.fieldNote}
             </div>
           </FadeIn>
 
@@ -368,7 +368,7 @@ export default function HomePage() {
                   <div className="text-xs mt-0.5" style={{ color: "var(--w55)" }}>{th.testimonial.role}</div>
                 </div>
                 <Link href="/projects" className="group inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase" style={{ color: "var(--blue)" }}>
-                  <span className="swept-underline">Read the case</span>
+                  <span className="swept-underline">{th.readCase}</span>
                   <ArrowUpRight size={13} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </Link>
               </div>
@@ -388,7 +388,7 @@ export default function HomePage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-5 lg:sticky lg:top-24 lg:self-start">
               <FadeIn>
-                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>Why Us</div>
+                <div className="mono-label mb-4" style={{ color: "var(--blue)" }}>{th.whyUsLabel}</div>
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {th.whyTitle.split(" ").slice(0, 3).join(" ")}
                   <br />
@@ -449,10 +449,10 @@ export default function HomePage() {
           <FadeIn>
             <div className="flex items-center justify-between flex-wrap gap-4 mb-16">
               <div className="mono-label" style={{ color: "var(--blue)" }}>
-                Get In Touch
+                {th.getInTouchLabel}
               </div>
               <div className="text-[11px] font-bold tracking-widest uppercase" style={{ color: "var(--w25)" }}>
-                Response time — under 24 hrs
+                {th.responseTime}
               </div>
             </div>
           </FadeIn>
@@ -460,10 +460,10 @@ export default function HomePage() {
           <div className="grid grid-cols-12 gap-6 items-end">
             <div className="col-span-12 lg:col-span-8">
               <h2 className="headline-xl">
-                <WordReveal text="Let's build something" />
+                <WordReveal text={th.letsBuild} />
                 <br />
                 <span style={{ fontStyle: "italic", fontWeight: 300, color: "var(--blue)" }}>
-                  <WordReveal text="worth keeping." delay={0.1} />
+                  <WordReveal text={th.worthKeeping} delay={0.1} />
                 </span>
               </h2>
             </div>
