@@ -19,9 +19,13 @@ export const author = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Slug (URL)',
+      description:
+        'Auto-generated from the name. Translated copies inherit the same slug and cannot change it — the public site looks authors up by slug.',
       type: 'slug',
       options: { source: 'name' },
+      readOnly: ({ document }) =>
+        typeof document?.language === 'string' && document.language !== 'en',
       validation: (Rule) => Rule.required(),
     }),
     defineField({

@@ -55,7 +55,7 @@ export function proxy(req: NextRequest) {
     return res;
   }
 
-  // Bare or non-locale path → 308 redirect to the canonical locale URL.
+  // Bare or non-locale path → redirect to the canonical locale URL.
   // Detect from cookie first (returning visitor), then Accept-Language, then default.
   const cookieLang = req.cookies.get(LOCALE_COOKIE)?.value;
   const fromCookie = isLocale(cookieLang) ? cookieLang : null;
@@ -64,7 +64,13 @@ export function proxy(req: NextRequest) {
 
   const url = req.nextUrl.clone();
   url.pathname = `/${target}${pathname === "/" ? "" : pathname}`;
-  return NextResponse.redirect(url, 308);
+
+  // `/` → `/<detected>` varies per visitor (cookie / Accept-Language), so use
+  // 302 to keep crawlers from treating one locale as the canonical for `/`.
+  // `/blog` → `/en/blog` is a permanent canonical move; use 301 so PageRank
+  // consolidates on the locale-prefixed URL.
+  const status = pathname === "/" ? 302 : 301;
+  return NextResponse.redirect(url, status);
 }
 
 export const config = {

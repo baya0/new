@@ -1,7 +1,11 @@
 import { MetadataRoute } from "next";
 import { BASE_URL } from "@/lib/config";
 import { client } from "@/sanity/lib/client";
-import { getAllPostSlugs, getAllProjectSlugs } from "@/sanity/lib/queries";
+import {
+  getAllAuthorSlugs,
+  getAllPostSlugs,
+  getAllProjectSlugs,
+} from "@/sanity/lib/queries";
 import { DEFAULT_LOCALE, LOCALES } from "@/lib/locales";
 
 export const revalidate = 3600;
@@ -42,14 +46,17 @@ function entryFor(
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let postSlugs: string[] = [];
   let projectSlugs: string[] = [];
+  let authorSlugs: string[] = [];
   try {
-    [postSlugs, projectSlugs] = await Promise.all([
+    [postSlugs, projectSlugs, authorSlugs] = await Promise.all([
       client.fetch<string[]>(getAllPostSlugs, {}, { next: { revalidate: 3600 } }),
       client.fetch<string[]>(getAllProjectSlugs, {}, { next: { revalidate: 3600 } }),
+      client.fetch<string[]>(getAllAuthorSlugs, {}, { next: { revalidate: 3600 } }),
     ]);
   } catch {
     postSlugs = [];
     projectSlugs = [];
+    authorSlugs = [];
   }
 
   const now = new Date();
@@ -66,5 +73,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entryFor(`/projects/${slug}`, "monthly", 0.7, now),
   );
 
-  return [...staticEntries, ...postEntries, ...projectEntries];
+  // Author profile pages — author docs are translatable, but slugs are
+  // sourced from name, so deduplicate to avoid the same /profile/jane
+  // appearing once per language.
+  const uniqueAuthorSlugs = Array.from(new Set(authorSlugs ?? []));
+  const profileEntries = uniqueAuthorSlugs.map((slug) =>
+    entryFor(`/profile/${slug}`, "monthly", 0.5, now),
+  );
+
+  return [
+    ...staticEntries,
+    ...postEntries,
+    ...projectEntries,
+    ...profileEntries,
+  ];
 }
