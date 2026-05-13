@@ -117,3 +117,4 @@ export const getRecentPosts = groq`*[_type == "post" && slug.current != $slug &&
 
 export const getAllPostSlugs = groq`*[_type == "post" && defined(slug.current)][].slug.current`
 export const getAllProjectSlugs = groq`*[_type == "project" && defined(slug.current)][].slug.current`
+export const getAllAuthorSlugs = groq`*[_type == "author" && defined(slug.current)][].slug.current`

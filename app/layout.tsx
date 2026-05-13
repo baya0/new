@@ -77,12 +77,29 @@ const organizationSchema = {
   description:
     "Enterprise IT consulting, staff augmentation, datacenter infrastructure, and managed IT services.",
   areaServed: "Worldwide",
+  telephone: "+17249063303",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "30 N Gould St Ste 35742",
+    addressLocality: "Sheridan",
+    addressRegion: "WY",
+    postalCode: "82801",
+    addressCountry: "US",
+  },
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",
-    url: `${BASE_URL}/contact`,
+    telephone: "+17249063303",
+    email: "info@supportiva.net",
+    url: `${BASE_URL}/${DEFAULT_LOCALE}/contact`,
+    availableLanguage: ["English", "Arabic", "Turkish"],
   },
-  sameAs: [],
+  sameAs: [
+    "https://www.linkedin.com/company/67696474/",
+    "https://www.instagram.com/supportivanet/",
+    "https://www.facebook.com/Supportiva/",
+    "https://twitter.com/Supportiva25",
+  ],
 };
 
 // Middleware sets `x-lang` so the root <html lang dir> are correct on first
