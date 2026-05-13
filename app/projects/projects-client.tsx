@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { useTheme } from "@/lib/theme-context";
 import {
-  MapPin, ChevronRight, ArrowRight,
+  MapPin, ChevronRight, ChevronDown,
   LayoutGrid, ArrowLeftRight, Server, Headphones, Network, Leaf,
   Calendar,
 } from "lucide-react";
@@ -169,8 +169,18 @@ function ProjectListItem({
 
 function ProjectDetail({ proj, color }: { proj: any; color: string }) {
   const { t } = useLang();
+  const [expanded, setExpanded] = useState(false);
+
+  // Reset expansion when the user switches projects
+  useEffect(() => { setExpanded(false); }, [proj.title]);
+
   const images = getProjectImages(proj);
   const hero = images[0];
+  const hasFullDesc = proj.fullDesc && proj.fullDesc !== proj.desc;
+  const hasBullets = Array.isArray(proj.bullets) && proj.bullets.length > 0;
+  const visibleTags = expanded
+    ? (proj.tags as string[] | undefined) ?? []
+    : ((proj.tags as string[] | undefined) ?? []).slice(0, 5);
 
   return (
     <motion.div
@@ -213,16 +223,20 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
         )}
       </div>
 
-      {/* Short teaser description — 3 lines max, no expand */}
+      {/* Short teaser description — clamped when collapsed, full when expanded */}
       <p
         className="text-[14px] leading-[1.85] mb-5"
-        style={{
-          color: "var(--w55)",
-          display: "-webkit-box",
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-        }}
+        style={
+          expanded
+            ? { color: "var(--w55)" }
+            : {
+                color: "var(--w55)",
+                display: "-webkit-box",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }
+        }
       >
         {proj.desc}
       </p>
@@ -247,10 +261,87 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
         </div>
       )}
 
-      {/* Tech tags */}
-      {proj.tags?.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-6">
-          {(proj.tags as string[]).slice(0, 5).map((tag, i) => (
+      {/* ─── Expanded content: full description, bullets ─── */}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="expanded"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="pb-2">
+              {/* Overview eyebrow */}
+              <p
+                className="text-[10px] font-bold tracking-[0.25em] uppercase mb-2"
+                style={{ color }}
+              >
+                {t.projects.overview}
+              </p>
+
+              {hasFullDesc && proj.fullDesc.split("\n\n").map((para: string, i: number) => (
+                <p
+                  key={i}
+                  className="text-[14px] leading-[1.85] mb-3"
+                  style={{ color: "var(--w55)" }}
+                >
+                  {para}
+                </p>
+              ))}
+
+              {hasBullets && (
+                <>
+                  <div className="mt-5 mb-3 flex items-center gap-3">
+                    <span className="h-px flex-1" style={{ background: "var(--border)" }} />
+                    <p
+                      className="text-[10px] font-bold tracking-[0.25em] uppercase"
+                      style={{ color }}
+                    >
+                      {t.projects.whatWeDid}
+                    </p>
+                    <span className="h-px flex-1" style={{ background: "var(--border)" }} />
+                  </div>
+                  <ul className="space-y-2 mb-5">
+                    {(proj.bullets as string[]).map((b, i) => (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.04, duration: 0.35 }}
+                        className="flex gap-3 items-start p-2.5 rounded-lg text-[13px] leading-relaxed"
+                        style={{
+                          background: "var(--glass)",
+                          border: "1px solid var(--border)",
+                          color: "var(--w55)",
+                        }}
+                      >
+                        <span
+                          className="w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5"
+                          style={{
+                            background: `${color}15`,
+                            color,
+                            border: `1px solid ${color}25`,
+                          }}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="flex-1">{b}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Tech tags — first 5 collapsed, all when expanded */}
+      {visibleTags.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-5">
+          {visibleTags.map((tag, i) => (
             <span
               key={i}
               className="text-[11px] px-3 py-1.5 rounded-full font-medium"
@@ -262,17 +353,26 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
         </div>
       )}
 
-      {/* Push CTA to bottom so cards feel consistent regardless of desc length */}
-      <div className="mt-auto pt-2">
-        <Link
-          href={`/projects/${proj.slug}`}
-          className="inline-flex items-center gap-2 text-[13px] font-bold transition-all duration-200 hover:gap-3"
-          style={{ color }}
-        >
-          {t.projects.readMore}
-          <ArrowRight size={14} />
-        </Link>
-      </div>
+      {/* ─── Big, catchy expand toggle pinned to the bottom ─── */}
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        className="mt-auto group relative w-full flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-xl text-[14px] font-bold tracking-wide transition-all duration-200 hover:gap-3 hover:-translate-y-0.5 active:translate-y-0"
+        style={{
+          background: `linear-gradient(135deg, ${color}1A, ${color}0D)`,
+          border: `1.5px solid ${color}55`,
+          color,
+          boxShadow: `0 4px 14px -6px ${color}40`,
+        }}
+      >
+        {expanded ? t.projects.showLess : t.projects.showFullDetails}
+        <ChevronDown
+          size={16}
+          className="transition-transform duration-300"
+          style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}
+        />
+      </button>
     </motion.div>
   );
 }
