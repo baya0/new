@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { useTheme } from "@/lib/theme-context";
 import {
-  MapPin, ChevronRight, ChevronDown,
+  MapPin, ChevronLeft, ChevronRight, ChevronDown,
   LayoutGrid, ArrowLeftRight, Server, Headphones, Network, Leaf,
   Calendar,
 } from "lucide-react";
@@ -82,6 +82,164 @@ function FadeIn({
     >
       {children}
     </motion.div>
+  );
+}
+
+/**
+ * Teaser gallery used inside the catalog detail card.
+ *
+ * - Uses object-contain so the full photo is always visible (heads,
+ *   logos, etc. never get cropped).
+ * - Fills the letterbox area with a blurred copy of the same image so
+ *   the empty space looks intentional, not like a bug.
+ * - Shows prev/next + a counter pill when a project has > 1 image.
+ * - Crossfades when switching between images.
+ * - Image area grows when `expanded` is true so the user gets a bigger
+ *   look at the work after clicking Show full details.
+ */
+function TeaserGallery({
+  images,
+  title,
+  color,
+  expanded,
+}: {
+  images: string[];
+  title: string;
+  color: string;
+  expanded: boolean;
+}) {
+  const [current, setCurrent] = useState(0);
+  useEffect(() => { setCurrent(0); }, [title]);
+
+  const prev = useCallback(
+    () => setCurrent((i) => (i - 1 + images.length) % images.length),
+    [images.length],
+  );
+  const next = useCallback(
+    () => setCurrent((i) => (i + 1) % images.length),
+    [images.length],
+  );
+
+  if (!images.length) return null;
+
+  const multi = images.length > 1;
+  const src = images[current];
+
+  return (
+    <div
+      className="relative w-full rounded-xl overflow-hidden mb-5 transition-[aspect-ratio] duration-300"
+      style={{
+        aspectRatio: expanded ? "16/9" : "16/10",
+        background: "var(--glass-deep)",
+      }}
+    >
+      {/* Blurred backdrop fills the letterbox so contained images don't sit
+          on awkward empty bars. */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`bg-${current}`}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.35 }}
+        >
+          <Image
+            src={src}
+            alt=""
+            fill
+            aria-hidden
+            className="object-cover"
+            style={{ filter: "blur(28px) brightness(0.7)", transform: "scale(1.15)" }}
+            sizes="(max-width: 1024px) 100vw, 70vw"
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Foreground full image — never cropped */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`fg-${current}`}
+          className="absolute inset-0 z-10"
+          initial={{ opacity: 0, scale: 1.02 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Image
+            src={src}
+            alt={`${title} — ${current + 1}`}
+            fill
+            className="object-contain"
+            sizes="(max-width: 1024px) 100vw, 70vw"
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Controls — only when there's more than one image */}
+      {multi && (
+        <>
+          <button
+            type="button"
+            onClick={prev}
+            aria-label="Previous image"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+            style={{
+              background: "rgba(0,0,0,0.55)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.15)",
+            }}
+          >
+            <ChevronLeft size={18} className="text-white" />
+          </button>
+          <button
+            type="button"
+            onClick={next}
+            aria-label="Next image"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+            style={{
+              background: "rgba(0,0,0,0.55)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.15)",
+            }}
+          >
+            <ChevronRight size={18} className="text-white" />
+          </button>
+
+          {/* Counter pill */}
+          <div
+            className="absolute bottom-3 right-3 z-20 text-[11px] px-2.5 py-1 rounded-full font-semibold tabular-nums flex items-center gap-1.5"
+            style={{
+              background: "rgba(0,0,0,0.55)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              color: "#fff",
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
+            {current + 1} / {images.length}
+          </div>
+
+          {/* Dot indicators centered at the bottom */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setCurrent(i)}
+                aria-label={`Show image ${i + 1}`}
+                className="rounded-full transition-all duration-200"
+                style={{
+                  width: i === current ? 18 : 6,
+                  height: 6,
+                  background: i === current ? color : "rgba(255,255,255,0.55)",
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -176,7 +334,6 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
   useEffect(() => { setExpanded(false); }, [proj.title]);
 
   const images = getProjectImages(proj);
-  const hero = images[0];
   const hasFullDesc = proj.fullDesc && proj.fullDesc !== proj.desc;
   const hasBullets = Array.isArray(proj.bullets) && proj.bullets.length > 0;
   const visibleTags = expanded
@@ -262,25 +419,14 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
         {proj.desc}
       </p>
 
-      {/* Single hero image — fixed compact height so the card stays balanced */}
-      {hero && (
-        <div
-          className="relative w-full rounded-xl overflow-hidden mb-5"
-          style={{
-            height: "clamp(180px, 28vh, 280px)",
-            background: "var(--glass-deep)",
-          }}
-        >
-          <Image
-            src={hero}
-            alt={proj.title}
-            fill
-            className="object-cover"
-            style={{ objectPosition: "center 30%" }}
-            sizes="(max-width: 1024px) 100vw, 70vw"
-          />
-        </div>
-      )}
+      {/* Gallery — full image (no crop), with prev/next when there are
+          multiple photos, and a slightly bigger aspect when expanded. */}
+      <TeaserGallery
+        images={images}
+        title={proj.title}
+        color={color}
+        expanded={expanded}
+      />
 
       {/* ─── Expanded content: full description, bullets ─── */}
       <AnimatePresence initial={false}>
