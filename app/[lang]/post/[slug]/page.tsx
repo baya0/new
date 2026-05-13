@@ -7,8 +7,10 @@ import {
   getPostBySlug,
   getRecentPosts,
 } from "@/sanity/lib/queries";
-import { fetchLocalized, getServerLang } from "@/sanity/lib/i18n-fetch";
+import { fetchLocalized } from "@/sanity/lib/i18n-fetch";
 import { BASE_URL } from "@/lib/config";
+import { isLocale, LOCALES } from "@/lib/locales";
+import { alternatesFor } from "@/lib/seo";
 import PostClient, {
   type PostView,
   type RelatedPostView,
@@ -63,21 +65,24 @@ function formatDate(iso?: string): string {
 export async function generateStaticParams() {
   try {
     const slugs = await client.fetch<string[]>(getAllPostSlugs);
-    return (slugs ?? []).map((slug) => ({ slug }));
+    return LOCALES.flatMap((lang) =>
+      (slugs ?? []).map((slug) => ({ lang, slug })),
+    );
   } catch {
     return [];
   }
 }
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ lang: string; slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const language = await getServerLang();
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) return {};
+
   const post = await fetchLocalized<SanityPost>(
     getPostBySlug,
     { slug },
-    language,
+    lang,
   );
 
   if (!post) {
@@ -90,7 +95,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = post.seoTitle ?? post.title;
   const description = post.seoDescription ?? post.excerpt ?? "";
-  const url = `${BASE_URL}/post/${post.slug}`;
+  const alts = alternatesFor(`/post/${post.slug}`, lang);
   const ogImage = post.thumbnail
     ? urlFor(post.thumbnail as never).width(1200).height(630).url()
     : undefined;
@@ -98,11 +103,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: alts,
     openGraph: {
       title,
       description,
-      url,
+      url: alts.canonical as string,
       type: "article",
       siteName: "Supportiva",
       publishedTime: post.publishedAt,
@@ -119,13 +124,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const { slug } = await params;
-  const language = await getServerLang();
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) notFound();
 
   const post = await fetchLocalized<SanityPost>(
     getPostBySlug,
     { slug },
-    language,
+    lang,
   );
   if (!post) return notFound();
 
@@ -176,7 +181,9 @@ export default async function BlogPostPage({ params }: Props) {
     author: {
       "@type": "Person",
       name: post.author?.name ?? "Team Supportiva",
-      ...(post.author?.slug && { url: `${BASE_URL}/profile/${post.author.slug}` }),
+      ...(post.author?.slug && {
+        url: `${BASE_URL}/${lang}/profile/${post.author.slug}`,
+      }),
     },
     publisher: {
       "@type": "Organization",
@@ -188,7 +195,7 @@ export default async function BlogPostPage({ params }: Props) {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${BASE_URL}/post/${post.slug}`,
+      "@id": `${BASE_URL}/${lang}/post/${post.slug}`,
     },
   };
 

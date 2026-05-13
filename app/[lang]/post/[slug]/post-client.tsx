@@ -3,6 +3,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/language-context";
+import { useLocalizedHref } from "@/lib/use-localized-href";
 import { Clock, ArrowLeft, User, Cloud, Server, Truck, Leaf, Network } from "lucide-react";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 
@@ -121,6 +122,7 @@ export default function PostClient({
   relatedPosts: RelatedPostView[];
 }) {
   const { t } = useLang();
+  const loc = useLocalizedHref();
   const b = t.blog;
 
   const cfg = catConfig[post.cat];
@@ -139,7 +141,7 @@ export default function PostClient({
 
         <div className="max-w-3xl mx-auto relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-semibold mb-8 transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>
+            <Link href={loc("/blog")} className="inline-flex items-center gap-2 text-sm font-semibold mb-8 transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>
               <ArrowLeft size={16} /> {b.backToBlog}
             </Link>
 
@@ -154,7 +156,7 @@ export default function PostClient({
             <div className="flex items-center gap-5 flex-wrap">
               {post.author?.slug ? (
                 <Link
-                  href={`/profile/${post.author.slug}`}
+                  href={loc(`/profile/${post.author.slug}`)}
                   className="flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-70"
                   style={{ color: "var(--w55)" }}
                 >
@@ -211,14 +213,14 @@ export default function PostClient({
             <div className="mt-16">
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-lg font-bold" style={{ color: "var(--white)" }}>{b.recentPosts}</h3>
-                <Link href="/blog" className="text-sm font-bold transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>{b.seeAll}</Link>
+                <Link href={loc("/blog")} className="text-sm font-bold transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>{b.seeAll}</Link>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {relatedPosts.map((rp) => {
                   const rcfg = catConfig[rp.cat];
                   const rcc = rcfg?.color ?? "var(--blue)";
                   return (
-                    <Link key={rp.slug} href={`/post/${rp.slug}`}>
+                    <Link key={rp.slug} href={loc(`/post/${rp.slug}`)}>
                       <div className="glass-card overflow-hidden cursor-pointer group h-full" style={{ borderRadius: 20 }}>
                         <div className="h-32 relative" style={{ background: `linear-gradient(135deg, ${rcc}0A, var(--glass-card))` }}>
                           <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${rcc}, transparent)` }} />

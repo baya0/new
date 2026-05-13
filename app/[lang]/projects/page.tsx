@@ -1,17 +1,11 @@
-import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { getAllProjects } from "@/sanity/lib/queries";
-import { getServerLang } from "@/sanity/lib/i18n-fetch";
+import { isLocale } from "@/lib/locales";
 import ProjectsClient from "./projects-client";
 
 export const revalidate = 3600;
-
-export const metadata: Metadata = {
-  title: "Projects | Supportiva",
-  description:
-    "Real-world IT projects delivered by Supportiva across 9 locations globally.",
-};
 
 type SanityProject = {
   _id: string;
@@ -52,18 +46,20 @@ function imgUrl(src: unknown): string | null {
   }
 }
 
-export default async function ProjectsPage() {
-  const language = await getServerLang();
+type Props = { params: Promise<{ lang: string }> };
+
+export default async function ProjectsPage({ params }: Props) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+
   let projects: SanityProject[] = [];
   try {
     projects = await client.fetch<SanityProject[]>(
       getAllProjects,
-      { language },
+      { language: lang },
       { next: { revalidate: 3600 } },
     );
-    // If the chosen language has no projects yet, fall back to English so the
-    // catalog isn't empty before the editor has translated anything.
-    if (projects.length === 0 && language !== "en") {
+    if (projects.length === 0 && lang !== "en") {
       projects = await client.fetch<SanityProject[]>(
         getAllProjects,
         { language: "en" },
@@ -74,8 +70,6 @@ export default async function ProjectsPage() {
     projects = [];
   }
 
-  // Shape into the structure expected by the existing client component:
-  // title, desc, fullDesc, bullets, tags, location, year, keyResult, color, image, images.
   const items = (projects ?? []).map((p) => {
     const galleryUrls = (p.images ?? [])
       .map((img) => imgUrl(img))

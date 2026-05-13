@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/language-context";
+import { useLocalizedHref } from "@/lib/use-localized-href";
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, ArrowRight, BookOpen, Cloud, Server, Truck, Leaf, Send, User, Network, Wifi } from "lucide-react";
@@ -53,6 +54,7 @@ function StaggerChild({ children, className, i }: { children: React.ReactNode; c
 
 export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
   const { t } = useLang();
+  const loc = useLocalizedHref();
   const b = t.blog;
   const { dark } = useTheme();
   return (
@@ -101,7 +103,7 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
           {/* Featured post */}
           {posts.length > 0 && (
           <AnimatedSection>
-            <Link href={`/post/${posts[0].slug}`}>
+            <Link href={loc(`/post/${posts[0].slug}`)}>
             <div className="float-panel glow-border rounded-3xl overflow-hidden mb-12 group cursor-pointer">
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(28,78,138,0.06), rgba(94,74,158,0.03), var(--glass-card))` }}>
@@ -150,7 +152,7 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
               const Icon = cfg?.icon ?? Cloud;
               return (
                 <StaggerChild key={post.slug} i={i}>
-                  <Link href={`/post/${post.slug}`}>
+                  <Link href={loc(`/post/${post.slug}`)}>
                   <div className="glass-card overflow-hidden cursor-pointer group h-full">
                     <div className="h-44 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${cc}0A, var(--glass-card))` }}>
                       <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${cc}, transparent)` }} />

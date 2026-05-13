@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
+import { useLocalizedHref } from "@/lib/use-localized-href";
 import { useTheme } from "@/lib/theme-context";
 import {
   MapPin, ChevronLeft, ChevronRight, ChevronDown,
@@ -548,6 +549,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
 
 export default function ProjectsClient({ items }: { items: any[] }) {
   const { t } = useLang();
+  const loc = useLocalizedHref();
   const p = t.projects;
   const { dark } = useTheme();
 
@@ -769,7 +771,7 @@ export default function ProjectsClient({ items }: { items: any[] }) {
 
           {/* ── CTA ── */}
           <FadeIn delay={0.18} className="text-center mt-14">
-            <Link href="/contact">
+            <Link href={loc("/contact")}>
               <Button size="lg">{p.cta}</Button>
             </Link>
           </FadeIn>

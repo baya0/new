@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
+import { useLocalizedHref } from "@/lib/use-localized-href";
 import { useTheme } from "@/lib/theme-context";
 import {
   CheckCircle2,
@@ -396,6 +397,7 @@ function NetworkHub({
 
 export default function SolutionsPage() {
   const { t } = useLang();
+  const loc = useLocalizedHref();
   const { dark } = useTheme();
   const s = t.solutions;
   const [selected, setSelected] = useState<number | null>(null);
@@ -541,7 +543,7 @@ export default function SolutionsPage() {
                       </ul>
                     )}
 
-                    <Link href="/contact">
+                    <Link href={loc("/contact")}>
                       <Button size="lg">{s.ctaFallback}</Button>
                     </Link>
                   </motion.div>
@@ -635,7 +637,7 @@ export default function SolutionsPage() {
                 <p className="text-base leading-relaxed mb-8" style={{ color: "var(--w55)" }}>
                   {s.whyDesc}
                 </p>
-                <Link href="/contact">
+                <Link href={loc("/contact")}>
                   <Button size="lg">{s.cta}</Button>
                 </Link>
               </FadeIn>

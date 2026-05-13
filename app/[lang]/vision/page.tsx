@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
+import { useLocalizedHref } from "@/lib/use-localized-href";
 import { useTheme } from "@/lib/theme-context";
 import { Play } from "lucide-react";
 import Image from "next/image";
@@ -43,6 +44,7 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 
 export default function VisionPage() {
   const { t } = useLang();
+  const loc = useLocalizedHref();
   const v = t.vision;
   const { dark } = useTheme();
 
@@ -146,7 +148,7 @@ export default function VisionPage() {
                   &ldquo;{v.mission1}&rdquo;
                 </p>
                 <p className="text-[15px] leading-[1.9] mb-10" style={{ color: "var(--w55)" }}>{v.mission2}</p>
-                <Link href="/contact"><Button>Work With Us →</Button></Link>
+                <Link href={loc("/contact")}><Button>Work With Us →</Button></Link>
               </FadeIn>
             </div>
           </div>

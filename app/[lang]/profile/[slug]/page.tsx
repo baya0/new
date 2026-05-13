@@ -6,8 +6,9 @@ import { ArrowLeft } from "lucide-react";
 import { Linkedin } from "@/components/ui/BrandIcons";
 import { urlFor } from "@/sanity/lib/image";
 import { getAuthorBySlug } from "@/sanity/lib/queries";
-import { fetchLocalized, getServerLang } from "@/sanity/lib/i18n-fetch";
-import { BASE_URL } from "@/lib/config";
+import { fetchLocalized } from "@/sanity/lib/i18n-fetch";
+import { isLocale, localized } from "@/lib/locales";
+import { alternatesFor } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -21,15 +22,16 @@ type SanityAuthor = {
   linkedin?: string;
 };
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ lang: string; slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const language = await getServerLang();
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) return {};
+
   const author = await fetchLocalized<SanityAuthor>(
     getAuthorBySlug,
     { slug },
-    language,
+    lang,
   );
 
   if (!author) {
@@ -40,26 +42,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const description = author.bio ?? `${author.name} — ${author.role ?? "Supportiva contributor"}.`;
+  const alts = alternatesFor(`/profile/${author.slug}`, lang);
   return {
     title: `${author.name} | Supportiva`,
     description,
-    alternates: { canonical: `${BASE_URL}/profile/${author.slug}` },
+    alternates: alts,
     openGraph: {
       title: `${author.name} | Supportiva`,
       description,
-      url: `${BASE_URL}/profile/${author.slug}`,
+      url: alts.canonical as string,
       type: "profile",
     },
   };
 }
 
 export default async function ProfilePage({ params }: Props) {
-  const { slug } = await params;
-  const language = await getServerLang();
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) notFound();
+
   const author = await fetchLocalized<SanityAuthor>(
     getAuthorBySlug,
     { slug },
-    language,
+    lang,
   );
 
   if (!author) return notFound();
@@ -76,7 +80,7 @@ export default async function ProfilePage({ params }: Props) {
 
       <div className="max-w-3xl mx-auto relative z-10">
         <Link
-          href="/blog"
+          href={localized("/blog", lang)}
           className="inline-flex items-center gap-2 text-sm font-semibold mb-10 transition-colors duration-200 hover:text-[var(--blue)]"
           style={{ color: "var(--w55)" }}
         >

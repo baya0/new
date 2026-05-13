@@ -6,8 +6,9 @@ import {
   getAllProjectSlugs,
   getProjectBySlug,
 } from "@/sanity/lib/queries";
-import { fetchLocalized, getServerLang } from "@/sanity/lib/i18n-fetch";
-import { BASE_URL } from "@/lib/config";
+import { fetchLocalized } from "@/sanity/lib/i18n-fetch";
+import { isLocale, LOCALES } from "@/lib/locales";
+import { alternatesFor } from "@/lib/seo";
 import ProjectDetailClient, { type ProjectView } from "./project-client";
 
 export const revalidate = 3600;
@@ -66,21 +67,24 @@ function getProjectCategory(tags: readonly string[]): string {
 export async function generateStaticParams() {
   try {
     const slugs = await client.fetch<string[]>(getAllProjectSlugs);
-    return (slugs ?? []).map((slug) => ({ slug }));
+    return LOCALES.flatMap((lang) =>
+      (slugs ?? []).map((slug) => ({ lang, slug })),
+    );
   } catch {
     return [];
   }
 }
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ lang: string; slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const language = await getServerLang();
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) return {};
+
   const proj = await fetchLocalized<SanityProject>(
     getProjectBySlug,
     { slug },
-    language,
+    lang,
   );
 
   if (!proj) {
@@ -94,7 +98,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = proj.seoTitle ?? `${proj.title} | Supportiva`;
   const description =
     proj.seoDescription ?? proj.description ?? blocksToPlainText(proj.fullDescription).slice(0, 160);
-  const url = `${BASE_URL}/projects/${proj.slug}`;
+  const alts = alternatesFor(`/projects/${proj.slug}`, lang);
   const ogImage = proj.image
     ? urlFor(proj.image as never).width(1200).height(630).url()
     : undefined;
@@ -102,11 +106,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: alts,
     openGraph: {
       title,
       description,
-      url,
+      url: alts.canonical as string,
       type: "article",
       siteName: "Supportiva",
       images: ogImage ? [{ url: ogImage }] : undefined,
@@ -121,13 +125,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProjectDetailPage({ params }: Props) {
-  const { slug } = await params;
-  const language = await getServerLang();
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) notFound();
 
   const proj = await fetchLocalized<SanityProject>(
     getProjectBySlug,
     { slug },
-    language,
+    lang,
   );
   if (!proj) return notFound();
 

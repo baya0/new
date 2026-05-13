@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { type Lang } from "@/lib/i18n";
+import { localized } from "@/lib/locales";
 import { Mail } from "lucide-react";
 import { Linkedin, Instagram, Facebook, Twitter } from "@/components/ui/BrandIcons";
 
@@ -40,7 +41,7 @@ export default function Footer({ t, lang, setLang }: FooterProps) {
         <div className={`grid gap-10 mb-14 ${isAR ? "grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1.4fr]" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr]"}`}>
           {/* Brand */}
           <div className="sm:col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2.5 font-extrabold text-base mb-4 group" style={{ color: "var(--white)", flexDirection: isAR ? "row-reverse" : "row" }}>
+            <Link href={localized("/", lang)} className="flex items-center gap-2.5 font-extrabold text-base mb-4 group" style={{ color: "var(--white)", flexDirection: isAR ? "row-reverse" : "row" }}>
               <Image src="/images/logo.avif" alt="Supportiva" width={50} height={50} className="shrink-0 transition-transform group-hover:scale-110" />
               supportiva<span style={{ color: "var(--blue)" }}>.net</span>
             </Link>
@@ -63,7 +64,8 @@ export default function Footer({ t, lang, setLang }: FooterProps) {
             <div key={i}>
               <h4 className="text-xs font-bold tracking-wide uppercase mb-5" style={{ color: "var(--white)" }}>{col.title}</h4>
               {col.links.map((link: string, j: number) => {
-                const href = PAGE_HREFS[link];
+                const rawHref = PAGE_HREFS[link];
+                const href = rawHref ? localized(rawHref, lang) : undefined;
                 const isEmail = link.includes("@");
                 return href ? (
                   <Link key={j} href={href} className="flex items-center gap-1 text-[13px] mb-3 transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)", justifyContent: isAR ? "flex-end" : "flex-start" }}>
