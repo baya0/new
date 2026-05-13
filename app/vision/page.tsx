@@ -127,15 +127,13 @@ export default function VisionPage() {
                 <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight mb-8" style={{ color: "var(--white)" }}>
                   {v.missionTitle.split(" ")[0]}
                   <br />
-                  <span style={{ fontStyle: "italic", fontWeight: 400, color: "var(--blue)" }}>
-                    {v.missionTitle.split(" ").slice(1).join(" ")}.
-                  </span>
+                
                 </h2>
                 <div className="brush-line w-20 mb-10" />
 
                 <div className="img-placeholder min-h-[320px] relative group cursor-pointer">
                   <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ zIndex: 3 }}>
-                    <button className="w-20 h-20 rounded-full flex items-center justify-center mb-3 transition-all duration-500 group-hover:scale-110" style={{ background: "var(--tint-blue-hover)", border: "2px solid var(--tint-blue-border)" }}>
+                    <button className="w-20 h-20 rounded-full flex items-center justify-center mb-3 transition-all duration-500 group-hover:scale-110" style={{ background: "var(--tint- -hover)", border: "2px solid var(--tint-blue-border)" }}>
                       <Play size={28} fill="var(--blue)" style={{ color: "var(--blue)", marginLeft: 3 }} />
                     </button>
                     <p className="text-sm font-semibold" style={{ color: "var(--w55)" }}>{v.watchLabel}</p>
