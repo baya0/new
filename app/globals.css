@@ -152,22 +152,25 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--blue); }
 
-/* ── PROJECTS SPLIT-VIEW — bounded row, list scrolls internally ── */
+/* ── PROJECTS SPLIT-VIEW — list bounded & scrolls internally; detail grows ── */
 @media (min-width: 1024px) {
-  .projects-split {
-    height: 72vh;
-    min-height: 540px;
-    max-height: 720px;
-  }
-  .projects-list-panel,
-  .projects-detail-cell {
-    height: 100%;
+  /*
+    Only the left LIST PANEL is height-capped so a long catalog doesn't make
+    the page absurdly tall. The right DETAIL CARD grows with its content
+    (and the whole page scrolls naturally) so expanding "Show full details"
+    reveals the full case below the fold instead of trapping it behind an
+    internal scrollbar.
+
+    When the detail card is shorter than the list (e.g. a project with no
+    bullets and the card is collapsed), the list panel becomes sticky so
+    its top edge follows the user down — they can still see what they
+    selected while reading the expanded details.
+  */
+  .projects-list-panel {
+    height: clamp(540px, 72vh, 720px);
     min-height: 0;
-  }
-  .projects-detail-card {
-    height: 100%;
-    overflow-y: auto;
-    min-height: 0;
+    position: sticky;
+    top: 96px; /* clears the floating nav */
   }
 }
 

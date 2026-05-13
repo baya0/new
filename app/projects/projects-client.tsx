@@ -170,6 +170,7 @@ function ProjectListItem({
 function ProjectDetail({ proj, color }: { proj: any; color: string }) {
   const { t } = useLang();
   const [expanded, setExpanded] = useState(false);
+  const expandedRef = useRef<HTMLDivElement>(null);
 
   // Reset expansion when the user switches projects
   useEffect(() => { setExpanded(false); }, [proj.title]);
@@ -181,6 +182,26 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
   const visibleTags = expanded
     ? (proj.tags as string[] | undefined) ?? []
     : ((proj.tags as string[] | undefined) ?? []).slice(0, 5);
+
+  const handleToggle = useCallback(() => {
+    setExpanded((prev) => {
+      const next = !prev;
+      // When opening, wait for the height animation to settle, then bring
+      // the new content into the user's viewport. Skip on collapse so the
+      // user keeps their position.
+      if (next) {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            expandedRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }, 320);
+        });
+      }
+      return next;
+    });
+  }, []);
 
   return (
     <motion.div
@@ -266,11 +287,13 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
         {expanded && (
           <motion.div
             key="expanded"
+            ref={expandedRef}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
+            style={{ scrollMarginTop: 96 }}
           >
             <div className="pb-2">
               {/* Overview eyebrow */}
@@ -356,7 +379,7 @@ function ProjectDetail({ proj, color }: { proj: any; color: string }) {
       {/* ─── Big, catchy expand toggle pinned to the bottom ─── */}
       <button
         type="button"
-        onClick={() => setExpanded((v) => !v)}
+        onClick={handleToggle}
         aria-expanded={expanded}
         className="mt-auto group relative w-full flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-xl text-[14px] font-bold tracking-wide transition-all duration-200 hover:gap-3 hover:-translate-y-0.5 active:translate-y-0"
         style={{
@@ -515,11 +538,13 @@ export default function ProjectsClient({ items }: { items: any[] }) {
           {/* ── SPLIT VIEW ── */}
           <FadeIn delay={0.13}>
             {/*
-              items-stretch: panels share the same row height. When the right
-              detail panel grows (e.g. on "Read more"), the left sidebar grows
-              with it. The list inside the sidebar scrolls when it overflows.
+              items-start: panels keep their natural heights. The LEFT list is
+              capped (see .projects-list-panel in globals.css) and made sticky
+              so it follows the user down the page. The RIGHT card grows with
+              its content — when "Show full details" is clicked, the page
+              scrolls instead of the card.
             */}
-            <div className="projects-split grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-stretch">
+            <div className="projects-split grid grid-cols-1 lg:grid-cols-[310px_1fr] gap-4 lg:gap-5 items-start">
 
               {/* LEFT — bounded height; list scrolls internally so the page never grows */}
               <div
@@ -571,8 +596,8 @@ export default function ProjectsClient({ items }: { items: any[] }) {
                 </div>
               </div>
 
-              {/* RIGHT — bounded cell; detail card scrolls internally */}
-              <div className="projects-detail-cell flex">
+              {/* RIGHT — natural height; grows with content so the page scrolls */}
+              <div className="projects-detail-cell">
                 <AnimatePresence mode="wait">
                   {selected ? (
                     <ProjectDetail
