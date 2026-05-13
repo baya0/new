@@ -154,7 +154,6 @@ export const translations = {
     vision: {
       eyebrow: "Our Vision",
       h1: "IT Services for Your Business",
-      sub: "At Supportiva, we provide comprehensive IT solutions to help your business thrive in the digital age. Our team of experts is dedicated to providing top-notch services and support to help you achieve your goals. Whether you need help with network security, cloud computing, or software development, we have the expertise and experience to get the job done right.",
       missionTitle: "Our Story",
       mission1: "At Supportiva, we have a passion for technology and helping businesses succeed. Our company was founded by a team of experienced IT professionals who saw a need for high-quality IT consulting services in the industry. We have since grown into a provider of IT solutions, with a focus on delivering exceptional customer service and support.",
       mission2: "Our mission is to help businesses harness the power of technology to achieve their goals and stay ahead of the competition.",
@@ -550,7 +549,6 @@ export const translations = {
     },
     vision: {
       eyebrow: "رؤيتنا", h1: "يجب أن تُمكّن التقنية أعمالك، لا أن تعيقها.",
-      sub: "أسسنا سبورتيفا بمعتقد واحد: كل عمل يستحق IT على مستوى المؤسسات.",
       missionTitle: "قصتنا",
       mission1: "بدأت Supportiva بهدف تقديم خدمات تقنية احترافية تجمع بين الخبرة الميدانية، سرعة التنفيذ، وجودة التشغيل.",
       mission2: "واليوم نواصل دعم عملائنا بحلول موثوقة تغطي البنية التحتية، مراكز البيانات، الشبكات، والخدمات السحابية.",
@@ -771,7 +769,6 @@ export const translations = {
     },
     vision: {
       eyebrow: "Vizyonumuz", h1: "Teknoloji Sizi Güçlendirmeli, Yavaşlatmamalı.",
-      sub: "Supportiva'yı tek bir inançla kurduk: her işletme kurumsal düzeyde BT'yi hak eder.",
       missionTitle: "Misyonumuz",
       mission1: "Son teknoloji ile gerçek iş ihtiyaçları arasındaki boşluğu kapatmak.",
       mission2: "İlaç, otomotiv, üretim ve kimya sektörlerinde 11+ yıllık uygulamalı deneyim.",
