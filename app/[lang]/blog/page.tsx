@@ -1,17 +1,11 @@
-import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { getAllPosts } from "@/sanity/lib/queries";
-import { getServerLang } from "@/sanity/lib/i18n-fetch";
+import { isLocale } from "@/lib/locales";
 import BlogClient, { type BlogPostView } from "./blog-client";
 
 export const revalidate = 3600;
-
-export const metadata: Metadata = {
-  title: "The S Blog | Supportiva",
-  description:
-    "IT insights, infrastructure guides, and technology trends from the Supportiva team.",
-};
 
 type SanityPost = {
   _id: string;
@@ -40,16 +34,20 @@ function formatDate(iso?: string): string {
   });
 }
 
-export default async function BlogPage() {
-  const language = await getServerLang();
+type Props = { params: Promise<{ lang: string }> };
+
+export default async function BlogPage({ params }: Props) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+
   let posts: SanityPost[] = [];
   try {
     posts = await client.fetch<SanityPost[]>(
       getAllPosts,
-      { language },
+      { language: lang },
       { next: { revalidate: 3600 } },
     );
-    if (posts.length === 0 && language !== "en") {
+    if (posts.length === 0 && lang !== "en") {
       posts = await client.fetch<SanityPost[]>(
         getAllPosts,
         { language: "en" },

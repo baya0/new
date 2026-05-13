@@ -1,8 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { DM_Sans, JetBrains_Mono } from "next/font/google";
-import Providers from "./providers";
 import { BASE_URL } from "@/lib/config";
+import { DEFAULT_LOCALE, dirFor, isLocale, LOCALES } from "@/lib/locales";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -49,17 +50,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: BASE_URL,
-  },
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: BASE_URL,
     siteName: "Supportiva",
-    title: "Supportiva — Enterprise IT Services",
-    description:
-      "IT consulting, staff augmentation, datacenter infrastructure, and managed IT services. Trusted by Nike, Dow Chemical, Medtronic, Mercedes-Benz.",
     images: [
       {
         url: "/opengraph-image",
@@ -71,9 +64,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Supportiva — Enterprise IT Services",
-    description:
-      "IT consulting, staff augmentation, datacenter infrastructure, and managed IT services.",
     images: ["/opengraph-image"],
   },
 };
@@ -95,10 +85,21 @@ const organizationSchema = {
   sameAs: [],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// Middleware sets `x-lang` so the root <html lang dir> are correct on first
+// paint — important for SEO crawlers and for RTL layout under Arabic.
+async function detectLang() {
+  const h = await headers();
+  const raw = h.get("x-lang");
+  return isLocale(raw) ? raw : DEFAULT_LOCALE;
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const lang = await detectLang();
+  void LOCALES;
   return (
     <html
-      lang="en"
+      lang={lang}
+      dir={dirFor(lang)}
       className={`${dmSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
@@ -109,7 +110,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="antialiased" suppressHydrationWarning>
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );

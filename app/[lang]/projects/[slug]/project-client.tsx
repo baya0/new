@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
+import { useLocalizedHref } from "@/lib/use-localized-href";
 import { useTheme } from "@/lib/theme-context";
 
 export type ProjectView = {
@@ -264,6 +265,7 @@ function MetaTile({
 
 export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
   const { t } = useLang();
+  const loc = useLocalizedHref();
   const { dark } = useTheme();
   const cc = colorMap[proj.color] ?? "var(--blue)";
 
@@ -315,7 +317,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
           <FadeIn>
             <div className="flex items-center gap-4 mb-7 flex-wrap">
               <Link
-                href="/projects"
+                href={loc("/projects")}
                 className="inline-flex items-center gap-2 text-sm font-semibold transition-all duration-200 hover:gap-3"
                 style={{ color: "var(--w55)" }}
               >
@@ -651,7 +653,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
                     {t.projects.similarChallengeSub}
                   </p>
                   <Link
-                    href="/contact"
+                    href={loc("/contact")}
                     className="inline-flex items-center gap-2 text-[13px] font-bold transition-all duration-200 hover:gap-3"
                     style={{ color: cc }}
                   >
@@ -699,7 +701,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
               >
                 {t.projects.readySub}
               </p>
-              <Link href="/contact">
+              <Link href={loc("/contact")}>
                 <Button size="lg">{t.projects.cta}</Button>
               </Link>
             </div>

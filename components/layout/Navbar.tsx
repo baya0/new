@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { type Lang } from "@/lib/i18n";
+import { localized } from "@/lib/locales";
 import { Menu, X, Sun, Moon, ChevronRight, Globe } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
@@ -17,12 +17,12 @@ interface NavbarProps {
 }
 
 const PAGES = [
-  { key: "home",      href: "/" },
-  { key: "solutions", href: "/solutions" },
-  { key: "vision",    href: "/vision" },
-  { key: "projects",  href: "/projects" },
-  { key: "blog",      href: "/blog" },
-  { key: "contact",   href: "/contact" },
+  { key: "home",      path: "/" },
+  { key: "solutions", path: "/solutions" },
+  { key: "vision",    path: "/vision" },
+  { key: "projects",  path: "/projects" },
+  { key: "blog",      path: "/blog" },
+  { key: "contact",   path: "/contact" },
 ];
 
 export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps) {
@@ -63,7 +63,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
         >
           <div className="h-full flex items-center gap-1">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 px-3 shrink-0 group" style={{ color: "var(--white)" }}>
+            <Link href={localized("/", lang)} className="flex items-center gap-2 px-3 shrink-0 group" style={{ color: "var(--white)" }}>
               <Image
                 src="/images/logo.avif"
                 alt="Supportiva"
@@ -83,11 +83,12 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center gap-0.5">
               {PAGES.map((p) => {
-                const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
+                const href = localized(p.path, lang);
+                const isActive = pathname === href || (p.path !== "/" && pathname.startsWith(href));
                 return (
                   <Link
                     key={p.key}
-                    href={p.href}
+                    href={href}
                     className="relative px-3.5 py-1.5 text-[12.5px] font-semibold transition-all duration-250 rounded-lg hover:text-[var(--blue)]"
                     style={{ color: isActive ? "var(--blue)" : "var(--w55)" }}
                   >
@@ -251,11 +252,12 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                 {/* Nav links */}
                 <div className="space-y-1">
                   {PAGES.map((p, i) => {
-                    const isActive = pathname === p.href || (p.href !== "/" && pathname.startsWith(p.href));
+                    const href = localized(p.path, lang);
+                    const isActive = pathname === href || (p.path !== "/" && pathname.startsWith(href));
                     return (
                       <motion.div key={p.key} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
                         <Link
-                          href={p.href}
+                          href={href}
                           onClick={() => setMobileOpen(false)}
                           className="flex items-center justify-between py-3 px-4 rounded-lg text-[13px] font-semibold transition-all duration-200"
                           style={{
@@ -303,7 +305,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
 
                   {/* CTA */}
                   <Link
-                    href="/contact"
+                    href={localized("/contact", lang)}
                     onClick={() => setMobileOpen(false)}
                     className="mt-4 flex items-center justify-center py-3 rounded-xl text-[13px] font-bold text-white transition-all"
                     style={{ background: "var(--gradient-brand)", boxShadow: "0 2px 0 rgba(0,0,0,0.15), 0 4px 12px rgba(28,78,138,0.18)" }}

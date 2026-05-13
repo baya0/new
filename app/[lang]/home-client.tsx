@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
+import { useLocalizedHref } from "@/lib/use-localized-href";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
 const NetworkSwitch3D = dynamic(() => import("@/components/sections/NetworkSwitch3D"), { ssr: false });
@@ -97,8 +98,9 @@ function ClientLogo({ name }: { name: string }) {
 
 /* ─────────── Page ─────────── */
 
-export default function HomePage() {
+export default function HomeClient() {
   const { t } = useLang();
+  const loc = useLocalizedHref();
   const th = t.home;
   const { dark } = useTheme()
   const heroRef = useRef<HTMLElement>(null);
@@ -180,8 +182,8 @@ export default function HomePage() {
                 transition={{ delay: 0.5, duration: 0.6 }}
                 className="mt-10 flex flex-wrap items-center gap-5"
               >
-                <Link href="/solutions"><Button size="lg">{th.btn1}</Button></Link>
-                <Link href="/projects" className="group inline-flex items-center gap-2 text-sm font-bold tracking-wide" style={{ color: "var(--white)" }}>
+                <Link href={loc("/solutions")}><Button size="lg">{th.btn1}</Button></Link>
+                <Link href={loc("/projects")} className="group inline-flex items-center gap-2 text-sm font-bold tracking-wide" style={{ color: "var(--white)" }}>
                   <span className="swept-underline">{th.btn2}</span>
                   <ArrowUpRight size={16} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </Link>
@@ -299,7 +301,7 @@ export default function HomePage() {
               </FadeIn>
             </div>
             <FadeIn delay={0.2}>
-              <Link href="/solutions" className="group inline-flex items-center gap-2 text-sm font-bold">
+              <Link href={loc("/solutions")} className="group inline-flex items-center gap-2 text-sm font-bold">
                 <span className="swept-underline" style={{ color: "var(--white)" }}>{th.servicesAll}</span>
                 <ArrowUpRight size={14} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" style={{ color: "var(--blue)" }} />
               </Link>
@@ -367,7 +369,7 @@ export default function HomePage() {
                   <div className="text-sm font-black" style={{ color: "var(--white)" }}>{th.testimonial.name}</div>
                   <div className="text-xs mt-0.5" style={{ color: "var(--w55)" }}>{th.testimonial.role}</div>
                 </div>
-                <Link href="/projects" className="group inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase" style={{ color: "var(--blue)" }}>
+                <Link href={loc("/projects")} className="group inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase" style={{ color: "var(--blue)" }}>
                   <span className="swept-underline">{th.readCase}</span>
                   <ArrowUpRight size={13} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </Link>
@@ -399,7 +401,7 @@ export default function HomePage() {
                 <p className="text-base lg:text-lg leading-[1.8] max-w-md mb-10" style={{ color: "var(--w55)" }}>
                   {th.whySub}
                 </p>
-                <Link href="/vision"><Button>{th.whyBtn}</Button></Link>
+                <Link href={loc("/vision")}><Button>{th.whyBtn}</Button></Link>
               </FadeIn>
             </div>
 
@@ -474,8 +476,8 @@ export default function HomePage() {
                   {th.ctaSub}
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <Link href="/contact"><Button size="lg">{th.ctaBtn1}</Button></Link>
-                  <Link href="/solutions"><Button variant="secondary" size="lg">{th.ctaBtn2}</Button></Link>
+                  <Link href={loc("/contact")}><Button size="lg">{th.ctaBtn1}</Button></Link>
+                  <Link href={loc("/solutions")}><Button variant="secondary" size="lg">{th.ctaBtn2}</Button></Link>
                 </div>
               </FadeIn>
             </div>

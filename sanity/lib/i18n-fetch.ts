@@ -1,19 +1,5 @@
-import { cookies } from "next/headers";
 import { client } from "./client";
 import type { Lang } from "@/lib/i18n";
-
-const LANG_COOKIE = "supportiva_lang";
-const VALID: Lang[] = ["en", "ar", "tr"];
-
-/**
- * Server-side language detection. Reads the `supportiva_lang` cookie set by
- * the client (see app/providers.tsx). Defaults to English.
- */
-export async function getServerLang(): Promise<Lang> {
-  const store = await cookies();
-  const raw = store.get(LANG_COOKIE)?.value as Lang | undefined;
-  return raw && VALID.includes(raw) ? raw : "en";
-}
 
 /**
  * Fetch a translated document by GROQ. If the user's language returns nothing
