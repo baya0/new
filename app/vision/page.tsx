@@ -106,9 +106,7 @@ export default function VisionPage() {
                   );
                 })()}
               </h1>
-              <FadeIn delay={0.6} className="max-w-2xl">
-                <p className="text-base lg:text-lg leading-[1.8]" style={{ color: "var(--w55)" }}>{v.sub}</p>
-              </FadeIn>
+             
             </div>
           </div>
         </div>
