@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { isUniquePerLanguage } from './isUnique'
 
 export const project = defineType({
   name: 'project',
@@ -23,7 +24,7 @@ export const project = defineType({
       description:
         'Auto-generated from the English title. Translated copies inherit the same slug and cannot change it — the public site looks projects up by slug, so changing it on Arabic or Turkish would break the URL.',
       type: 'slug',
-      options: { source: 'title' },
+      options: { source: 'title', isUnique: isUniquePerLanguage },
       readOnly: ({ document }) =>
         typeof document?.language === 'string' && document.language !== 'en',
       validation: (Rule) => Rule.required(),
