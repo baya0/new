@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { isUniquePerLanguage } from './isUnique'
 
 export const author = defineType({
   name: 'author',
@@ -23,7 +24,7 @@ export const author = defineType({
       description:
         'Auto-generated from the name. Translated copies inherit the same slug and cannot change it — the public site looks authors up by slug.',
       type: 'slug',
-      options: { source: 'name' },
+      options: { source: 'name', isUnique: isUniquePerLanguage },
       readOnly: ({ document }) =>
         typeof document?.language === 'string' && document.language !== 'en',
       validation: (Rule) => Rule.required(),
