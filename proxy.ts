@@ -42,10 +42,21 @@ export function proxy(req: NextRequest) {
   const segments = pathname.split("/").filter(Boolean);
   const first = segments[0];
 
-  // Already locale-prefixed → just expose the lang to the root layout via header.
+  // Already locale-prefixed → forward the lang to the root layout via a
+  // request header so <html lang dir> are correct on first paint.
+  //
+  // The header MUST be set on the forwarded request (not the outgoing
+  // response), because `headers()` in server components reads request
+  // headers — response headers go to the browser and are invisible to
+  // the route handler. Without `request: { headers }` here, the root
+  // layout falls back to `en` and renders <html dir="ltr"> even under
+  // /ar/*, which breaks RTL block layout (navbar, flex direction).
   if (isLocale(first)) {
-    const res = NextResponse.next();
-    res.headers.set("x-lang", first);
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("x-lang", first);
+    const res = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
     // Sticky preference so language-switcher choices survive future bare-URL visits.
     res.cookies.set(LOCALE_COOKIE, first, {
       maxAge: COOKIE_MAX_AGE,

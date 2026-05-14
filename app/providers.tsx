@@ -6,7 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { translations, type Lang } from "@/lib/i18n";
 import { LanguageContext } from "@/lib/language-context";
 import { ThemeContext } from "@/lib/theme-context";
-import { isLocale, LOCALES } from "@/lib/locales";
+import { dirFor, isLocale, LOCALES } from "@/lib/locales";
 
 export default function Providers({
   children,
@@ -30,9 +30,18 @@ export default function Providers({
     router.push(target);
   };
 
+  // Keep <html lang dir> in sync with the URL-derived lang on the client.
+  // Defensive against:
+  //   - SSG pages whose prerendered HTML baked in the build-time lang
+  //   - soft navigations (Link clicks) that don't re-render the root <html>
+  // The middleware sets x-lang on the request so SSR is correct for crawlers;
+  // this just guarantees correctness after hydration.
   useEffect(() => {
-    document.documentElement.className = dark ? "dark" : "";
-  }, [dark]);
+    const html = document.documentElement;
+    html.lang = lang;
+    html.dir = dirFor(lang);
+    html.className = dark ? "dark" : "";
+  }, [lang, dark]);
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t }}>
