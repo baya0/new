@@ -165,7 +165,7 @@ export default function VisionPage() {
             <div className="mb-16">
             
               <h2 className="text-[32px] lg:text-[44px] font-bold leading-[1.05] tracking-tight" style={{ color: "var(--white)" }}>
-                {v.valuesLabel.toLowerCase()}.
+                {v.valuesLabel.toLowerCase()}
               </h2>
             </div>
           </FadeIn>
