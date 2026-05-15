@@ -56,7 +56,7 @@ function imgUrl(src: unknown): string | null {
 
 function getProjectCategory(tags: readonly string[]): string {
   const s = tags.join(" ").toLowerCase();
-  if (s.includes("migration") || s.includes("windows")) return "Migration";
+  if (s.includes("migration") || s.includes("upgrade") || s.includes("windows")) return "Upgrade";
   if (s.includes("datacenter") || s.includes("rack") || s.includes("cabling") || s.includes("firewall")) return "Datacenter";
   if (s.includes("support") || s.includes("l1")) return "Support";
   if (s.includes("cisco") || s.includes("wifi") || s.includes("network") || s.includes("heatmap")) return "Network";

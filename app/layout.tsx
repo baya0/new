@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     "staff augmentation",
     "datacenter infrastructure",
     "managed IT services",
-    "cloud migration",
+    "cloud upgrade",
     "network security",
     "IT support",
     "enterprise IT",

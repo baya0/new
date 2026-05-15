@@ -11,12 +11,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: "IT Solutions & Services",
     description:
-      "Cloud migration, datacenter infrastructure, network security, IT support, cabling design, and staff augmentation. Enterprise IT solutions by Supportiva.",
+      "Cloud upgrade, datacenter infrastructure, network security, IT support, cabling design, and staff augmentation. Enterprise IT solutions by Supportiva.",
     alternates: alts,
     openGraph: {
       title: "IT Solutions & Services | Supportiva",
       description:
-        "Cloud migration, datacenter infrastructure, network security, IT support, cabling design, and staff augmentation.",
+        "Cloud upgrade, datacenter infrastructure, network security, IT support, cabling design, and staff augmentation.",
       url: alts.canonical as string,
       type: "website",
     },
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: "IT Solutions & Services | Supportiva",
       description:
-        "Cloud migration, datacenter infrastructure, network security, IT support, cabling design, and staff augmentation.",
+        "Cloud upgrade, datacenter infrastructure, network security, IT support, cabling design, and staff augmentation.",
     },
   };
 }

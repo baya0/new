@@ -22,17 +22,20 @@ export type BlogPostView = {
 const catConfig: Record<string, { color: string; icon: typeof Cloud }> = {
   Cloud: { color: "var(--blue)", icon: Cloud },
   Infrastructure: { color: "var(--cyan)", icon: Server },
+  Upgrade: { color: "var(--amber)", icon: Truck },
   Migration: { color: "var(--amber)", icon: Truck },
   Sustainability: { color: "var(--green)", icon: Leaf },
   Network: { color: "var(--purple)", icon: Network },
   // Arabic category names
   "السحابة": { color: "var(--blue)", icon: Cloud },
   "البنية التحتية": { color: "var(--cyan)", icon: Server },
+  "ترقية": { color: "var(--amber)", icon: Truck },
   "الهجرة": { color: "var(--amber)", icon: Truck },
   "الاستدامة": { color: "var(--green)", icon: Leaf },
   // Turkish category names
   "Bulut": { color: "var(--blue)", icon: Cloud },
   "Altyapı": { color: "var(--cyan)", icon: Server },
+  "Yükseltme": { color: "var(--amber)", icon: Truck },
   "Göç": { color: "var(--amber)", icon: Truck },
   "Sürdürülebilirlik": { color: "var(--green)", icon: Leaf },
 };

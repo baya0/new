@@ -25,20 +25,24 @@ export type RelatedPostView = {
   title: string;
   cat: string;
   date: string;
+  thumbnailUrl: string | null;
 };
 
 const catConfig: Record<string, { color: string; icon: typeof Cloud }> = {
   Cloud: { color: "var(--blue)", icon: Cloud },
   Infrastructure: { color: "var(--cyan)", icon: Server },
+  Upgrade: { color: "var(--amber)", icon: Truck },
   Migration: { color: "var(--amber)", icon: Truck },
   Sustainability: { color: "var(--green)", icon: Leaf },
   Network: { color: "var(--purple)", icon: Network },
   "السحابة": { color: "var(--blue)", icon: Cloud },
   "البنية التحتية": { color: "var(--cyan)", icon: Server },
+  "ترقية": { color: "var(--amber)", icon: Truck },
   "الهجرة": { color: "var(--amber)", icon: Truck },
   "الاستدامة": { color: "var(--green)", icon: Leaf },
   "Bulut": { color: "var(--blue)", icon: Cloud },
   "Altyapı": { color: "var(--cyan)", icon: Server },
+  "Yükseltme": { color: "var(--amber)", icon: Truck },
   "Göç": { color: "var(--amber)", icon: Truck },
   "Sürdürülebilirlik": { color: "var(--green)", icon: Leaf },
 };
@@ -135,72 +139,77 @@ export default function PostClient({
 
   return (
     <>
-      {/* Hero */}
+      {/* Hero — title/meta left, image right */}
       <section className="relative overflow-hidden section-depth" style={{ padding: "100px 24px 80px" }}>
         <div className="aurora" />
         <div className="blob blob-blue w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
         <div className="blob blob-purple w-[350px] h-[350px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "5s" }} />
 
-        <div className="max-w-3xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Link href={loc("/blog")} className="inline-flex items-center gap-2 text-sm font-semibold mb-8 transition-colors duration-200 hover:text-[var(--blue)]" style={{ color: "var(--w55)" }}>
               <ArrowLeft size={16} /> {b.backToBlog}
             </Link>
-
-            <div className="tag mb-5 w-fit" style={{ background: `${cc}0D`, color: cc, border: `1px solid ${cc}20` }}>
-              <Icon size={11} />{post.cat}
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl lg:text-[36px] font-bold leading-[1.1] tracking-tight mb-6" style={{ color: "var(--white)" }}>
-              {post.title}
-            </h1>
-
-            <div className="flex items-center gap-5 flex-wrap">
-              {post.author?.slug ? (
-                <Link
-                  href={loc(`/profile/${post.author.slug}`)}
-                  className="flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-70"
-                  style={{ color: "var(--w55)" }}
-                >
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
-                    <User size={12} style={{ color: "var(--blue)" }} />
-                  </div>
-                  {post.author?.name ?? b.author}
-                </Link>
-              ) : (
-                <span className="flex items-center gap-2 text-sm font-medium" style={{ color: "var(--w55)" }}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
-                    <User size={12} style={{ color: "var(--blue)" }} />
-                  </div>
-                  {post.author?.name ?? b.author}
-                </span>
-              )}
-              <span className="flex items-center gap-1.5 text-sm" style={{ color: "var(--w25)" }}>
-                <Clock size={14} />{post.date}
-              </span>
-              <span className="text-sm" style={{ color: "var(--w25)" }}>{post.read}</span>
-            </div>
           </motion.div>
+
+          <div className={`grid grid-cols-1 ${post.thumbnailUrl ? "lg:grid-cols-[1fr_minmax(0,420px)]" : ""} gap-10 lg:gap-14 items-center`}>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }}>
+              <div className="tag mb-5 w-fit" style={{ background: `${cc}0D`, color: cc, border: `1px solid ${cc}20` }}>
+                <Icon size={11} />{post.cat}
+              </div>
+
+              <h1 className="text-2xl sm:text-3xl lg:text-[36px] font-bold leading-[1.1] tracking-tight mb-6" style={{ color: "var(--white)" }}>
+                {post.title}
+              </h1>
+
+              <div className="flex items-center gap-5 flex-wrap">
+                {post.author?.slug ? (
+                  <Link
+                    href={loc(`/profile/${post.author.slug}`)}
+                    className="flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-70"
+                    style={{ color: "var(--w55)" }}
+                  >
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
+                      <User size={12} style={{ color: "var(--blue)" }} />
+                    </div>
+                    {post.author?.name ?? b.author}
+                  </Link>
+                ) : (
+                  <span className="flex items-center gap-2 text-sm font-medium" style={{ color: "var(--w55)" }}>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "var(--tint-blue)", border: "1px solid var(--tint-blue-border)" }}>
+                      <User size={12} style={{ color: "var(--blue)" }} />
+                    </div>
+                    {post.author?.name ?? b.author}
+                  </span>
+                )}
+                <span className="flex items-center gap-1.5 text-sm" style={{ color: "var(--w25)" }}>
+                  <Clock size={14} />{post.date}
+                </span>
+                <span className="text-sm" style={{ color: "var(--w25)" }}>{post.read}</span>
+              </div>
+            </motion.div>
+
+            {post.thumbnailUrl && (
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+                className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden"
+                style={{ boxShadow: "var(--shadow-lg)", border: "1px solid var(--glass-border)" }}
+              >
+                <Image
+                  src={post.thumbnailUrl}
+                  alt={post.title}
+                  fill
+                  sizes="(min-width: 1024px) 420px, 100vw"
+                  className="object-cover"
+                  priority
+                />
+              </motion.div>
+            )}
+          </div>
         </div>
       </section>
-
-      {/* Featured Image */}
-      {post.thumbnailUrl && (
-        <div className="max-w-3xl mx-auto px-6 -mt-2 mb-12 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-            <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden">
-              <Image
-                src={post.thumbnailUrl}
-                alt={post.title}
-                fill
-                sizes="(min-width: 768px) 768px, 100vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-          </motion.div>
-        </div>
-      )}
 
       <div className="section-divider" />
 
@@ -233,8 +242,17 @@ export default function PostClient({
                   return (
                     <Link key={rp.slug} href={loc(`/post/${rp.slug}`)}>
                       <div className="glass-card overflow-hidden cursor-pointer group h-full" style={{ borderRadius: 20 }}>
-                        <div className="h-32 relative" style={{ background: `linear-gradient(135deg, ${rcc}0A, var(--glass-card))` }}>
-                          <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${rcc}, transparent)` }} />
+                        <div className="h-32 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${rcc}0A, var(--glass-card))` }}>
+                          {rp.thumbnailUrl && (
+                            <Image
+                              src={rp.thumbnailUrl}
+                              alt={rp.title}
+                              fill
+                              sizes="(min-width: 640px) 33vw, 100vw"
+                              className="object-cover"
+                            />
+                          )}
+                          <div className="absolute bottom-0 left-0 right-0 h-[2px] z-10" style={{ background: `linear-gradient(90deg, ${rcc}, transparent)` }} />
                         </div>
                         <div className="p-4">
                           <h4 className="text-xs font-bold leading-snug mb-2 line-clamp-2 relative z-10" style={{ color: "var(--white)" }}>{rp.title}</h4>

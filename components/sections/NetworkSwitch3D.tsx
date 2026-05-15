@@ -3,7 +3,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 const PORTS = [
-  { main: "Cloud Services", tag: "Cloud · Migration · Security", color: [0x1C, 0x4E, 0x8A] },
+  { main: "Cloud Services", tag: "Cloud · Upgrade · Security", color: [0x1C, 0x4E, 0x8A] },
   { main: "Staff Augmentation", tag: "On-demand · Scalable", color: [0x2A, 0x7E, 0x9E] },
   { main: "Datacenter Infrastructure", tag: "Design · Deploy · Optimize", color: [0xB8, 0x87, 0x3E] },
   { main: "IT Support Services", tag: "24/7 · Enterprise SLA", color: [0x1A, 0x7A, 0x54] },

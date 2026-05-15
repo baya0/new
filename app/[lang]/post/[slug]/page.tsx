@@ -49,6 +49,7 @@ type SanityRelatedPost = {
   slug: string;
   category?: string;
   publishedAt?: string;
+  thumbnail?: unknown;
 };
 
 function formatDate(iso?: string): string {
@@ -167,6 +168,9 @@ export default async function BlogPostPage({ params }: Props) {
     title: r.title,
     cat: r.category ?? "",
     date: formatDate(r.publishedAt),
+    thumbnailUrl: r.thumbnail
+      ? urlFor(r.thumbnail as never).width(600).height(400).url()
+      : null,
   }));
 
   const ogImage = post.thumbnail
