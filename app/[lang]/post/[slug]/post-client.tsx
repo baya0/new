@@ -1,5 +1,6 @@
 "use client";
 import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/language-context";
@@ -15,6 +16,7 @@ export type PostView = {
   date: string;
   read: string;
   body: unknown[];
+  thumbnailUrl: string | null;
   author: { name: string; slug: string | null; avatarUrl: string | null } | null;
 };
 
@@ -182,14 +184,23 @@ export default function PostClient({
         </div>
       </section>
 
-      {/* Featured Image Placeholder */}
-      <div className="max-w-3xl mx-auto px-6 -mt-2 mb-12 relative z-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-          <div className="img-placeholder min-h-[300px] sm:min-h-[400px] relative rounded-2xl">
-            {/* To add featured image: <Image src={`/images/blog/${post.slug}.jpg`} alt={post.title} fill className="object-cover rounded-2xl" /> */}
-          </div>
-        </motion.div>
-      </div>
+      {/* Featured Image */}
+      {post.thumbnailUrl && (
+        <div className="max-w-3xl mx-auto px-6 -mt-2 mb-12 relative z-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
+            <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden">
+              <Image
+                src={post.thumbnailUrl}
+                alt={post.title}
+                fill
+                sizes="(min-width: 768px) 768px, 100vw"
+                className="object-cover"
+                priority
+              />
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       <div className="section-divider" />
 

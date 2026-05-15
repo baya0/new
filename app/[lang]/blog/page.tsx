@@ -65,6 +65,9 @@ export default async function BlogPage({ params }: Props) {
     cat: p.category ?? "",
     date: formatDate(p.publishedAt),
     read: p.readTime ?? "",
+    thumbnailUrl: p.thumbnail
+      ? urlFor(p.thumbnail as never).width(1200).height(800).url()
+      : null,
     author: p.author
       ? {
           name: p.author.name ?? "",
