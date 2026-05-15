@@ -80,8 +80,8 @@ function ClientLogo({ name }: { name: string }) {
           alt={name}
           width={300}
           height={200}
-          sizes="180px"
-          style={{ height: 56, width: "auto" }}
+          sizes="220px"
+          style={{ height: 72, width: "auto" }}
           className="object-contain"
         />
       </span>
