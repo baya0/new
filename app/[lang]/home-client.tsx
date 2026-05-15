@@ -206,11 +206,14 @@ export default function HomeClient() {
               
                 {/* ─── LOGO — path controlled by HERO_LOGO_SRC constant at top of file ─── */}
                 <Image
+                  key={heroLogoSrc}
                   src={heroLogoSrc}
                   alt="Supportiva"
-                  width={1000}
-                  height={1000}
-                  className="relative z-10 animate-float-slow"
+                  width={768}
+                  height={512}
+                  sizes="(min-width: 1024px) 560px, 0px"
+                  priority
+                  className="relative z-10 animate-float-slow w-full max-w-[560px] h-auto object-contain"
                 />
               </div>
             </motion.div>
