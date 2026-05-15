@@ -78,9 +78,10 @@ function ClientLogo({ name }: { name: string }) {
         <Image
           src={src}
           alt={name}
-          width={150}
-          height={50}
-          style={{ width: "auto", height: "auto", maxHeight: 50 }}
+          width={300}
+          height={200}
+          sizes="180px"
+          style={{ height: 56, width: "auto" }}
           className="object-contain"
         />
       </span>
@@ -125,6 +126,8 @@ export default function HomeClient() {
             src="/images/backgrounds/serversroom.jpg"
             alt=""
             fill
+            sizes="100vw"
+            quality={55}
             className="object-cover object-center"
             style={{
               opacity: dark ? 0.08 : 0.18,
