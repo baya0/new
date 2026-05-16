@@ -71,7 +71,7 @@ export const post = defineType({
           { title: 'Cloud', value: 'Cloud' },
           { title: 'Network', value: 'Network' },
           { title: 'Security', value: 'Security' },
-          { title: 'Migration', value: 'Migration' },
+          { title: 'Upgrade', value: 'Upgrade' },
           { title: 'Infrastructure', value: 'Infrastructure' },
           { title: 'Sustainability', value: 'Sustainability' },
         ],

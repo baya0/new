@@ -49,6 +49,7 @@ type SanityRelatedPost = {
   slug: string;
   category?: string;
   publishedAt?: string;
+  thumbnail?: unknown;
 };
 
 function formatDate(iso?: string): string {
@@ -148,6 +149,9 @@ export default async function BlogPostPage({ params }: Props) {
     date: formatDate(post.publishedAt),
     read: post.readTime ?? "",
     body: (post.body as unknown[]) ?? [],
+    thumbnailUrl: post.thumbnail
+      ? urlFor(post.thumbnail as never).width(1600).height(900).url()
+      : null,
     author: post.author
       ? {
           name: post.author.name ?? "",
@@ -164,6 +168,9 @@ export default async function BlogPostPage({ params }: Props) {
     title: r.title,
     cat: r.category ?? "",
     date: formatDate(r.publishedAt),
+    thumbnailUrl: r.thumbnail
+      ? urlFor(r.thumbnail as never).width(600).height(400).url()
+      : null,
   }));
 
   const ogImage = post.thumbnail

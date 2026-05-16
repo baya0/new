@@ -11,12 +11,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: "Projects & Case Studies",
     description:
-      "From Nike Turkey's 9-site migration to datacenter builds — see Supportiva's portfolio of enterprise IT projects delivered across 9 countries.",
+      "From Nike Turkey's 9-site upgrade to datacenter builds — see Supportiva's portfolio of enterprise IT projects delivered across 9 countries.",
     alternates: alts,
     openGraph: {
       title: "Projects & Case Studies | Supportiva",
       description:
-        "From Nike Turkey's 9-site migration to datacenter builds — enterprise IT projects delivered worldwide.",
+        "From Nike Turkey's 9-site upgrade to datacenter builds — enterprise IT projects delivered worldwide.",
       url: alts.canonical as string,
       type: "website",
     },
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: "Projects & Case Studies | Supportiva",
       description:
-        "From Nike Turkey's 9-site migration to datacenter builds — enterprise IT projects delivered worldwide.",
+        "From Nike Turkey's 9-site upgrade to datacenter builds — enterprise IT projects delivered worldwide.",
     },
   };
 }

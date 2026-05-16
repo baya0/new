@@ -78,10 +78,11 @@ function ClientLogo({ name }: { name: string }) {
         <Image
           src={src}
           alt={name}
-          width={150}
-          height={50}
+          width={300}
+          height={200}
+          sizes="220px"
+          style={{ height: 72, width: "auto" }}
           className="object-contain"
-         
         />
       </span>
     );
@@ -125,6 +126,8 @@ export default function HomeClient() {
             src="/images/backgrounds/serversroom.jpg"
             alt=""
             fill
+            sizes="100vw"
+            quality={55}
             className="object-cover object-center"
             style={{
               opacity: dark ? 0.08 : 0.18,
@@ -206,11 +209,14 @@ export default function HomeClient() {
               
                 {/* ─── LOGO — path controlled by HERO_LOGO_SRC constant at top of file ─── */}
                 <Image
+                  key={heroLogoSrc}
                   src={heroLogoSrc}
                   alt="Supportiva"
-                  width={1000}
-                  height={1000}
-                  className="relative z-10 animate-float-slow"
+                  width={768}
+                  height={512}
+                  sizes="(min-width: 1024px) 560px, 0px"
+                  priority
+                  className="relative z-10 animate-float-slow w-full max-w-[560px] h-auto object-contain"
                 />
               </div>
             </motion.div>
