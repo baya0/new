@@ -11,18 +11,23 @@ export const runtime = "nodejs";
  * their changes on the live site within seconds rather than waiting for the
  * hourly ISR revalidation.
  *
- * Setup in Sanity dashboard:
- *   1. API → Webhooks → Create webhook
- *   2. URL: https://<your-domain>/api/revalidate
- *   3. Dataset: production
- *   4. Trigger on: Create, Update, Delete
- *   5. Filter (optional): _type in ["post", "project", "author"]
- *   6. HTTP method: POST
- *   7. HTTP Headers: x-webhook-secret = <a long random string>
- *   8. Projection:
- *        { "_type": _type, "slug": slug.current }
+ * Setup in Sanity dashboard (manage.sanity.io → API → Webhooks):
+ *   1. URL: https://<your-domain>/api/revalidate
+ *   2. Dataset: production
+ *   3. Trigger on: Create, Update, Delete
+ *   4. Filter: _type in ["post", "project", "author"]
+ *   5. HTTP method: POST
+ *   6. HTTP Headers: x-webhook-secret = <a long random string>
+ *   7. Projection: { "_type": _type, "slug": slug.current }
  *
  * Put the same random string in Vercel as SANITY_REVALIDATE_SECRET.
+ *
+ * Why the routes look like "/[lang]/blog": revalidatePath's second
+ * argument is "page" | "layout". When you pass a dynamic route shape
+ * (e.g. "/[lang]/blog") with "page", Next.js invalidates every concrete
+ * path that matches that shape — /en/blog, /ar/blog, /tr/blog — in one
+ * call. Calling revalidatePath("/blog") wouldn't match anything on this
+ * site since every page lives under /[lang]/.
  */
 
 const SECRET = process.env.SANITY_REVALIDATE_SECRET;
@@ -33,8 +38,6 @@ type WebhookBody = {
 };
 
 export async function POST(request: NextRequest) {
-  // Require a shared secret in the header so random POSTs can't trigger
-  // revalidations and waste serverless invocations.
   if (!SECRET) {
     return NextResponse.json(
       { ok: false, error: "Revalidation is not configured." },
@@ -50,27 +53,34 @@ export async function POST(request: NextRequest) {
   try {
     body = (await request.json()) as WebhookBody;
   } catch {
-    // No body is fine — we'll just revalidate the index pages.
+    // No body is fine — we'll still flush the index pages.
   }
 
   const revalidated: string[] = [];
+  const flush = (route: string, type: "page" | "layout" = "page") => {
+    revalidatePath(route, type);
+    revalidated.push(route);
+  };
 
-  // Always refresh the listing pages and the sitemap.
-  for (const path of ["/blog", "/projects", "/sitemap.xml"]) {
-    revalidatePath(path);
-    revalidated.push(path);
+  // Sitemap is a single concrete route — no locale segment.
+  revalidatePath("/sitemap.xml");
+  revalidated.push("/sitemap.xml");
+
+  if (body._type === "post") {
+    flush("/[lang]/blog");
+    if (body.slug) flush(`/[lang]/post/${body.slug}`);
+  } else if (body._type === "project") {
+    flush("/[lang]/projects");
+    if (body.slug) flush(`/[lang]/projects/${body.slug}`);
+  } else if (body._type === "author") {
+    if (body.slug) flush(`/[lang]/profile/${body.slug}`);
+    // Author name/avatar shows on blog cards too.
+    flush("/[lang]/blog");
+  } else {
+    // Unknown or missing _type — be conservative and flush both listings.
+    flush("/[lang]/blog");
+    flush("/[lang]/projects");
   }
 
-  // Refresh the specific document's detail page if we know its type + slug.
-  if (body.slug) {
-    if (body._type === "post") {
-      revalidatePath(`/post/${body.slug}`);
-      revalidated.push(`/post/${body.slug}`);
-    } else if (body._type === "author") {
-      revalidatePath(`/profile/${body.slug}`);
-      revalidated.push(`/profile/${body.slug}`);
-    }
-  }
-
-  return NextResponse.json({ ok: true, revalidated });
+  return NextResponse.json({ ok: true, type: body._type ?? null, slug: body.slug ?? null, revalidated });
 }
