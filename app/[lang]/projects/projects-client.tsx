@@ -21,12 +21,12 @@ const colorMap: Record<string, string> = {
   purple: "var(--purple)",
 };
 
-const CATEGORIES = ["All", "Migration", "Datacenter", "Support", "Network", "Sustainability"] as const;
+const CATEGORIES = ["All", "Upgrade", "Datacenter", "Support", "Network", "Sustainability"] as const;
 type Category = (typeof CATEGORIES)[number];
 
 const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   All: <LayoutGrid size={13} />,
-  Migration: <ArrowLeftRight size={13} />,
+  Upgrade: <ArrowLeftRight size={13} />,
   Datacenter: <Server size={13} />,
   Support: <Headphones size={13} />,
   Network: <Network size={13} />,
@@ -42,7 +42,7 @@ function categoryLabel(key: string, cats: Record<string, string>): string {
 function getCategories(tags: readonly string[]): string[] {
   const cats: string[] = [];
   const s = tags.join(" ").toLowerCase();
-  if (s.includes("migration") || s.includes("windows")) cats.push("Migration");
+  if (s.includes("migration") || s.includes("upgrade") || s.includes("windows")) cats.push("Upgrade");
   if (s.includes("datacenter") || s.includes("rack") || s.includes("cabling") || s.includes("firewall")) cats.push("Datacenter");
   if (s.includes("support") || s.includes("l1")) cats.push("Support");
   if (s.includes("cisco") || s.includes("wifi") || s.includes("network") || s.includes("heatmap")) cats.push("Network");

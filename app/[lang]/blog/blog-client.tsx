@@ -15,23 +15,27 @@ export type BlogPostView = {
   cat: string;
   date: string;
   read: string;
+  thumbnailUrl: string | null;
   author: { name: string; slug: string | null; avatarUrl: string | null } | null;
 };
 
 const catConfig: Record<string, { color: string; icon: typeof Cloud }> = {
   Cloud: { color: "var(--blue)", icon: Cloud },
   Infrastructure: { color: "var(--cyan)", icon: Server },
+  Upgrade: { color: "var(--amber)", icon: Truck },
   Migration: { color: "var(--amber)", icon: Truck },
   Sustainability: { color: "var(--green)", icon: Leaf },
   Network: { color: "var(--purple)", icon: Network },
   // Arabic category names
   "السحابة": { color: "var(--blue)", icon: Cloud },
   "البنية التحتية": { color: "var(--cyan)", icon: Server },
+  "ترقية": { color: "var(--amber)", icon: Truck },
   "الهجرة": { color: "var(--amber)", icon: Truck },
   "الاستدامة": { color: "var(--green)", icon: Leaf },
   // Turkish category names
   "Bulut": { color: "var(--blue)", icon: Cloud },
   "Altyapı": { color: "var(--cyan)", icon: Server },
+  "Yükseltme": { color: "var(--amber)", icon: Truck },
   "Göç": { color: "var(--amber)", icon: Truck },
   "Sürdürülebilirlik": { color: "var(--green)", icon: Leaf },
 };
@@ -107,8 +111,17 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
             <div className="float-panel glow-border rounded-3xl overflow-hidden mb-12 group cursor-pointer">
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div className="relative min-h-[280px] md:min-h-full overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(28,78,138,0.06), rgba(94,74,158,0.03), var(--glass-card))` }}>
-                  {/* To add featured image: <Image src="/images/blog/featured.jpg" alt="Featured post" fill className="object-cover" /> */}
-                  <div className="absolute top-5 left-5"><div className="badge text-[10px]">{b.featured}</div></div>
+                  {posts[0].thumbnailUrl && (
+                    <Image
+                      src={posts[0].thumbnailUrl}
+                      alt={posts[0].title}
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover"
+                      priority
+                    />
+                  )}
+                  <div className="absolute top-5 left-5 z-10"><div className="badge text-[10px]">{b.featured}</div></div>
                 </div>
                 <div className="p-8 lg:p-10 flex flex-col justify-center">
                   {(() => {
@@ -155,8 +168,16 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
                   <Link href={loc(`/post/${post.slug}`)}>
                   <div className="glass-card overflow-hidden cursor-pointer group h-full">
                     <div className="h-44 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${cc}0A, var(--glass-card))` }}>
-                      <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${cc}, transparent)` }} />
-                      {/* To add post image: <Image src={`/images/blog/post-${i + 2}.jpg`} alt={post.title} fill className="object-cover" /> */}
+                      {post.thumbnailUrl && (
+                        <Image
+                          src={post.thumbnailUrl}
+                          alt={post.title}
+                          fill
+                          sizes="(min-width: 768px) 33vw, 100vw"
+                          className="object-cover"
+                        />
+                      )}
+                      <div className="absolute bottom-0 left-0 right-0 h-[3px] z-10" style={{ background: `linear-gradient(90deg, ${cc}, transparent)` }} />
                     </div>
                     <div className="p-6">
                       <div className="tag mb-3 w-fit" style={{ background: `${cc}0D`, color: cc, border: `1px solid ${cc}20` }}>
