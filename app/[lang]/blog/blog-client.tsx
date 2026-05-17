@@ -77,6 +77,7 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
             src="/images/backgrounds/serversroom.jpg"
             alt=""
             fill
+            sizes="100vw"
             className="object-cover object-top"
             style={{
               opacity: dark ? 0.00 : 0.00,

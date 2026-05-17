@@ -593,6 +593,7 @@ export default function ProjectsClient({ items }: { items: any[] }) {
             src="/images/backgrounds/back1.jpg"
             alt=""
             fill
+            sizes="100vw"
             className="object-cover object-top"
             style={{
               opacity: dark ? 0.16 : 0.08,

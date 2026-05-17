@@ -64,6 +64,7 @@ export default function VisionPage() {
             src="/images/backgrounds/serverroom2.jpg"
             alt=""
             fill
+            sizes="100vw"
             className="object-cover object-center"
             style={{
               opacity: dark ? 0.18 : 0.24,

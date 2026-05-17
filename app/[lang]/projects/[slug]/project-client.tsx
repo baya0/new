@@ -282,6 +282,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
             src="/images/backgrounds/back1.jpg"
             alt=""
             fill
+            sizes="100vw"
             className="object-cover object-top"
             style={{
               opacity: dark ? 0.14 : 0.07,
