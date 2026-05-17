@@ -89,68 +89,143 @@ export const translations = {
       ctaBtn1: "Get Started",
       ctaBtn2: "Learn More",
     },
-    solutions: {
-      eyebrow: "Our Solutions",
-      h1: "Empowering Your Business with Data-Driven Solutions",
-      sub: "Every service is built to keep your business ahead with reliable, modern technology.",
-      label: "OUR SERVICES",
-      ctaFallback: "Get In Touch →",
-      services: [
-        {
-          icon: "☁", color: "blue", title: "Cloud Upgrade",
-          desc: "We modernize your infrastructure with zero-downtime upgrades to AWS and Azure. Our certified cloud architects handle strategy, execution, and post-upgrade optimization so your workloads run faster, safer, and at lower cost.",
-          tag: "AWS · Azure · Hybrid",
-          bullets: ["Cloud readiness & strategy", "Zero-downtime upgrade", "Hybrid & multi-cloud", "Cost & performance tuning"],
-        },
-        {
-          icon: "🏗", color: "amber", title: "Datacenter Infrastructure",
-          desc: "Trust Supportiva to architect, implement, and optimize your data center infrastructure. We bring expertise to every facet, from design to deployment, ensuring a robust foundation for your digital operations.",
-          tag: "Design · Deploy · Optimize",
-          bullets: ["Rack & stack engineering", "Power & cooling design", "Capacity & rack planning", "Smoke testing & handover"],
-        },
-        {
-          icon: "🛡", color: "purple", title: "Network Security",
-          desc: "Defend your network end-to-end with enterprise-grade security: next-gen firewalls, segmentation, intrusion prevention, and zero-trust access — delivered by Cisco and Palo Alto certified engineers.",
-          tag: "Firewall · IDS/IPS · Zero-Trust",
-          bullets: ["Firewalls (Palo Alto, Cisco)", "VPN & VLAN segmentation", "IDS/IPS monitoring", "Zero-trust access control"],
-        },
-        {
-          icon: "🖥", color: "green", title: "IT Support",
-          desc: "We provide comprehensive managed IT support to help businesses streamline their operations and improve efficiency. Our services include 24/7 monitoring, help desk support, software updates, and hardware maintenance — so you can focus on your core business while we take care of your IT.",
-          tag: "24/7 · Help Desk · Maintenance",
-          bullets: ["24/7 NOC monitoring", "L1 / L2 help desk", "Patch & update management", "On-site hardware maintenance"],
-        },
-        {
-          icon: "🔌", color: "cyan", title: "Cabling Design",
-          desc: "From structured cabling to full patch-matrix engineering, our teams deliver clean, labeled, and certified installations that keep your data center operational, organized, and audit-ready.",
-          tag: "Structured · Fiber · Labeled",
-          bullets: ["Structured cabling design", "Fiber & copper runs", "Patch matrix engineering", "Labeling & documentation"],
-        },
-        {
-          icon: "⚡", color: "blue-light", title: "Staff Augmentation",
-          desc: "Unlock the power of a skilled and dynamic workforce through our resource augmentation services. We align top-tier IT professionals with your unique needs, ensuring seamless collaboration and project success.",
-          tag: "On-demand · Scalable · Certified",
-          bullets: ["On-demand engineers", "CCNA / AWS certified", "Short & long-term roles", "On-site or remote"],
-        },
-      ],
-      whyTitle: "Why Choose Supportiva?",
-      whyDesc: "At Supportiva, we are committed to delivering exceptional IT services and solutions that drive business growth. We work closely with our clients to understand their unique needs and provide customized solutions that fit their specific requirements. With our expertise and experience, you can trust us to deliver reliable and innovative IT solutions that empower your business.",
-      whyPoints: [
-        "Customized solutions tailored to your specific business needs",
-        "Certified engineers with 11+ years of field experience",
-        "Multinational delivery across 9 locations worldwide",
-        "Enterprise-grade SLAs with 24/7 support availability",
-      ],
-      processLabel: "OUR PROCESS",
-      processTitle: "How we deliver results.",
-      processSteps: [
-        { title: "Discovery", desc: "We analyze your infrastructure and understand your goals.", color: "blue" },
-        { title: "Architecture", desc: "Custom solution design with detailed roadmap and timelines.", color: "cyan" },
-        { title: "Implementation", desc: "Zero-downtime deployment by certified engineers.", color: "green" },
-        { title: "Ongoing Support", desc: "24/7 monitoring and continuous optimization.", color: "amber" },
-      ],
-      cta: "Talk to an Expert →",
+solutions: {
+  eyebrow: "Our Solutions",
+
+  h1: "Enterprise IT Solutions Built for Modern Infrastructure",
+
+  sub: "Reliable infrastructure, secure networks, and scalable IT services designed to support your business operations.",
+
+  label: "OUR SERVICES",
+
+  ctaFallback: "Contact Us →",
+
+  services: [
+    {
+      icon: "☁",
+      color: "blue",
+      title: "Cloud Solutions",
+      desc: "We help organizations modernize their infrastructure through cloud adoption, hybrid environments, and performance optimization across AWS and Azure.",
+      tag: "AWS · Azure · Hybrid",
+      bullets: [
+        "Cloud readiness assessment",
+        "Hybrid & multi-cloud solutions",
+        "Cloud deployment",
+        "Cost optimization"
+      ]
     },
+
+    {
+      icon: "🏗",
+      color: "amber",
+      title: "Datacenter Infrastructure",
+      desc: "We design, deploy, and optimize data center environments that support reliable and scalable operations.",
+      tag: "Design · Deploy · Optimize",
+      bullets: [
+        "Rack & stack services",
+        "Power & cooling design",
+        "Capacity planning",
+        "Testing & handover"
+      ]
+    },
+
+    {
+      icon: "🛡",
+      color: "purple",
+      title: "Network Security",
+      desc: "Protect your infrastructure with enterprise-grade security solutions delivered by certified engineers.",
+      tag: "Firewall · IDS/IPS · Zero-Trust",
+      bullets: [
+        "Firewall deployment",
+        "VPN & network segmentation",
+        "IDS/IPS monitoring",
+        "Access control"
+      ]
+    },
+
+    {
+      icon: "🖥",
+      color: "green",
+      title: "IT Support",
+      desc: "Comprehensive IT support services that help maintain operational continuity and reduce downtime.",
+      tag: "24/7 · Help Desk · Maintenance",
+      bullets: [
+        "24/7 monitoring",
+        "L1 / L2 support",
+        "Patch management",
+        "Hardware maintenance"
+      ]
+    },
+
+    {
+      icon: "🔌",
+      color: "cyan",
+      title: "Cabling Solutions",
+      desc: "Structured cabling services designed to ensure organized, reliable, and scalable connectivity.",
+      tag: "Structured · Fiber · Labeled",
+      bullets: [
+        "Structured cabling",
+        "Fiber & copper installation",
+        "Patch panel configuration",
+        "Documentation"
+      ]
+    },
+
+    {
+      icon: "⚡",
+      color: "blue-light",
+      title: "Staff Augmentation",
+      desc: "We provide skilled IT professionals to support short-term projects and long-term operational needs.",
+      tag: "On-demand · Scalable · Certified",
+      bullets: [
+        "On-demand engineers",
+        "Certified professionals",
+        "Project-based staffing",
+        "On-site or remote support"
+      ]
+    }
+  ],
+
+  whyTitle: "Why Supportiva?",
+
+  whyDesc: "We deliver practical IT solutions that help organizations improve performance, maintain uptime, and scale with confidence.",
+
+  whyPoints: [
+    "Solutions tailored to your operational needs",
+    "Certified engineers with 11+ years of experience",
+    "Project delivery across 9 global locations",
+    "24/7 support availability"
+  ],
+
+  processLabel: "OUR PROCESS",
+
+  processTitle: "How we work.",
+
+  processSteps: [
+    {
+      title: "Assessment",
+      desc: "We evaluate your infrastructure requirements.",
+      color: "blue"
+    },
+    {
+      title: "Planning",
+      desc: "We design the right solution and deployment roadmap.",
+      color: "cyan"
+    },
+    {
+      title: "Implementation",
+      desc: "Our engineers execute deployment efficiently.",
+      color: "green"
+    },
+    {
+      title: "Support",
+      desc: "Ongoing maintenance and optimization.",
+      color: "amber"
+    }
+  ],
+
+  cta: "Contact Our Team →"
+},
     vision: {
       eyebrow: "Our Vision",
       h1: "IT Services for Your Business",
@@ -416,33 +491,143 @@ export const translations = {
       ctaSub: "تواصل معنا لاكتشاف كيف يمكن لحلولنا التقنية دعم نمو أعمالك وتحسين كفاءتها التشغيلية.",
       ctaBtn1: "ابدأ اليوم", ctaBtn2: "حدد موعداً",
     },
-    solutions: {
-      eyebrow: "حلولنا",
-      h1: "تمكين أعمالك بحلول تقنية متطورة",
-      sub: "كل خدمة مصممة لإبقاء أعمالك في المقدمة.",
-      label: "خدماتنا",
-      ctaFallback: "تواصل معنا →",
-      services: [
-        { icon: "☁", color: "blue", title: "الترقية السحابية", desc: "نحدّث بنيتك التحتية بعمليات ترقية سحابية بدون توقف إلى AWS وAzure. مهندسونا المعتمدون يتولون الاستراتيجية والتنفيذ والتحسين بعد الترقية.", tag: "AWS · Azure · هجين", bullets: ["تقييم جاهزية السحابة", "ترقية بدون توقف", "سحابة هجينة ومتعددة", "تحسين التكلفة والأداء"] },
-        { icon: "🏗", color: "amber", title: "مراكز البيانات", desc: "ثق في سبورتيفا لتصميم وتنفيذ وتحسين مراكز البيانات من التصميم إلى النشر.", tag: "تصميم · نشر · تحسين", bullets: ["تركيب الرفوف والخوادم", "تصميم الطاقة والتبريد", "تخطيط السعة", "اختبار الدخان والتسليم"] },
-        { icon: "🛡", color: "purple", title: "أمن الشبكات", desc: "احمِ شبكتك من الطرف إلى الطرف بأمان على مستوى المؤسسات: جدران حماية متقدمة، تجزئة، منع تسلل، ووصول بدون ثقة.", tag: "جدار حماية · IDS/IPS · بدون ثقة", bullets: ["جدران حماية (Palo Alto, Cisco)", "VPN وتجزئة VLAN", "مراقبة IDS/IPS", "تحكم وصول بدون ثقة"] },
-        { icon: "🖥", color: "green", title: "دعم تقنية المعلومات", desc: "دعم IT متكامل يشمل مراقبة 24/7، مكتب المساعدة، تحديثات البرمجيات، وصيانة الأجهزة — لتتفرغ لأعمالك الأساسية.", tag: "24/7 · مكتب المساعدة · الصيانة", bullets: ["مراقبة NOC على مدار الساعة", "مكتب مساعدة L1/L2", "إدارة التحديثات والترقيعات", "صيانة الأجهزة في الموقع"] },
-        { icon: "🔌", color: "cyan", title: "تصميم الكابلات", desc: "من الكابلات المهيكلة إلى هندسة مصفوفات التوصيل الكاملة، نقدم تركيبات نظيفة وموثقة تُبقي مراكز البيانات منظمة وجاهزة للتدقيق.", tag: "مهيكل · ألياف · موثق", bullets: ["تصميم كابلات مهيكلة", "ألياف ونحاس", "هندسة مصفوفة التوصيل", "التسمية والتوثيق"] },
-        { icon: "⚡", color: "blue-light", title: "تعزيز الكوادر", desc: "افتح إمكانيات قوة عاملة ماهرة. نوائم أفضل المتخصصين مع احتياجاتك الفريدة لضمان التعاون السلس.", tag: "حسب الطلب · قابل للتوسع · معتمد", bullets: ["مهندسون عند الطلب", "شهادات CCNA / AWS", "أدوار قصيرة وطويلة", "في الموقع أو عن بُعد"] },
-      ],
-      whyTitle: "لماذا تختار سبورتيفا؟",
-      whyDesc: "نلتزم بتقديم خدمات وحلول IT استثنائية تدفع نمو أعمالك.",
-      whyPoints: ["حلول مخصصة لاحتياجاتك الفريدة", "مهندسون معتمدون بخبرة أكثر من 11 عامًا", "تسليم متعدد الجنسيات عبر 9 مواقع عالمية", "اتفاقيات خدمة مؤسسية مع دعم 24/7"],
-      processLabel: "العملية",
-      processTitle: "كيف نحقق النتائج.",
-      processSteps: [
-        { title: "الاستكشاف", desc: "نحلل بنيتك التحتية ونفهم أهدافك.", color: "blue" },
-        { title: "الهندسة المعمارية", desc: "تصميم حل مخصص مع خارطة طريق وجداول زمنية.", color: "cyan" },
-        { title: "التنفيذ", desc: "نشر بدون توقف من قبل مهندسين معتمدين.", color: "green" },
-        { title: "الدعم المستمر", desc: "مراقبة 24/7 وتحسين مستمر.", color: "amber" },
-      ],
-      cta: "تحدث مع خبير →",
+solutions: {
+  eyebrow: "حلولنا",
+
+  h1: "حلول تقنية مؤسسية مصممة للبنية التحتية الحديثة",
+
+  sub: "بنية تحتية موثوقة، وشبكات آمنة، وخدمات تقنية قابلة للتوسع لدعم عمليات أعمالك.",
+
+  label: "خدماتنا",
+
+  ctaFallback: "تواصل معنا →",
+
+  services: [
+    {
+      icon: "☁",
+      color: "blue",
+      title: "الحلول السحابية",
+      desc: "نساعد المؤسسات على تحديث بنيتها التحتية من خلال تبني الحلول السحابية، والبيئات الهجينة، وتحسين الأداء عبر AWS و Azure.",
+      tag: "AWS · Azure · Hybrid",
+      bullets: [
+        "تقييم الجاهزية السحابية",
+        "حلول هجينة ومتعددة السحابات",
+        "تنفيذ الحلول السحابية",
+        "تحسين التكاليف"
+      ]
     },
+
+    {
+      icon: "🏗",
+      color: "amber",
+      title: "البنية التحتية لمراكز البيانات",
+      desc: "نقوم بتصميم وتنفيذ وتحسين بيئات مراكز البيانات لدعم عمليات موثوقة وقابلة للتوسع.",
+      tag: "تصميم · تنفيذ · تحسين",
+      bullets: [
+        "خدمات Rack & Stack",
+        "تصميم الطاقة والتبريد",
+        "تخطيط السعة",
+        "الاختبارات والتسليم"
+      ]
+    },
+
+    {
+      icon: "🛡",
+      color: "purple",
+      title: "أمن الشبكات",
+      desc: "احمِ بنيتك التحتية من خلال حلول أمنية متقدمة تُنفذ بواسطة مهندسين معتمدين.",
+      tag: "Firewall · IDS/IPS · Zero-Trust",
+      bullets: [
+        "تنفيذ الجدران النارية",
+        "VPN وتقسيم الشبكات",
+        "مراقبة IDS/IPS",
+        "إدارة الوصول"
+      ]
+    },
+
+    {
+      icon: "🖥",
+      color: "green",
+      title: "الدعم التقني",
+      desc: "خدمات دعم تقني متكاملة تساعدك على ضمان استمرارية العمليات وتقليل فترات التوقف.",
+      tag: "24/7 · Help Desk · Maintenance",
+      bullets: [
+        "مراقبة على مدار الساعة",
+        "دعم L1 / L2",
+        "إدارة التحديثات",
+        "صيانة الأجهزة"
+      ]
+    },
+
+    {
+      icon: "🔌",
+      color: "cyan",
+      title: "حلول الكابلات",
+      desc: "خدمات كابلات منظمة تضمن اتصالًا موثوقًا ومنظمًا وقابلًا للتوسع.",
+      tag: "Structured · Fiber · Labeled",
+      bullets: [
+        "تصميم الكابلات المنظمة",
+        "تركيب الألياف والنحاس",
+        "تهيئة Patch Panels",
+        "التوثيق"
+      ]
+    },
+
+    {
+      icon: "⚡",
+      color: "blue-light",
+      title: "تعزيز الكوادر التقنية",
+      desc: "نوفر كوادر تقنية مؤهلة لدعم المشاريع قصيرة وطويلة المدى حسب احتياجاتك التشغيلية.",
+      tag: "عند الطلب · مرن · معتمد",
+      bullets: [
+        "مهندسون عند الطلب",
+        "كوادر معتمدة",
+        "دعم المشاريع",
+        "دعم ميداني أو عن بُعد"
+      ]
+    }
+  ],
+
+  whyTitle: "لماذا سبورتيفا؟",
+
+  whyDesc: "نقدم حلولًا تقنية عملية تساعد المؤسسات على تحسين الأداء وضمان استمرارية الأعمال والنمو بثقة.",
+
+  whyPoints: [
+    "حلول مصممة وفق احتياجاتك التشغيلية",
+    "مهندسون معتمدون بخبرة تتجاوز 11 عامًا",
+    "تنفيذ مشاريع عبر 9 مواقع حول العالم",
+    "دعم متوفر على مدار الساعة"
+  ],
+
+  processLabel: "آلية العمل",
+
+  processTitle: "كيف نعمل",
+
+  processSteps: [
+    {
+      title: "التقييم",
+      desc: "نقيّم احتياجات البنية التحتية لديك.",
+      color: "blue"
+    },
+    {
+      title: "التخطيط",
+      desc: "نصمم الحل المناسب وخطة التنفيذ.",
+      color: "cyan"
+    },
+    {
+      title: "التنفيذ",
+      desc: "يقوم مهندسونا بتنفيذ المشروع بكفاءة.",
+      color: "green"
+    },
+    {
+      title: "الدعم",
+      desc: "صيانة وتحسين مستمران.",
+      color: "amber"
+    }
+  ],
+
+  cta: "تواصل مع فريقنا →"
+},
     vision: {
       eyebrow: "رؤيتنا", h1: "يجب أن تُمكّن التقنية أعمالك، لا أن تعيقها.",
       missionTitle: "قصتنا",
@@ -624,33 +809,143 @@ export const translations = {
       ctaSub: "Supportiva'nın ölçülebilir sonuçlar nasıl sağlayabileceğini konuşalım.",
       ctaBtn1: "Bugün Başlayın", ctaBtn2: "Görüşme Ayarlayın",
     },
-    solutions: {
-      eyebrow: "Çözümlerimiz",
-      h1: "İşletmenizi Veri Odaklı Çözümlerle Güçlendiriyoruz",
-      sub: "Her hizmet işletmenizi güvenilir ve modern teknolojiyle ileride tutmak için tasarlanmıştır.",
-      label: "HİZMETLERİMİZ",
-      ctaFallback: "İletişime Geçin →",
-      services: [
-        { icon: "☁", color: "blue", title: "Bulut Yükseltmesi", desc: "AWS ve Azure'a sıfır kesinti süreli yükseltmelerle altyapınızı modernize ediyoruz. Sertifikalı bulut mimarlarımız strateji, uygulama ve yükseltme sonrası optimizasyonu üstlenir.", tag: "AWS · Azure · Hibrit", bullets: ["Bulut hazırlık değerlendirmesi", "Sıfır kesintili yükseltme", "Hibrit & çoklu bulut", "Maliyet ve performans optimizasyonu"] },
-        { icon: "🏗", color: "amber", title: "Veri Merkezi Altyapısı", desc: "Veri merkezi altyapınızı mimarlandırmak, uygulamak ve optimize etmek için Supportiva'ya güvenin.", tag: "Tasarım · Dağıtım · Optimizasyon", bullets: ["Rack ve kurulum mühendisliği", "Güç ve soğutma tasarımı", "Kapasite planlaması", "Duman testi ve teslim"] },
-        { icon: "🛡", color: "purple", title: "Ağ Güvenliği", desc: "Yeni nesil güvenlik duvarları, segmentasyon, saldırı önleme ve sıfır güven erişimiyle ağınızı uçtan uca koruyun — Cisco ve Palo Alto sertifikalı mühendisler tarafından.", tag: "Firewall · IDS/IPS · Sıfır Güven", bullets: ["Güvenlik duvarları (Palo Alto, Cisco)", "VPN & VLAN segmentasyonu", "IDS/IPS izleme", "Sıfır güven erişim kontrolü"] },
-        { icon: "🖥", color: "green", title: "BT Desteği", desc: "7/24 izleme, yardım masası desteği, yazılım güncellemeleri ve donanım bakımını kapsayan kapsamlı yönetilen BT desteği — siz ana işinize odaklanırken BT'nizi biz üstleniriz.", tag: "7/24 · Yardım Masası · Bakım", bullets: ["7/24 NOC izleme", "L1 / L2 yardım masası", "Yama ve güncelleme yönetimi", "Sahada donanım bakımı"] },
-        { icon: "🔌", color: "cyan", title: "Kablolama Tasarımı", desc: "Yapılandırılmış kablolamadan tam patch matrisi mühendisliğine kadar, ekiplerimiz veri merkezinizi düzenli, etiketli ve denetime hazır tutan temiz kurulumlar sunar.", tag: "Yapılandırılmış · Fiber · Etiketli", bullets: ["Yapılandırılmış kablolama", "Fiber ve bakır kurulumu", "Patch matrisi mühendisliği", "Etiketleme ve dokümantasyon"] },
-        { icon: "⚡", color: "blue-light", title: "Personel Güçlendirme", desc: "Kaynak artırma hizmetlerimiz aracılığıyla yetenekli ve dinamik bir iş gücünün gücünü açığa çıkarın. En iyi BT profesyonellerini ihtiyaçlarınızla eşleştiririz.", tag: "Talep üzeri · Ölçeklenebilir · Sertifikalı", bullets: ["Talep üzerine mühendisler", "CCNA / AWS sertifikalı", "Kısa ve uzun vadeli roller", "Sahada veya uzaktan"] },
-      ],
-      whyTitle: "Neden Supportiva?",
-      whyDesc: "Supportiva olarak işletme büyümesini destekleyen olağanüstü BT hizmetleri ve çözümleri sunmaya kararlıyız.",
-      whyPoints: ["Özel iş ihtiyaçlarınıza göre kişiselleştirilmiş çözümler", "11+ yıllık saha deneyimiyle sertifikalı mühendisler", "9 küresel lokasyonda çok uluslu teslimat", "7/24 destek ile kurumsal SLA'lar"],
-      processLabel: "SÜRECİMİZ",
-      processTitle: "Sonuçları nasıl sağlarız.",
-      processSteps: [
-        { title: "Keşif", desc: "Altyapınızı analiz ediyor ve hedeflerinizi anlıyoruz.", color: "blue" },
-        { title: "Mimari", desc: "Ayrıntılı yol haritası ve zaman çizelgesiyle özel çözüm tasarımı.", color: "cyan" },
-        { title: "Uygulama", desc: "Sertifikalı mühendisler tarafından sıfır kesinti süresiyle dağıtım.", color: "green" },
-        { title: "Sürekli Destek", desc: "7/24 izleme ve sürekli optimizasyon.", color: "amber" },
-      ],
-      cta: "Uzmanla Konuşun →",
+solutions: {
+  eyebrow: "Çözümlerimiz",
+
+  h1: "Modern Altyapılar İçin Kurumsal BT Çözümleri",
+
+  sub: "İş operasyonlarınızı destekleyen güvenilir altyapı, güvenli ağlar ve ölçeklenebilir BT hizmetleri.",
+
+  label: "HİZMETLERİMİZ",
+
+  ctaFallback: "Bizimle İletişime Geçin →",
+
+  services: [
+    {
+      icon: "☁",
+      color: "blue",
+      title: "Bulut Çözümleri",
+      desc: "Kuruluşların AWS ve Azure üzerinde bulut geçişi, hibrit altyapılar ve performans optimizasyonu süreçlerini destekliyoruz.",
+      tag: "AWS · Azure · Hybrid",
+      bullets: [
+        "Bulut hazırlık analizi",
+        "Hibrit ve multi-cloud çözümleri",
+        "Bulut kurulum hizmetleri",
+        "Maliyet optimizasyonu"
+      ]
     },
+
+    {
+      icon: "🏗",
+      color: "amber",
+      title: "Veri Merkezi Altyapısı",
+      desc: "Güvenilir ve ölçeklenebilir operasyonlar için veri merkezi altyapıları tasarlıyor, kuruyor ve optimize ediyoruz.",
+      tag: "Tasarım · Kurulum · Optimizasyon",
+      bullets: [
+        "Rack & stack hizmetleri",
+        "Güç ve soğutma tasarımı",
+        "Kapasite planlaması",
+        "Test ve teslim süreçleri"
+      ]
+    },
+
+    {
+      icon: "🛡",
+      color: "purple",
+      title: "Ağ Güvenliği",
+      desc: "Sertifikalı mühendisler tarafından sunulan kurumsal güvenlik çözümleriyle altyapınızı koruyun.",
+      tag: "Firewall · IDS/IPS · Zero-Trust",
+      bullets: [
+        "Firewall kurulumu",
+        "VPN ve ağ segmentasyonu",
+        "IDS/IPS izleme",
+        "Erişim kontrolü"
+      ]
+    },
+
+    {
+      icon: "🖥",
+      color: "green",
+      title: "BT Destek Hizmetleri",
+      desc: "Operasyon sürekliliğini sağlamak ve kesinti sürelerini azaltmak için kapsamlı BT destek hizmetleri sunuyoruz.",
+      tag: "7/24 · Help Desk · Bakım",
+      bullets: [
+        "7/24 izleme",
+        "L1 / L2 destek",
+        "Patch yönetimi",
+        "Donanım bakımı"
+      ]
+    },
+
+    {
+      icon: "🔌",
+      color: "cyan",
+      title: "Kablolama Çözümleri",
+      desc: "Düzenli, güvenilir ve ölçeklenebilir bağlantılar için yapısal kablolama hizmetleri sunuyoruz.",
+      tag: "Structured · Fiber · Labeled",
+      bullets: [
+        "Yapısal kablolama",
+        "Fiber ve bakır kurulumları",
+        "Patch panel yapılandırması",
+        "Dokümantasyon"
+      ]
+    },
+
+    {
+      icon: "⚡",
+      color: "blue-light",
+      title: "Personel Destek Hizmetleri",
+      desc: "Kısa ve uzun vadeli projeler için ihtiyaçlarınıza uygun uzman BT profesyonelleri sağlıyoruz.",
+      tag: "İsteğe bağlı · Esnek · Sertifikalı",
+      bullets: [
+        "Talep üzerine mühendisler",
+        "Sertifikalı uzmanlar",
+        "Proje bazlı destek",
+        "Yerinde veya uzaktan destek"
+      ]
+    }
+  ],
+
+  whyTitle: "Neden Supportiva?",
+
+  whyDesc: "Kuruluşların performansını artırmasına, operasyon sürekliliğini sağlamasına ve güvenle büyümesine yardımcı olan pratik BT çözümleri sunuyoruz.",
+
+  whyPoints: [
+    "Operasyonel ihtiyaçlara özel çözümler",
+    "11+ yıllık deneyime sahip sertifikalı mühendisler",
+    "9 farklı lokasyonda proje teslimi",
+    "7/24 destek hizmeti"
+  ],
+
+  processLabel: "SÜRECİMİZ",
+
+  processTitle: "Nasıl Çalışıyoruz",
+
+  processSteps: [
+    {
+      title: "Değerlendirme",
+      desc: "Altyapı ihtiyaçlarınızı analiz ediyoruz.",
+      color: "blue"
+    },
+    {
+      title: "Planlama",
+      desc: "Doğru çözümü ve uygulama planını oluşturuyoruz.",
+      color: "cyan"
+    },
+    {
+      title: "Uygulama",
+      desc: "Mühendislerimiz projeyi verimli şekilde hayata geçirir.",
+      color: "green"
+    },
+    {
+      title: "Destek",
+      desc: "Sürekli bakım ve optimizasyon.",
+      color: "amber"
+    }
+  ],
+
+  cta: "Ekibimizle İletişime Geçin →"
+},
     vision: {
       eyebrow: "Vizyonumuz", h1: "Teknoloji Sizi Güçlendirmeli, Yavaşlatmamalı.",
       missionTitle: "Misyonumuz",
