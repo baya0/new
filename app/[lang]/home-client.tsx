@@ -314,7 +314,7 @@ export default function HomeClient() {
             </FadeIn>
           </div>
 
-          <FadeIn delay={0.1}>
+          <FadeIn delay={0.1} className="hidden md:block">
             <NetworkSwitch3D />
           </FadeIn>
         </div>
