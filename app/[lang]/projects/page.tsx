@@ -40,7 +40,11 @@ function blocksToPlainText(blocks?: SanityProject["fullDescription"]): string {
 function imgUrl(src: unknown): string | null {
   if (!src) return null;
   try {
-    return urlFor(src as never).width(1600).url();
+    // 1200px covers the gallery hero at 70vw on all common displays; Next's
+    // image optimizer resizes down from here for thumbnails. Sanity was
+    // previously asked for 1600px on every variant, which inflated upstream
+    // bytes without any visible benefit.
+    return urlFor(src as never).width(1200).url();
   } catch {
     return null;
   }

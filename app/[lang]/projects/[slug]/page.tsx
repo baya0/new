@@ -48,7 +48,9 @@ function blocksToPlainText(blocks?: SanityProject["fullDescription"]): string {
 function imgUrl(src: unknown): string | null {
   if (!src) return null;
   try {
-    return urlFor(src as never).width(1600).url();
+    // Match /projects gallery — 1200px source is enough for the detail-page
+    // hero on all common displays without forcing Sanity to upscale.
+    return urlFor(src as never).width(1200).url();
   } catch {
     return null;
   }
