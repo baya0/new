@@ -108,7 +108,7 @@ export default function HomeClient() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroBgY = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const heroLogoSrc = dark ? HERO_LOGO_DARK_SRC : HERO_LOGO_LIGHT_SRC;
-  const year = new Date().getFullYear();
+  const year = 2024;
 
   return (
     <>
