@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compress: true,
+  poweredByHeader: false,
+
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: "https",
@@ -34,11 +39,30 @@ const nextConfig = {
       },
     ];
 
+    const immutableCache = [
+      {
+        key: "Cache-Control",
+        value: "public, max-age=31536000, immutable",
+      },
+    ];
+
     return [
       {
         // Apply to every route.
         source: "/:path*",
         headers: securityHeaders,
+      },
+      {
+        // Static images shipped from /public/images. Next.js handles
+        // /_next/static and /_next/image caching internally via
+        // `minimumCacheTTL` — overriding them here can break revalidation.
+        source: "/images/:path*",
+        headers: immutableCache,
+      },
+      {
+        // Fonts shipped from /public/fonts (if any).
+        source: "/fonts/:path*",
+        headers: immutableCache,
       },
     ];
   },
