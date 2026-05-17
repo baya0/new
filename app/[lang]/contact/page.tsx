@@ -33,7 +33,10 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", email: "", company: "", service: "", message: "" });
+  // `website` is the honeypot — visually hidden, off-screen, tab-skipped. Real
+  // users leave it empty; bots that auto-fill every field trip it and the
+  // server silently drops the submission.
+  const [form, setForm] = useState({ name: "", email: "", company: "", service: "", message: "", website: "" });
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -138,6 +141,17 @@ export default function ContactPage() {
                 <div className="relative">
                   {/* Form with floating labels feel */}
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Honeypot — hidden from humans, visible to dumb bots. */}
+                    <input
+                      type="text"
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={form.website}
+                      onChange={e => setForm({ ...form, website: e.target.value })}
+                      aria-hidden="true"
+                      style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
+                    />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       {[
                         { key: "name", label: c.form.name, type: "text", placeholder: "John Smith", required: true },
