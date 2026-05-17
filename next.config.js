@@ -4,7 +4,10 @@ const nextConfig = {
   poweredByHeader: false,
 
   images: {
-    formats: ["image/avif", "image/webp"],
+    // WebP only — AVIF encoding is ~10× slower per first-hit transcode and the
+    // marginal byte savings don't justify the latency, especially on the
+    // multi-MB background JPGs in /public/images.
+    formats: ["image/webp"],
     minimumCacheTTL: 31536000,
     remotePatterns: [
       {
