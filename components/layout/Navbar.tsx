@@ -161,10 +161,15 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                 </AnimatePresence>
               </div>
 
-              {/* Theme toggle — pill with sliding indicator */}
+              {/* Theme toggle — pill with sliding indicator.
+                  dir="ltr" pins the layout so the thumb and icons stay in the
+                  same physical positions under Arabic (RTL would flip the
+                  flex axis and send the absolutely-positioned thumb off the
+                  pill). */}
               <button
                 onClick={() => setDark(!dark)}
                 aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+                dir="ltr"
                 className="relative w-[52px] h-7 rounded-full flex items-center transition-all duration-300"
                 style={{
                   background: "var(--tint-blue)",
