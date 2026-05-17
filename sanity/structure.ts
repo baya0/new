@@ -1,4 +1,5 @@
 import type { StructureBuilder, StructureResolver } from 'sanity/structure'
+import { apiVersion } from './env'
 import {
   LOCALIZED_SCHEMA_TYPES,
   STUDIO_LANGUAGES,
@@ -29,6 +30,7 @@ function localizedSublist(
   return S.documentList()
     .title(STUDIO_LANGUAGES.find((l) => l.id === languageId)?.title ?? languageId)
     .schemaType(typeName)
+    .apiVersion(apiVersion)
     .filter('_type == $type && coalesce(language, "en") == $language')
     .params({ type: typeName, language: languageId })
     .initialValueTemplates([
