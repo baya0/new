@@ -162,10 +162,11 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
               </div>
 
               {/* Theme toggle — pill with sliding indicator.
-                  dir="ltr" pins the layout so the thumb and icons stay in the
-                  same physical positions under Arabic (RTL would flip the
-                  flex axis and send the absolutely-positioned thumb off the
-                  pill). */}
+                  dir="ltr" + explicit `left: 0` on the thumb pin the geometry
+                  to physical coordinates so the slider stays inside the pill
+                  under Arabic (RTL). Without `left: 0` the thumb's static
+                  origin follows the inherited RTL direction and framer-motion's
+                  `x` transform pushes it off the right edge. */}
               <button
                 onClick={() => setDark(!dark)}
                 aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
@@ -181,6 +182,7 @@ export default function Navbar({ t, lang, setLang, dark, setDark }: NavbarProps)
                   animate={{ x: dark ? 26 : 4 }}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   style={{
+                    left: 0,
                     background: dark ? "var(--amber)" : "var(--blue)",
                     boxShadow: "var(--shadow-sm)",
                   }}
