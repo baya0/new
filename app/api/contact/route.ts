@@ -9,6 +9,9 @@ type ContactPayload = {
   company?: string;
   message?: string;
   service?: string;
+  // Honeypot — must arrive empty. Real users never see this field; bots that
+  // blindly fill every input give themselves away here.
+  website?: string;
 };
 
 const TO_ADDRESS = "info@supportiva.net";
@@ -58,7 +61,28 @@ function escape(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+function isAllowedOrigin(request: Request): boolean {
+  // Block cross-site form submissions. Allow same-origin (Origin/Referer host
+  // matches the Host header) and direct same-host calls with no Origin (some
+  // mobile browsers / tools omit it).
+  const host = request.headers.get("host");
+  if (!host) return false;
+  const origin = request.headers.get("origin");
+  const referer = request.headers.get("referer");
+  const source = origin ?? referer;
+  if (!source) return true;
+  try {
+    return new URL(source).host === host;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
+  if (!isAllowedOrigin(request)) {
+    return NextResponse.json({ ok: false, error: "Forbidden." }, { status: 403 });
+  }
+
   const ip = getClientIp(request);
   const limit = checkRateLimit(ip);
   if (!limit.allowed) {
@@ -92,6 +116,11 @@ export async function POST(request: Request) {
       { ok: false, error: "Invalid JSON payload." },
       { status: 400 },
     );
+  }
+
+  // Honeypot tripped — pretend success so bots don't probe for the reason.
+  if (body.website && body.website.trim().length > 0) {
+    return NextResponse.json({ ok: true });
   }
 
   const name = body.name?.trim();
