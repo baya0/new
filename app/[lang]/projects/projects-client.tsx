@@ -282,7 +282,7 @@ function ProjectListItem({
         style={{ background: "var(--glass-deep)" }}
       >
         {images[0] && (
-          <Image src={images[0]} alt="" fill className="object-cover" sizes="76px" />
+          <Image src={images[0]} alt={proj.title} fill className="object-cover" sizes="76px" />
         )}
       </div>
 
@@ -591,7 +591,7 @@ export default function ProjectsClient({ items }: { items: any[] }) {
         <div className="absolute inset-0 pointer-events-none">
           <Image
             src="/images/backgrounds/back1.jpg"
-            alt=""
+            alt="Supportiva enterprise IT project portfolio"
             fill
             sizes="100vw"
             className="object-cover object-top"

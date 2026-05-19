@@ -28,6 +28,33 @@ export type RelatedPostView = {
   thumbnailUrl: string | null;
 };
 
+// Category → related service mapping. Keys cover all locales (post.cat
+// is the localized string from Sanity). Service `key` indexes into
+// t.blog.relatedServiceLabels so the visible link text stays localized.
+type ServiceKey = "cloud" | "network" | "security" | "datacenter" | "managed";
+const CATEGORY_SERVICE_MAP: Record<string, { key: ServiceKey; path: string }> = {
+  // English
+  Cloud: { key: "cloud", path: "/solutions#cloud" },
+  Network: { key: "network", path: "/solutions#network" },
+  Security: { key: "security", path: "/solutions#security" },
+  Infrastructure: { key: "datacenter", path: "/solutions#datacenter" },
+  Upgrade: { key: "cloud", path: "/solutions#cloud" },
+  Migration: { key: "cloud", path: "/solutions#cloud" },
+  Sustainability: { key: "managed", path: "/solutions#managed" },
+  // Arabic
+  "السحابة": { key: "cloud", path: "/solutions#cloud" },
+  "البنية التحتية": { key: "datacenter", path: "/solutions#datacenter" },
+  "ترقية": { key: "cloud", path: "/solutions#cloud" },
+  "الهجرة": { key: "cloud", path: "/solutions#cloud" },
+  "الاستدامة": { key: "managed", path: "/solutions#managed" },
+  // Turkish
+  "Bulut": { key: "cloud", path: "/solutions#cloud" },
+  "Altyapı": { key: "datacenter", path: "/solutions#datacenter" },
+  "Yükseltme": { key: "cloud", path: "/solutions#cloud" },
+  "Göç": { key: "cloud", path: "/solutions#cloud" },
+  "Sürdürülebilirlik": { key: "managed", path: "/solutions#managed" },
+};
+
 const catConfig: Record<string, { color: string; icon: typeof Cloud }> = {
   Cloud: { color: "var(--blue)", icon: Cloud },
   Infrastructure: { color: "var(--cyan)", icon: Server },
@@ -227,6 +254,45 @@ export default function PostClient({
               </article>
             </div>
           </AnimatedSection>
+
+          {/* Related Service — internal link from blog category to a money page. */}
+          {(() => {
+            const svc = CATEGORY_SERVICE_MAP[post.cat];
+            if (!svc) return null;
+            return (
+              <AnimatedSection>
+                <div className="mt-16">
+                  <div
+                    className="rounded-2xl p-6 lg:p-7 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 relative overflow-hidden"
+                    style={{
+                      background: "var(--glass-card)",
+                      border: "1px solid var(--glass-card-border)",
+                    }}
+                  >
+                    <div
+                      className="absolute top-0 left-0 right-0 h-[2px]"
+                      style={{ background: "var(--blue)" }}
+                    />
+                    <div className="flex-1">
+                      <div
+                        className="text-[10px] font-bold tracking-[0.25em] uppercase mb-2"
+                        style={{ color: "var(--blue)" }}
+                      >
+                        {b.relatedService}
+                      </div>
+                      <a
+                        href={loc(svc.path)}
+                        className="text-base lg:text-lg font-bold leading-snug transition-opacity hover:opacity-80"
+                        style={{ color: "var(--white)", textDecoration: "none" }}
+                      >
+                        {b.relatedServiceLabels[svc.key]} →
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </AnimatedSection>
+            );
+          })()}
 
           {/* Related Posts */}
           <AnimatedSection>

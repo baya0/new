@@ -62,7 +62,7 @@ export default function VisionPage() {
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <Image
             src="/images/backgrounds/serverroom2.jpg"
-            alt=""
+            alt="Supportiva enterprise IT operations"
             fill
             sizes="100vw"
             className="object-cover object-center"

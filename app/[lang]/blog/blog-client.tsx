@@ -75,7 +75,7 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
         <div className="absolute inset-0 pointer-events-none">
           <Image
             src="/images/backgrounds/serversroom.jpg"
-            alt=""
+            alt="Enterprise IT insights — Supportiva blog"
             fill
             sizes="100vw"
             className="object-cover object-top"

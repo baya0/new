@@ -9,6 +9,7 @@ import {
 } from "@/sanity/lib/queries";
 import { fetchLocalized } from "@/sanity/lib/i18n-fetch";
 import { BASE_URL } from "@/lib/config";
+import { translations } from "@/lib/i18n";
 import { isLocale, LOCALES } from "@/lib/locales";
 import { alternatesFor } from "@/lib/seo";
 import {
@@ -221,11 +222,42 @@ export default async function BlogPostPage({ params }: Props) {
     },
   };
 
+  const nav = translations[lang].nav;
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    inLanguage: lang,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: nav.home,
+        item: `${BASE_URL}/${lang}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: nav.blog,
+        item: `${BASE_URL}/${lang}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: `${BASE_URL}/${lang}/post/${post.slug}`,
+      },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <PostClient post={view} relatedPosts={relatedPosts} />
     </>

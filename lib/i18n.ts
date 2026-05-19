@@ -224,7 +224,32 @@ solutions: {
     }
   ],
 
-  cta: "Contact Our Team →"
+  cta: "Contact Our Team →",
+
+  faqTitle: "Frequently Asked Questions",
+  faq: [
+    {
+      q: "What happens when our office network goes down?",
+      a: "Supportiva provides 24/7 managed IT support. Our engineers respond immediately to network outages, remotely diagnose the issue, and dispatch on-site teams when needed to restore operations as fast as possible.",
+    },
+    {
+      q: "How long does a cloud migration take for an enterprise?",
+      a: "A typical enterprise cloud migration takes 4–12 weeks depending on infrastructure complexity. Supportiva handles planning, execution, and post-migration support so your team experiences minimal disruption.",
+    },
+    {
+      q: "Can you manage IT for multiple office locations?",
+      a: "Yes. Supportiva currently supports clients across 9 locations including Turkey, UAE, and the US. We provide centralized IT management with local on-site capability in each region.",
+    },
+    {
+      q: "What is the difference between managed IT and traditional IT support?",
+      a: "Traditional IT support is reactive — you call when something breaks. Managed IT is proactive — we monitor, maintain, and optimize your infrastructure continuously so problems are prevented before they affect your business.",
+    },
+  ],
+
+  trustedByTitle: "Trusted By Enterprise Leaders",
+  trustedByClients: ["Nike", "Dow Chemical", "Medtronic", "Mercedes-Benz", "Viatris"],
+  techTitle: "Technologies & Partners",
+  techList: ["Cisco", "Microsoft", "VMware", "Ruijie", "AWS", "Azure"],
 },
     vision: {
       eyebrow: "Our Vision",
@@ -296,6 +321,14 @@ solutions: {
       readArticle: "Read article",
       newsletterTitle: "Stay in the loop",
       newsletterSub: "Get the latest IT insights from our field engineers, straight to your inbox.",
+      relatedService: "Related Service",
+      relatedServiceLabels: {
+        cloud: "Cloud & Infrastructure Services",
+        network: "Network Solutions",
+        security: "Cybersecurity & Security Services",
+        datacenter: "Datacenter Infrastructure",
+        managed: "Managed IT Services",
+      },
       posts: [
         { cat: "Infrastructure", slug: "unveiling-the-future-with-wifi-7-ruijie-s-rg-rap73hd-leads-the-charge", title: "Unveiling the Future with WiFi 7: Ruijie's RG-RAP73HD Leads the Charge", desc: "WiFi 7 is here and it's changing the game. Explore how Ruijie's latest access point delivers next-gen wireless performance with an innovative SFP+ port for fiber connectivity.", date: "Mar 1, 2024", read: "2 min read",
           body: [
@@ -626,7 +659,32 @@ solutions: {
     }
   ],
 
-  cta: "تواصل مع فريقنا →"
+  cta: "تواصل مع فريقنا →",
+
+  faqTitle: "الأسئلة الشائعة",
+  faq: [
+    {
+      q: "ماذا يحدث عندما تتعطل شبكة مكتبنا؟",
+      a: "تقدم سابورتيفا دعمًا فنيًا مُدارًا على مدار الساعة طوال أيام الأسبوع. يستجيب مهندسونا فورًا لانقطاعات الشبكة، ويشخّصون المشكلة عن بُعد، ويُرسلون فرقًا ميدانية عند الحاجة لاستعادة العمليات في أسرع وقت ممكن.",
+    },
+    {
+      q: "كم تستغرق عملية الترقية إلى الحوسبة السحابية للمؤسسات؟",
+      a: "تستغرق عملية الترقية النموذجية للمؤسسات من 4 إلى 12 أسبوعًا حسب تعقيد البنية التحتية. تتولى سابورتيفا التخطيط والتنفيذ والدعم بعد الترقية لضمان الحد الأدنى من الانقطاع لفريقك.",
+    },
+    {
+      q: "هل يمكنكم إدارة تقنية المعلومات لعدة مواقع مكتبية؟",
+      a: "نعم. تدعم سابورتيفا حاليًا عملاء عبر 9 مواقع تشمل تركيا والإمارات والولايات المتحدة. نقدّم إدارة IT مركزية مع قدرة ميدانية محلية في كل منطقة.",
+    },
+    {
+      q: "ما الفرق بين خدمات IT المُدارة والدعم التقني التقليدي؟",
+      a: "الدعم التقليدي تفاعلي — تتصل بنا عند حدوث عُطل. أما الخدمات المُدارة فاستباقية — نراقب البنية التحتية ونصونها ونحسّنها باستمرار لمنع المشكلات قبل أن تؤثر على أعمالك.",
+    },
+  ],
+
+  trustedByTitle: "موثوق به من قِبَل كبرى المؤسسات",
+  trustedByClients: ["نايك", "داو كيميكال", "ميدترونيك", "مرسيدس-بنز", "فياتريس"],
+  techTitle: "التقنيات والشركاء",
+  techList: ["Cisco", "Microsoft", "VMware", "Ruijie", "AWS", "Azure"],
 },
     vision: {
       eyebrow: "رؤيتنا", h1: "يجب أن تُمكّن التقنية أعمالك، لا أن تعيقها.",
@@ -694,6 +752,14 @@ solutions: {
       readArticle: "اقرأ المقال",
       newsletterTitle: "ابقَ على اطلاع",
       newsletterSub: "احصل على أحدث رؤى تقنية المعلومات من مهندسينا الميدانيين، مباشرة في بريدك الإلكتروني.",
+      relatedService: "الخدمة ذات الصلة",
+      relatedServiceLabels: {
+        cloud: "خدمات الحوسبة السحابية والبنية التحتية",
+        network: "حلول الشبكات",
+        security: "خدمات الأمن السيبراني",
+        datacenter: "البنية التحتية لمراكز البيانات",
+        managed: "خدمات IT المُدارة",
+      },
       posts: [
         { cat: "البنية التحتية", title: "استشراف المستقبل مع WiFi 7: Ruijie RG-RAP73HD يقود المسيرة", desc: "WiFi 7 هنا ويغير قواعد اللعبة. اكتشف كيف تقدم نقطة الوصول الأحدث من Ruijie أداءً لاسلكيًا للجيل التالي.", date: "1 مارس 2024", read: "دقيقتان" },
         { cat: "السحابة", title: "Microsoft Copilot: مستقبل الإنتاجية", desc: "كيف يحول المساعد الذكي من Microsoft طريقة عمل الشركات — مدمج في Word وExcel وOutlook وTeams.", date: "21 فبراير 2024", read: "دقيقتان" },
@@ -944,7 +1010,32 @@ solutions: {
     }
   ],
 
-  cta: "Ekibimizle İletişime Geçin →"
+  cta: "Ekibimizle İletişime Geçin →",
+
+  faqTitle: "Sıkça Sorulan Sorular",
+  faq: [
+    {
+      q: "Ofis ağımız çöktüğünde ne olur?",
+      a: "Supportiva 7/24 yönetilen BT desteği sunar. Mühendislerimiz ağ kesintilerine anında müdahale eder, sorunu uzaktan teşhis eder ve gerektiğinde operasyonları en hızlı şekilde yeniden başlatmak için saha ekiplerini görevlendirir.",
+    },
+    {
+      q: "Bir kurumsal bulut göçü ne kadar sürer?",
+      a: "Tipik bir kurumsal bulut göçü, altyapı karmaşıklığına bağlı olarak 4–12 hafta sürer. Supportiva planlama, uygulama ve geçiş sonrası desteği üstlenir; böylece ekibiniz minimum kesinti yaşar.",
+    },
+    {
+      q: "Birden fazla ofis lokasyonu için BT yönetimi sunabiliyor musunuz?",
+      a: "Evet. Supportiva şu anda Türkiye, BAE ve ABD dahil 9 lokasyonda müşterilere hizmet veriyor. Her bölgede yerel saha kapasitesiyle merkezi BT yönetimi sunuyoruz.",
+    },
+    {
+      q: "Yönetilen BT ile geleneksel BT desteği arasındaki fark nedir?",
+      a: "Geleneksel BT desteği reaktiftir — bir şey bozulduğunda ararsınız. Yönetilen BT proaktiftir — altyapınızı sürekli izler, bakımını yapar ve optimize ederiz; sorunlar işinize etki etmeden önlenir.",
+    },
+  ],
+
+  trustedByTitle: "Kurumsal Liderler Tarafından Güvenilen",
+  trustedByClients: ["Nike Türkiye", "Dow Chemical", "Medtronic", "Mercedes-Benz", "Viatris"],
+  techTitle: "Teknolojiler ve İş Ortakları",
+  techList: ["Cisco", "Microsoft", "VMware", "Ruijie", "AWS", "Azure"],
 },
     vision: {
       eyebrow: "Vizyonumuz", h1: "Teknoloji Sizi Güçlendirmeli, Yavaşlatmamalı.",
@@ -1012,6 +1103,14 @@ solutions: {
       readArticle: "Makaleyi Oku",
       newsletterTitle: "Güncel Kalın",
       newsletterSub: "Saha mühendislerimizden en güncel BT içgörülerini doğrudan gelen kutunuza alın.",
+      relatedService: "İlgili Hizmet",
+      relatedServiceLabels: {
+        cloud: "Bulut ve Altyapı Hizmetleri",
+        network: "Ağ Çözümleri",
+        security: "Siber Güvenlik Hizmetleri",
+        datacenter: "Veri Merkezi Altyapısı",
+        managed: "Yönetilen BT Hizmetleri",
+      },
       posts: [
         { cat: "Altyapı", title: "WiFi 7 ile Geleceğe Bakış: Ruijie RG-RAP73HD Öncülük Ediyor", desc: "WiFi 7 burada ve oyunu değiştiriyor. Ruijie'nin en yeni erişim noktasının fiber bağlantı için SFP+ portuyla nasıl fark yarattığını keşfedin.", date: "1 Mart 2024", read: "2 dk okuma" },
         { cat: "Bulut", title: "Microsoft Copilot: Üretkenliğin Geleceği", desc: "Microsoft'un yapay zeka destekli Copilot'u Word, Excel, Outlook ve Teams'e entegre olarak iş dünyasını nasıl dönüştürüyor.", date: "21 Şubat 2024", read: "2 dk okuma" },
