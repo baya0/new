@@ -13,7 +13,7 @@ export const translations = {
     },
     home: {
       eyebrow: "✦ Managed IT Services · Cloud · Datacenter",
-      h1: ["Engineering Reliable Digital Infrastructure"],
+      h1: ["Engineering", "Reliable Digital", "Infrastructure"],
       sub: "Supportiva delivers managed IT services, cloud migration, datacenter infrastructure, network security, and 24/7 enterprise IT support — helping modern businesses scale with confidence.",
       btn1: "Learn More →",
       btn2: "View Projects",
@@ -454,7 +454,7 @@ solutions: {
     },
     home: {
       eyebrow: "✦ خدمات IT مُدارة · حوسبة سحابية · مراكز بيانات",
-      h1: ["نبني بنية تحتية رقمية موثوقة للشركات"],
+      h1: ["نبني بنية تحتية", "رقمية موثوقة", "للشركات"],
       sub: "نقدّم خدمات IT للشركات مع إدارة وتشغيل البنية التحتية الرقمية، إلى جانب حلول السحابة، ومراكز البيانات، والأمن السيبراني، والدعم التقني المستمر لمساعدة المؤسسات على العمل بكفاءة واستمرارية.",
       btn1: "اعرف المزيد →", btn2: "شاهد المشاريع",
       whoWeAreTitle: "من نحن",
