@@ -38,7 +38,7 @@ export const translations = {
     },
     home: {
       eyebrow: "✦ Managed IT Services · Cloud · Datacenter",
-      h1: ["Enterprise IT Services", "& Managed Infrastructure", "for Modern Business"],
+      h1: ["Engineering Reliable Digital Infrastructure"],
       sub: "Supportiva delivers managed IT services, cloud migration, datacenter infrastructure, network security, and 24/7 enterprise IT support — helping modern businesses scale with confidence.",
       btn1: "Learn More →",
       btn2: "View Projects",
@@ -478,8 +478,8 @@ solutions: {
       projects: "المشاريع", blog: "المدونة", contact: "اتصل بنا", cta: "ابدأ الآن →",
     },
     servicesIndex: {
-      h1: "خدمات تقنية المعلومات للنتائج المؤسسية",
-      sub: "خدمات IT مُدارة، ترقية سحابية، بنية تحتية لمراكز البيانات، الأمن السيبراني والمزيد — مصممة للأعمال الحديثة في تركيا والإمارات والأسواق العالمية.",
+      h1: "نقدّم حلول IT وبنية تحتية للشركات",
+      sub: "نقدّم خدمات IT للشركات مع إدارة وتشغيل البنية التحتية الرقمية، إلى جانب حلول السحابة، ومراكز البيانات، والأمن السيبراني، والدعم التقني المستمر لمساعدة المؤسسات على العمل بكفاءة واستمرارية",
       eyebrow: "خدماتنا",
       exploreButton: "استكشاف الخدمة →",
       emptyState: "نعمل على إضافة الخدمات. عد قريبًا.",
@@ -878,8 +878,8 @@ solutions: {
     },
     home: {
       eyebrow: "✦ Yönetilen BT Hizmetleri · Bulut · Veri Merkezi",
-      h1: ["Kurumsal BT Altyapısı", "Bulut Çözümleri", "ve Yönetilen Hizmetler"],
-      sub: "Supportiva, kurumsal işletmelere yönetilen BT hizmetleri, bulut göçü, veri merkezi altyapısı, siber güvenlik ve 7/24 teknik destek sunar — ölçeklenebilir büyüme için güvenilir bir BT iş ortağı.",
+      h1: ["Güvenilir Dijital Altyapı Mühendisliği"],
+      sub: "Kurumsal IT hizmetleri, bulut çözümleri, veri merkezi altyapısı, siber güvenlik ve 7/24 operasyonel destek sunarak şirketlerin güvenle ölçeklenmesini sağlıyoruz",
       btn1: "Daha Fazla Bilgi →", btn2: "Projelere Bakın",
       whoWeAreTitle: "Biz Kimiz",
       whoWeAreText: "Supportiva; altyapı, ağ, bulut ve destek hizmetleri alanlarında uçtan uca çözümler sunan bir teknoloji iş ortağıdır. Güvenli, sürdürülebilir ve yüksek performanslı BT ortamları oluşturmanıza yardımcı oluruz.",
