@@ -68,6 +68,11 @@
   --tint-blue-border: rgba(28,78,138,0.12);
 
   --noise-opacity: 0;
+
+  /* Reserved space below the floating Navbar so hero content never slides
+     under it when the headline grows tall. ~56px navbar + 16px float gap +
+     16px breathing room. */
+  --nav-safe-top: 88px;
 }
 
 .dark {
@@ -275,6 +280,9 @@ body {
 .hero-bg {
   position: relative;
   background: var(--bg0);
+  /* Pad the content area below the floating navbar. Background layers use
+     `position: absolute; inset: 0` so they stay full-bleed and ignore this. */
+  padding-top: var(--nav-safe-top);
 }
 .hero-bg::before {
   content: '';
