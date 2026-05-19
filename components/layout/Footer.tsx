@@ -7,7 +7,6 @@ import { Mail } from "lucide-react";
 import { Linkedin, Instagram, Facebook, Twitter } from "@/components/ui/BrandIcons";
 
 const PAGE_HREFS: Record<string, string> = {
-  "Services": "/services", "Hizmetler": "/services", "الخدمات": "/services",
   "IT Consulting": "/solutions", "Staff Augmentation": "/solutions",
   "Datacenter Infra": "/solutions", "Managed IT": "/solutions",
   "BT Danışmanlığı": "/solutions", "Personel Güçlendirme": "/solutions",
