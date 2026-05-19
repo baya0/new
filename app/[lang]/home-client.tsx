@@ -164,8 +164,16 @@ export default function HomeClient() {
               >
                 <h1 className="headline-xl">
                   {th.h1[0]}<br />
-                  {th.h1[1]}<br />
-                  <span style={{ color: "var(--blue)" }}>{th.h1[2]}</span>
+                  {(() => {
+                    const [first, ...rest] = th.h1[1].split(" ");
+                    return (
+                      <>
+                        <span style={{ color: "var(--blue)" }}>{first}</span>
+                        {rest.length ? " " + rest.join(" ") : ""}
+                      </>
+                    );
+                  })()}<br />
+                  {th.h1[2]}
                 </h1>
               </motion.div>
 
