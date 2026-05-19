@@ -6,13 +6,7 @@ import type { Template } from 'sanity'
 // Without these, new docs land with `language` undefined and silently fall
 // into the English bucket via `coalesce(language, "en")`.
 
-export const LOCALIZED_SCHEMA_TYPES = [
-  'post',
-  'project',
-  'author',
-  'servicePage',
-  'locationPage',
-] as const
+export const LOCALIZED_SCHEMA_TYPES = ['post', 'project', 'author'] as const
 export type LocalizedSchemaType = (typeof LOCALIZED_SCHEMA_TYPES)[number]
 
 export const STUDIO_LANGUAGES = [
@@ -26,8 +20,6 @@ const SCHEMA_TITLES: Record<LocalizedSchemaType, string> = {
   post: 'Blog Post',
   project: 'Project',
   author: 'Author',
-  servicePage: 'Service Page',
-  locationPage: 'Location Page',
 }
 
 export function templateId(schemaType: LocalizedSchemaType, languageId: string): string {

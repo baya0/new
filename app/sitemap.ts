@@ -5,8 +5,6 @@ import {
   getAllAuthorsForSitemap,
   getAllPostsForSitemap,
   getAllProjectsForSitemap,
-  getLocationPagesForSitemap,
-  getServicePagesForSitemap,
 } from "@/sanity/lib/queries";
 import { DEFAULT_LOCALE, LOCALES } from "@/lib/locales";
 
@@ -16,12 +14,10 @@ type Priority = 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
 type ChangeFreq = "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 
 type SitemapDoc = { slug: string; _updatedAt?: string };
-type SitemapLocationDoc = { serviceKey: string; locationKey: string; _updatedAt?: string };
 
 const STATIC_PAGES: Array<{ path: string; changeFrequency: ChangeFreq; priority: Priority }> = [
   { path: "",          changeFrequency: "weekly",  priority: 1.0 },
   { path: "/solutions", changeFrequency: "monthly", priority: 0.9 },
-  { path: "/services",  changeFrequency: "weekly",  priority: 0.9 },
   { path: "/projects",  changeFrequency: "monthly", priority: 0.8 },
   { path: "/blog",      changeFrequency: "weekly",  priority: 0.8 },
   { path: "/vision",    changeFrequency: "monthly", priority: 0.7 },
@@ -59,22 +55,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let posts: SitemapDoc[] = [];
   let projects: SitemapDoc[] = [];
   let authors: SitemapDoc[] = [];
-  let services: SitemapDoc[] = [];
-  let locations: SitemapLocationDoc[] = [];
   try {
-    [posts, projects, authors, services, locations] = await Promise.all([
+    [posts, projects, authors] = await Promise.all([
       client.fetch<SitemapDoc[]>(getAllPostsForSitemap, {}, { next: { revalidate: 3600 } }),
       client.fetch<SitemapDoc[]>(getAllProjectsForSitemap, {}, { next: { revalidate: 3600 } }),
       client.fetch<SitemapDoc[]>(getAllAuthorsForSitemap, {}, { next: { revalidate: 3600 } }),
-      client.fetch<SitemapDoc[]>(getServicePagesForSitemap, {}, { next: { revalidate: 3600 } }),
-      client.fetch<SitemapLocationDoc[]>(getLocationPagesForSitemap, {}, { next: { revalidate: 3600 } }),
     ]);
   } catch {
     posts = [];
     projects = [];
     authors = [];
-    services = [];
-    locations = [];
   }
 
   const now = new Date();
@@ -83,7 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // edit as a freshness proxy — beats "today on every crawl" without
   // forcing a manual date table.
   const newestCmsUpdate =
-    [...posts, ...projects, ...authors, ...services, ...locations]
+    [...posts, ...projects, ...authors]
       .map((d) => parseDate(d._updatedAt, now).getTime())
       .reduce<number>((max, t) => (t > max ? t : max), 0) || now.getTime();
   const staticLastMod = new Date(newestCmsUpdate);
@@ -113,23 +103,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entryFor(`/profile/${slug}`, "monthly", 0.5, d),
   );
 
-  const serviceEntries = (services ?? []).map((s) =>
-    entryFor(`/services/${s.slug}`, "monthly", 0.9, parseDate(s._updatedAt, now)),
-  );
-
-  const locationEntries = (locations ?? []).map((l) =>
-    entryFor(
-      `/services/${l.serviceKey}/${l.locationKey}`,
-      "monthly",
-      0.8,
-      parseDate(l._updatedAt, now),
-    ),
-  );
-
   return [
     ...staticEntries,
-    ...serviceEntries,
-    ...locationEntries,
     ...postEntries,
     ...projectEntries,
     ...profileEntries,
