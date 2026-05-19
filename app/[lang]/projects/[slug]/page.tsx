@@ -9,6 +9,11 @@ import {
 import { fetchLocalized } from "@/sanity/lib/i18n-fetch";
 import { isLocale, LOCALES } from "@/lib/locales";
 import { alternatesFor } from "@/lib/seo";
+import {
+  alternateOgLocales,
+  ogLocaleFor,
+  TWITTER_SITE,
+} from "@/lib/seo-content";
 import ProjectDetailClient, { type ProjectView } from "./project-client";
 
 export const revalidate = 3600;
@@ -115,10 +120,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: alts.canonical as string,
       type: "article",
       siteName: "Supportiva",
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      locale: ogLocaleFor(lang),
+      alternateLocale: alternateOgLocales(lang),
+      images: ogImage
+        ? [{ url: ogImage, width: 1200, height: 630, alt: title }]
+        : undefined,
     },
     twitter: {
       card: "summary_large_image",
+      site: TWITTER_SITE,
+      creator: TWITTER_SITE,
       title,
       description,
       images: ogImage ? [ogImage] : undefined,

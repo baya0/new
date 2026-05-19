@@ -24,6 +24,7 @@ export const getAllPosts = groq`*[_type == "post" && coalesce(language, "en") ==
 
 export const getPostBySlug = groq`*[_type == "post" && slug.current == $slug && coalesce(language, "en") == $language][0] {
   _id,
+  _updatedAt,
   title,
   "slug": slug.current,
   language,
@@ -68,6 +69,7 @@ export const getAllProjects = groq`*[_type == "project" && coalesce(language, "e
 
 export const getProjectBySlug = groq`*[_type == "project" && slug.current == $slug && coalesce(language, "en") == $language][0] {
   _id,
+  _updatedAt,
   title,
   "slug": slug.current,
   language,
@@ -89,6 +91,7 @@ export const getProjectBySlug = groq`*[_type == "project" && slug.current == $sl
 
 export const getAuthorBySlug = groq`*[_type == "author" && slug.current == $slug && coalesce(language, "en") == $language][0] {
   _id,
+  _updatedAt,
   name,
   "slug": slug.current,
   language,
@@ -118,3 +121,18 @@ export const getRecentPosts = groq`*[_type == "post" && slug.current != $slug &&
 export const getAllPostSlugs = groq`*[_type == "post" && defined(slug.current)][].slug.current`
 export const getAllProjectSlugs = groq`*[_type == "project" && defined(slug.current)][].slug.current`
 export const getAllAuthorSlugs = groq`*[_type == "author" && defined(slug.current)][].slug.current`
+
+// Sitemap-oriented projections: slug + _updatedAt so XML lastmod reflects
+// real edits rather than "today on every build".
+export const getAllPostsForSitemap = groq`*[_type == "post" && defined(slug.current)]{
+  "slug": slug.current,
+  _updatedAt
+}`
+export const getAllProjectsForSitemap = groq`*[_type == "project" && defined(slug.current)]{
+  "slug": slug.current,
+  _updatedAt
+}`
+export const getAllAuthorsForSitemap = groq`*[_type == "author" && defined(slug.current)]{
+  "slug": slug.current,
+  _updatedAt
+}`

@@ -84,7 +84,9 @@ export default function Footer({ t, lang, setLang }: FooterProps) {
 
         {/* Bottom bar */}
         <div className="flex justify-between items-center pt-6 border-t flex-wrap gap-4" style={{ borderColor: "var(--border)" }}>
-          <span className="text-xs font-medium" style={{ color: "var(--w25)" }}>{t.footer.copy}</span>
+          <span className="text-xs font-medium" style={{ color: "var(--w25)" }}>
+            {t.footer.copy.replace("{year}", String(new Date().getFullYear()))}
+          </span>
           <div className="flex gap-1 p-1 rounded-lg" style={{ background: "var(--bg3)", border: "1px solid var(--border)" }}>
             {(["en", "ar", "tr"] as Lang[]).map((l) => (
               <button key={l} onClick={() => setLang(l)}
