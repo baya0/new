@@ -11,6 +11,11 @@ import { fetchLocalized } from "@/sanity/lib/i18n-fetch";
 import { BASE_URL } from "@/lib/config";
 import { isLocale, LOCALES } from "@/lib/locales";
 import { alternatesFor } from "@/lib/seo";
+import {
+  alternateOgLocales,
+  ogLocaleFor,
+  TWITTER_SITE,
+} from "@/lib/seo-content";
 import PostClient, {
   type PostView,
   type RelatedPostView,
@@ -29,6 +34,7 @@ type SanityAuthor = {
 
 type SanityPost = {
   _id: string;
+  _updatedAt?: string;
   title: string;
   slug: string;
   language?: string;
@@ -111,12 +117,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: alts.canonical as string,
       type: "article",
       siteName: "Supportiva",
+      locale: ogLocaleFor(lang),
+      alternateLocale: alternateOgLocales(lang),
       publishedTime: post.publishedAt,
+      modifiedTime: post._updatedAt,
       authors: post.author?.name ? [post.author.name] : ["Team Supportiva"],
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      images: ogImage
+        ? [{ url: ogImage, width: 1200, height: 630, alt: title }]
+        : undefined,
     },
     twitter: {
       card: "summary_large_image",
+      site: TWITTER_SITE,
+      creator: TWITTER_SITE,
       title,
       description,
       images: ogImage ? [ogImage] : undefined,
@@ -183,8 +196,9 @@ export default async function BlogPostPage({ params }: Props) {
     headline: post.title,
     description: post.seoDescription ?? post.excerpt ?? "",
     image: ogImage,
+    inLanguage: lang,
     datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
+    dateModified: post._updatedAt ?? post.publishedAt,
     author: {
       "@type": "Person",
       name: post.author?.name ?? "Team Supportiva",
@@ -194,6 +208,7 @@ export default async function BlogPostPage({ params }: Props) {
     },
     publisher: {
       "@type": "Organization",
+      "@id": `${BASE_URL}#organization`,
       name: "Supportiva",
       logo: {
         "@type": "ImageObject",

@@ -7,13 +7,20 @@ import { Linkedin } from "@/components/ui/BrandIcons";
 import { urlFor } from "@/sanity/lib/image";
 import { getAuthorBySlug } from "@/sanity/lib/queries";
 import { fetchLocalized } from "@/sanity/lib/i18n-fetch";
+import { BASE_URL } from "@/lib/config";
 import { isLocale, localized } from "@/lib/locales";
 import { alternatesFor } from "@/lib/seo";
+import {
+  alternateOgLocales,
+  ogLocaleFor,
+  TWITTER_SITE,
+} from "@/lib/seo-content";
 
 export const revalidate = 3600;
 
 type SanityAuthor = {
   _id: string;
+  _updatedAt?: string;
   name: string;
   slug: string;
   role?: string;
@@ -43,15 +50,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description = author.bio ?? `${author.name} — ${author.role ?? "Supportiva contributor"}.`;
   const alts = alternatesFor(`/profile/${author.slug}`, lang);
+  const avatarUrl = author.avatar
+    ? urlFor(author.avatar as never).width(1200).height(630).url()
+    : undefined;
+  const title = `${author.name} | Supportiva`;
   return {
-    title: `${author.name} | Supportiva`,
+    title,
     description,
     alternates: alts,
     openGraph: {
-      title: `${author.name} | Supportiva`,
+      title,
       description,
       url: alts.canonical as string,
       type: "profile",
+      siteName: "Supportiva",
+      locale: ogLocaleFor(lang),
+      alternateLocale: alternateOgLocales(lang),
+      images: avatarUrl
+        ? [{ url: avatarUrl, width: 1200, height: 630, alt: author.name }]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: TWITTER_SITE,
+      creator: TWITTER_SITE,
+      title,
+      description,
+      images: avatarUrl ? [avatarUrl] : undefined,
     },
   };
 }
@@ -71,9 +96,32 @@ export default async function ProfilePage({ params }: Props) {
   const avatarUrl = author.avatar
     ? urlFor(author.avatar as never).width(320).height(320).url()
     : null;
+  const avatarHi = author.avatar
+    ? urlFor(author.avatar as never).width(800).height(800).url()
+    : undefined;
+
+  const profileUrl = `${BASE_URL}/${lang}/profile/${author.slug}`;
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${profileUrl}#person`,
+    name: author.name,
+    url: profileUrl,
+    ...(author.role && { jobTitle: author.role }),
+    ...(author.bio && { description: author.bio }),
+    ...(avatarHi && { image: avatarHi }),
+    worksFor: { "@id": `${BASE_URL}#organization` },
+    ...(author.linkedin && { sameAs: [author.linkedin] }),
+    mainEntityOfPage: { "@type": "ProfilePage", "@id": profileUrl },
+    inLanguage: lang,
+  };
 
   return (
     <section className="relative overflow-hidden section-depth" style={{ padding: "120px 24px 140px" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
       <div className="aurora" />
       <div className="blob blob-blue w-[500px] h-[500px] -top-40 -right-40 animate-blob" />
       <div className="blob blob-purple w-[350px] h-[350px] bottom-0 -left-32 animate-blob" style={{ animationDelay: "5s" }} />

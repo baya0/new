@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import { BASE_URL } from "@/lib/config";
 import { DEFAULT_LOCALE, dirFor, isLocale, LOCALES } from "@/lib/locales";
+import { TWITTER_SITE } from "@/lib/seo-content";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -64,6 +65,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_SITE,
+    creator: TWITTER_SITE,
     images: ["/opengraph-image"],
   },
 };
@@ -71,6 +74,7 @@ export const metadata: Metadata = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${BASE_URL}#organization`,
   name: "Supportiva",
   url: BASE_URL,
   logo: `${BASE_URL}/images/logo.avif`,
@@ -102,6 +106,28 @@ const organizationSchema = {
   ],
 };
 
+// WebSite schema with SearchAction — eligible for the sitelinks search box
+// in Google SERPs once the site has enough authority.
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${BASE_URL}#website`,
+  url: BASE_URL,
+  name: "Supportiva",
+  description:
+    "Enterprise IT consulting, staff augmentation, datacenter infrastructure, and managed IT services.",
+  publisher: { "@id": `${BASE_URL}#organization` },
+  inLanguage: ["en", "ar", "tr"],
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${BASE_URL}/${DEFAULT_LOCALE}/blog?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
 // Middleware sets `x-lang` so the root <html lang dir> are correct on first
 // paint — important for SEO crawlers and for RTL layout under Arabic.
 async function detectLang() {
@@ -124,6 +150,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
       <body className="antialiased" suppressHydrationWarning>

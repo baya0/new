@@ -410,7 +410,7 @@ solutions: {
         { title: "Company", links: ["About Us", "Vision", "Projects", "The S Blog"] },
         { title: "Contact", links: ["+1 724 906 3303", "info@supportiva.net", "Sheridan, WY 82801", "USA"] },
       ],
-      copy: "© 2024 Supportiva · All rights reserved.",
+      copy: "© {year} Supportiva · All rights reserved.",
     },
   },
 
@@ -728,7 +728,7 @@ solutions: {
         { title: "الشركة", links: ["من نحن", "الرؤية", "المشاريع", "المدونة"] },
         { title: "تواصل معنا", links: ["+1 724 906 3303", "info@supportiva.net", "شيريدان، وايومنغ", "الولايات المتحدة"] },
       ],
-      copy: "© 2024 Supportiva · جميع الحقوق محفوظة.",
+      copy: "© {year} Supportiva · جميع الحقوق محفوظة.",
     },
   },
 
@@ -1046,7 +1046,7 @@ solutions: {
         { title: "Şirket", links: ["Hakkımızda", "Vizyon", "Projeler", "S Blog"] },
         { title: "İletişim", links: ["+1 724 906 3303", "info@supportiva.net", "Sheridan, WY 82801", "ABD"] },
       ],
-      copy: "© 2024 Supportiva · Tüm hakları saklıdır.",
+      copy: "© {year} Supportiva · Tüm hakları saklıdır.",
     },
   },
 } as const;
