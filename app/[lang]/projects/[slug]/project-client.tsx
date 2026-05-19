@@ -202,7 +202,7 @@ function HeroGallery({
             >
               <Image
                 src={img}
-                alt=""
+                alt={`${title} — image ${i + 1}`}
                 fill
                 className="object-cover"
                 style={{ objectPosition: "center 30%" }}
@@ -280,7 +280,7 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
         <div className="absolute inset-0 pointer-events-none">
           <Image
             src="/images/backgrounds/back1.jpg"
-            alt=""
+            alt="Supportiva enterprise project case study"
             fill
             sizes="100vw"
             className="object-cover object-top"

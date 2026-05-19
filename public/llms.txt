@@ -1,0 +1,41 @@
+# Supportiva
+> Enterprise IT infrastructure, managed services, cloud migration, and cybersecurity for modern organizations.
+
+URL: https://www.supportiva.net
+Languages: English (en), Arabic (ar), Turkish (tr)
+Primary markets: Turkey, UAE, Saudi Arabia, Global enterprise
+
+## Routes
+
+/[lang]/
+Homepage. Company overview, stats (11+ years, 300+ support hrs/month, 27+ projects, 9 locations), services summary, trusted clients.
+
+/[lang]/solutions
+IT service offerings: Managed IT Services, Cloud & Infrastructure, Datacenter Infrastructure, Network Solutions, Cybersecurity, Staff Augmentation, Cabling Design.
+
+/[lang]/projects
+Portfolio of enterprise IT projects. Includes Nike Turkey migration (9 sites), datacenter builds, Windows 11 migrations, WiFi surveys, network device deployments.
+
+/[lang]/projects/[slug]
+Individual project case study with full description, location, year, key results, image gallery, and tags.
+
+/[lang]/blog
+Blog listing: enterprise IT insights covering cloud, infrastructure, networking, security, and digital transformation.
+
+/[lang]/post/[slug]
+Individual blog post with full article, author, publish date, category, and related service links.
+
+/[lang]/profile/[slug]
+Author profile with name, role, bio, and LinkedIn.
+
+/[lang]/vision
+Company mission, story, values, and team background.
+
+/[lang]/contact
+Contact information: +1 724 906 3303, info@supportiva.net, Sheridan WY USA.
+
+## Clients served
+Nike, Dow Chemical, Medtronic, Mercedes-Benz, Viatris
+
+## Technologies
+Cisco, Microsoft, VMware, Ruijie, AWS, Azure

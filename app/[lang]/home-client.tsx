@@ -124,7 +124,7 @@ export default function HomeClient() {
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <Image
             src="/images/backgrounds/serversroom.jpg"
-            alt=""
+            alt="Enterprise IT datacenter server room — Supportiva"
             fill
             sizes="100vw"
             quality={55}
@@ -211,7 +211,7 @@ export default function HomeClient() {
                 <Image
                   key={heroLogoSrc}
                   src={heroLogoSrc}
-                  alt="Supportiva"
+                  alt="Supportiva — Enterprise IT Services"
                   width={768}
                   height={512}
                   sizes="(min-width: 1024px) 560px, 0px"

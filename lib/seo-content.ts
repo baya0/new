@@ -30,6 +30,7 @@ type PageCopy = {
 export type PageKey =
   | "home"
   | "solutions"
+  | "services"
   | "projects"
   | "blog"
   | "vision"
@@ -72,6 +73,27 @@ export const SEO_COPY: Record<Lang, Record<PageKey, PageCopy>> = {
         "IT operations management",
         "IT service provider",
         "enterprise tech support",
+      ],
+    },
+    services: {
+      title: "IT Services — Managed IT, Cloud, Cybersecurity & More | Supportiva",
+      description:
+        "Enterprise IT services including managed IT, cloud migration, cybersecurity, datacenter infrastructure, and staff augmentation. Serving Turkey, UAE, and global markets.",
+      ogTitle: "IT Services | Supportiva",
+      keywords: [
+        "IT services",
+        "enterprise IT services",
+        "managed IT services",
+        "cloud services",
+        "cybersecurity services",
+        "datacenter services",
+        "network solutions",
+        "IT staff augmentation",
+        "cloud migration",
+        "digital transformation",
+        "MSP",
+        "IT services Turkey",
+        "IT services UAE",
       ],
     },
     solutions: {
@@ -204,6 +226,27 @@ export const SEO_COPY: Record<Lang, Record<PageKey, PageCopy>> = {
         "حلول تقنية للشركات",
       ],
     },
+    services: {
+      title: "خدمات تقنية المعلومات — IT مُدارة، سحابة، أمن سيبراني | Supportiva",
+      description:
+        "خدمات IT للمؤسسات تشمل الإدارة التقنية، الهجرة السحابية، الأمن السيبراني، والبنية التحتية. نخدم تركيا والإمارات والأسواق العالمية.",
+      ogTitle: "خدمات IT | سابورتيفا",
+      keywords: [
+        "خدمات تقنية المعلومات",
+        "خدمات IT للمؤسسات",
+        "خدمات IT مُدارة",
+        "managed IT services",
+        "خدمات سحابية للشركات",
+        "الأمن السيبراني للشركات",
+        "خدمات مراكز البيانات",
+        "حلول الشبكات",
+        "تعزيز الكوادر التقنية",
+        "الترقية السحابية",
+        "التحول الرقمي",
+        "خدمات IT في الإمارات",
+        "خدمات IT في تركيا",
+      ],
+    },
     solutions: {
       title: "حلول تقنية المعلومات: الخدمات المُدارة، السحابة، مراكز البيانات والأمن السيبراني",
       description:
@@ -329,6 +372,27 @@ export const SEO_COPY: Record<Lang, Record<PageKey, PageCopy>> = {
         "7/24 BT desteği",
         "kurumsal IT çözümleri",
         "IT danışmanlık",
+      ],
+    },
+    services: {
+      title: "BT Hizmetleri — Yönetilen BT, Bulut, Siber Güvenlik | Supportiva",
+      description:
+        "Yönetilen BT, bulut geçiş, siber güvenlik, veri merkezi altyapısı ve personel güçlendirme dahil kurumsal BT hizmetleri. Türkiye, BAE ve küresel piyasalara hizmet veriyoruz.",
+      ogTitle: "BT Hizmetleri | Supportiva",
+      keywords: [
+        "BT hizmetleri",
+        "kurumsal BT hizmetleri",
+        "yönetilen BT hizmetleri",
+        "managed services",
+        "bulut hizmetleri",
+        "bulut göçü",
+        "veri merkezi hizmetleri",
+        "ağ çözümleri",
+        "siber güvenlik hizmetleri",
+        "BT personel takviyesi",
+        "dijital dönüşüm",
+        "IT outsourcing",
+        "BT hizmetleri Türkiye",
       ],
     },
     solutions: {

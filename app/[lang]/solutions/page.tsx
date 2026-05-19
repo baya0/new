@@ -8,6 +8,7 @@ import { useLocalizedHref } from "@/lib/use-localized-href";
 import { useTheme } from "@/lib/theme-context";
 import {
   CheckCircle2,
+  ChevronDown,
   Cloud,
   Server,
   ShieldCheck,
@@ -401,6 +402,7 @@ export default function SolutionsPage() {
   const { dark } = useTheme();
   const s = t.solutions;
   const [selected, setSelected] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -658,6 +660,153 @@ export default function SolutionsPage() {
               </FadeIn>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── Trusted By — visible client names for E-E-A-T trust signal ── */}
+      <section className="relative overflow-hidden py-20 lg:py-24">
+        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
+          <FadeIn>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-6 h-px" style={{ background: "var(--blue)" }} />
+              <span className="text-[11px] font-bold tracking-wider" style={{ color: "var(--blue)" }}>
+                {s.trustedByTitle}
+              </span>
+            </div>
+            <h2
+              className="text-2xl lg:text-3xl font-bold leading-tight mb-8"
+              style={{ color: "var(--white)" }}
+            >
+              {s.trustedByTitle}
+            </h2>
+            <ul className="flex flex-wrap gap-3 lg:gap-4">
+              {s.trustedByClients.map((name: string) => (
+                <li
+                  key={name}
+                  className="px-5 py-2.5 rounded-xl text-sm font-semibold"
+                  style={{
+                    background: "var(--glass-card)",
+                    border: "1px solid var(--glass-card-border)",
+                    color: "var(--white)",
+                  }}
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── Technologies & Partners — visible vendor names for topical authority ── */}
+      <section className="relative overflow-hidden py-20 lg:py-24">
+        <div className="relative z-10 max-w-[1360px] mx-auto px-6 lg:px-10">
+          <FadeIn>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-6 h-px" style={{ background: "var(--cyan)" }} />
+              <span className="text-[11px] font-bold tracking-wider" style={{ color: "var(--cyan)" }}>
+                {s.techTitle}
+              </span>
+            </div>
+            <h2
+              className="text-2xl lg:text-3xl font-bold leading-tight mb-8"
+              style={{ color: "var(--white)" }}
+            >
+              {s.techTitle}
+            </h2>
+            <ul className="flex flex-wrap gap-3 lg:gap-4">
+              {s.techList.map((name: string) => (
+                <li
+                  key={name}
+                  className="px-5 py-2.5 rounded-xl text-sm font-semibold"
+                  style={{
+                    background: "var(--glass-card)",
+                    border: "1px solid var(--glass-card-border)",
+                    color: "var(--white)",
+                  }}
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── FAQ — visible accordion paired with FAQPage JSON-LD in the layout ── */}
+      <section id="faq" className="relative overflow-hidden py-20 lg:py-28">
+        <div className="relative z-10 max-w-3xl mx-auto px-6 lg:px-10">
+          <FadeIn>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-6 h-px" style={{ background: "var(--blue)" }} />
+              <span className="text-[11px] font-bold tracking-wider" style={{ color: "var(--blue)" }}>
+                {s.faqTitle}
+              </span>
+            </div>
+            <h2
+              className="text-3xl lg:text-4xl font-bold leading-tight mb-8"
+              style={{ color: "var(--white)" }}
+            >
+              {s.faqTitle}
+            </h2>
+            <ul className="space-y-3">
+              {s.faq.map((item: { q: string; a: string }, i: number) => {
+                const open = openFaq === i;
+                return (
+                  <li
+                    key={i}
+                    className="rounded-2xl overflow-hidden"
+                    style={{
+                      background: "var(--glass-card)",
+                      border: `1px solid ${open ? "var(--blue)" : "var(--glass-card-border)"}`,
+                      transition: "border-color 0.2s",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(open ? null : i)}
+                      aria-expanded={open}
+                      className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+                    >
+                      <h3
+                        className="text-[15px] lg:text-base font-semibold leading-snug"
+                        style={{ color: "var(--white)" }}
+                      >
+                        {item.q}
+                      </h3>
+                      <ChevronDown
+                        size={18}
+                        style={{
+                          color: "var(--blue)",
+                          transition: "transform 0.25s",
+                          transform: open ? "rotate(180deg)" : "rotate(0deg)",
+                          flexShrink: 0,
+                        }}
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {open && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25 }}
+                          style={{ overflow: "hidden" }}
+                        >
+                          <p
+                            className="px-5 pb-5 text-[14px] leading-relaxed"
+                            style={{ color: "var(--w55)" }}
+                          >
+                            {item.a}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </li>
+                );
+              })}
+            </ul>
+          </FadeIn>
         </div>
       </section>
 

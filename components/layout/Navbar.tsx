@@ -19,6 +19,7 @@ interface NavbarProps {
 const PAGES = [
   { key: "home",      path: "/" },
   { key: "solutions", path: "/solutions" },
+  { key: "services",  path: "/services" },
   { key: "vision",    path: "/vision" },
   { key: "projects",  path: "/projects" },
   { key: "blog",      path: "/blog" },

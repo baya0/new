@@ -7,6 +7,8 @@ import {
   getProjectBySlug,
 } from "@/sanity/lib/queries";
 import { fetchLocalized } from "@/sanity/lib/i18n-fetch";
+import { BASE_URL } from "@/lib/config";
+import { translations } from "@/lib/i18n";
 import { isLocale, LOCALES } from "@/lib/locales";
 import { alternatesFor } from "@/lib/seo";
 import {
@@ -170,5 +172,68 @@ export default async function ProjectDetailPage({ params }: Props) {
     images: allImages,
   };
 
-  return <ProjectDetailClient proj={view} />;
+  const nav = translations[lang].nav;
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    inLanguage: lang,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: nav.home,
+        item: `${BASE_URL}/${lang}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: nav.projects,
+        item: `${BASE_URL}/${lang}/projects`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: proj.title,
+        item: `${BASE_URL}/${lang}/projects/${proj.slug}`,
+      },
+    ],
+  };
+
+  const projectSchema = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    inLanguage: lang,
+    name: proj.title,
+    description: proj.seoDescription ?? proj.description ?? "",
+    ...(proj.location && { locationCreated: proj.location }),
+    ...(proj.year && { dateCreated: proj.year }),
+    ...(proj.tags && proj.tags.length > 0 && { keywords: proj.tags.join(", ") }),
+    ...(proj.image
+      ? { image: urlFor(proj.image as never).width(1200).height(630).url() }
+      : {}),
+    author: {
+      "@type": "Organization",
+      "@id": `${BASE_URL}#organization`,
+      name: "Supportiva",
+      url: BASE_URL,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${BASE_URL}/${lang}/projects/${proj.slug}`,
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
+      <ProjectDetailClient proj={view} />
+    </>
+  );
 }
