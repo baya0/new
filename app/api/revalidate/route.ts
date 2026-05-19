@@ -15,7 +15,7 @@ export const runtime = "nodejs";
  *   1. URL: https://<your-domain>/api/revalidate
  *   2. Dataset: production
  *   3. Trigger on: Create, Update, Delete
- *   4. Filter: _type in ["post", "project", "author"]
+ *   4. Filter: _type in ["post", "project", "author", "servicePage", "locationPage"]
  *   5. HTTP method: POST
  *   6. HTTP Headers: x-webhook-secret = <a long random string>
  *   7. Projection: { "_type": _type, "slug": slug.current }
@@ -76,10 +76,19 @@ export async function POST(request: NextRequest) {
     if (body.slug) flush(`/[lang]/profile/${body.slug}`);
     // Author name/avatar shows on blog cards too.
     flush("/[lang]/blog");
+  } else if (body._type === "servicePage") {
+    flush("/[lang]/services");
+    if (body.slug) flush(`/[lang]/services/${body.slug}`);
+  } else if (body._type === "locationPage") {
+    // Location pages key on serviceKey+locationKey, not a single slug, so
+    // we just flush the services index and let the [slug]/[location] route
+    // re-fetch on its next visit.
+    flush("/[lang]/services");
   } else {
     // Unknown or missing _type — be conservative and flush both listings.
     flush("/[lang]/blog");
     flush("/[lang]/projects");
+    flush("/[lang]/services");
   }
 
   return NextResponse.json({ ok: true, type: body._type ?? null, slug: body.slug ?? null, revalidated });

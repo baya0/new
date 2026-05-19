@@ -11,6 +11,8 @@ const TYPE_TITLES: Record<LocalizedSchemaType, string> = {
   post: 'Blog Posts',
   project: 'Projects',
   author: 'Authors',
+  servicePage: 'Service Pages',
+  locationPage: 'Location Pages',
 }
 
 // One sublist per (type, language). Editors land on a list that already

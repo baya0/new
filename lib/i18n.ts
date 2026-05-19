@@ -5,11 +5,36 @@ export const translations = {
     nav: {
       home: "Home",
       solutions: "Solutions",
+      services: "Services",
       vision: "Vision",
       projects: "Projects",
       blog: "Insights",
       contact: "Contact",
       cta: "Get Started →",
+    },
+    servicesIndex: {
+      h1: "IT Services Built for Enterprise Outcomes",
+      sub: "Managed IT, cloud migration, datacenter infrastructure, cybersecurity, and more — engineered for modern business across Turkey, the UAE, and global markets.",
+      eyebrow: "OUR SERVICES",
+      exploreButton: "Explore Service →",
+      emptyState: "Services are being added. Check back soon.",
+    },
+    servicePage: {
+      keyBenefits: "Key Benefits",
+      targetIndustries: "Target Industries",
+      technologies: "Technologies & Tools",
+      relatedCaseStudies: "Related Case Studies",
+      faqTitle: "Frequently Asked Questions",
+      ctaTitle: "Ready to discuss your project?",
+      ctaButton: "Get in Touch",
+      backToServices: "Back to Services",
+    },
+    locationPage: {
+      featuredCaseStudy: "Featured Case Study",
+      comingSoonBadge: "COMING SOON",
+      comingSoonTitle: "Local presence is on the way",
+      comingSoonBody:
+        "We're expanding direct service coverage to this city. Reach out and we'll discuss your project remotely or with our nearest team.",
     },
     home: {
       eyebrow: "✦ Managed IT Services · Cloud · Datacenter",
@@ -439,7 +464,7 @@ solutions: {
     footer: {
       tagline: "Transforming businesses through expert IT services.",
       cols: [
-        { title: "Solutions", links: ["IT Consulting", "Staff Augmentation", "Datacenter Infra", "Managed IT"] },
+        { title: "Solutions", links: ["Services", "IT Consulting", "Staff Augmentation", "Datacenter Infra", "Managed IT"] },
         { title: "Company", links: ["About Us", "Vision", "Projects", "The S Blog"] },
         { title: "Contact", links: ["+1 724 906 3303", "info@supportiva.net", "Sheridan, WY 82801", "USA"] },
       ],
@@ -449,8 +474,32 @@ solutions: {
 
   ar: {
     nav: {
-      home: "الرئيسية", solutions: "الحلول", vision: "رؤيتنا",
+      home: "الرئيسية", solutions: "الحلول", services: "الخدمات", vision: "رؤيتنا",
       projects: "المشاريع", blog: "المدونة", contact: "اتصل بنا", cta: "ابدأ الآن →",
+    },
+    servicesIndex: {
+      h1: "خدمات تقنية المعلومات للنتائج المؤسسية",
+      sub: "خدمات IT مُدارة، ترقية سحابية، بنية تحتية لمراكز البيانات، الأمن السيبراني والمزيد — مصممة للأعمال الحديثة في تركيا والإمارات والأسواق العالمية.",
+      eyebrow: "خدماتنا",
+      exploreButton: "استكشاف الخدمة →",
+      emptyState: "نعمل على إضافة الخدمات. عد قريبًا.",
+    },
+    servicePage: {
+      keyBenefits: "أبرز المزايا",
+      targetIndustries: "القطاعات المُستهدفة",
+      technologies: "التقنيات والأدوات",
+      relatedCaseStudies: "دراسات حالة ذات صلة",
+      faqTitle: "الأسئلة الشائعة",
+      ctaTitle: "هل أنت جاهز لمناقشة مشروعك؟",
+      ctaButton: "تواصل معنا",
+      backToServices: "العودة إلى الخدمات",
+    },
+    locationPage: {
+      featuredCaseStudy: "دراسة حالة بارزة",
+      comingSoonBadge: "قريبًا",
+      comingSoonTitle: "حضور محلي على الطريق",
+      comingSoonBody:
+        "نعمل على توسيع تغطية خدماتنا المباشرة في هذه المدينة. تواصل معنا وسنناقش مشروعك عن بُعد أو مع أقرب فريق لدينا.",
     },
     home: {
       eyebrow: "✦ خدمات IT مُدارة · حوسبة سحابية · مراكز بيانات",
@@ -790,7 +839,7 @@ solutions: {
     footer: {
       tagline: "نحوّل الأعمال من خلال خدمات تقنية المعلومات ",
       cols: [
-        { title: "الحلول", links: ["الاستشارات", "تعزيز الكوادر", "مراكز البيانات", "خدمات IT المُدارة"] },
+        { title: "الحلول", links: ["الخدمات", "الاستشارات", "تعزيز الكوادر", "مراكز البيانات", "خدمات IT المُدارة"] },
         { title: "الشركة", links: ["من نحن", "الرؤية", "المشاريع", "المدونة"] },
         { title: "تواصل معنا", links: ["+1 724 906 3303", "info@supportiva.net", "شيريدان، وايومنغ", "الولايات المتحدة"] },
       ],
@@ -800,8 +849,32 @@ solutions: {
 
   tr: {
     nav: {
-      home: "Ana Sayfa", solutions: "Çözümler", vision: "Vizyon",
+      home: "Ana Sayfa", solutions: "Çözümler", services: "Hizmetler", vision: "Vizyon",
       projects: "Projeler", blog: "S Blog", contact: "İletişim", cta: "Başlayın →",
+    },
+    servicesIndex: {
+      h1: "Kurumsal Sonuçlar için BT Hizmetleri",
+      sub: "Yönetilen BT, bulut göçü, veri merkezi altyapısı, siber güvenlik ve daha fazlası — Türkiye, BAE ve küresel pazarlardaki modern işletmeler için tasarlandı.",
+      eyebrow: "HİZMETLERİMİZ",
+      exploreButton: "Hizmeti Keşfet →",
+      emptyState: "Hizmetler ekleniyor. Yakında tekrar uğrayın.",
+    },
+    servicePage: {
+      keyBenefits: "Temel Faydalar",
+      targetIndustries: "Hedef Sektörler",
+      technologies: "Teknolojiler ve Araçlar",
+      relatedCaseStudies: "İlgili Vaka Çalışmaları",
+      faqTitle: "Sıkça Sorulan Sorular",
+      ctaTitle: "Projenizi konuşmaya hazır mısınız?",
+      ctaButton: "İletişime Geçin",
+      backToServices: "Hizmetlere Dön",
+    },
+    locationPage: {
+      featuredCaseStudy: "Öne Çıkan Vaka Çalışması",
+      comingSoonBadge: "YAKINDA",
+      comingSoonTitle: "Yerel varlık yolda",
+      comingSoonBody:
+        "Doğrudan hizmet kapsamımızı bu şehre genişletiyoruz. Bize ulaşın; projenizi uzaktan veya en yakın ekibimizle birlikte konuşalım.",
     },
     home: {
       eyebrow: "✦ Yönetilen BT Hizmetleri · Bulut · Veri Merkezi",
@@ -1141,7 +1214,7 @@ solutions: {
     footer: {
       tagline: "İşletmeleri uzman BT hizmetleriyle dönüştürüyoruz.",
       cols: [
-        { title: "Çözümler", links: ["BT Danışmanlığı", "Personel Güçlendirme", "Veri Merkezi", "Yönetilen BT"] },
+        { title: "Çözümler", links: ["Hizmetler", "BT Danışmanlığı", "Personel Güçlendirme", "Veri Merkezi", "Yönetilen BT"] },
         { title: "Şirket", links: ["Hakkımızda", "Vizyon", "Projeler", "S Blog"] },
         { title: "İletişim", links: ["+1 724 906 3303", "info@supportiva.net", "Sheridan, WY 82801", "ABD"] },
       ],

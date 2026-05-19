@@ -136,3 +136,82 @@ export const getAllAuthorsForSitemap = groq`*[_type == "author" && defined(slug.
   "slug": slug.current,
   _updatedAt
 }`
+
+// ── Service pages ─────────────────────────────────────────────────────
+export const getServicePageBySlug = groq`*[_type == "servicePage" && slug.current == $slug && coalesce(language, "en") == $language][0] {
+  _id,
+  _updatedAt,
+  title,
+  "slug": slug.current,
+  language,
+  serviceKey,
+  heroHeadline,
+  heroSubheading,
+  body,
+  keyBenefits,
+  targetIndustries,
+  technologies,
+  relatedProjectSlugs,
+  faq,
+  seoTitle,
+  seoDescription,
+  ogImage
+}`
+
+export const getAllServicePageSlugs = groq`*[_type == "servicePage" && defined(slug.current) && coalesce(language, "en") == "en"][].slug.current`
+
+export const getAllServicePages = groq`*[_type == "servicePage" && coalesce(language,"en") == $language] | order(serviceKey asc) {
+  _id,
+  title,
+  "slug": slug.current,
+  serviceKey,
+  heroSubheading,
+  seoDescription,
+  ogImage
+}`
+
+export const getServicePagesForSitemap = groq`*[_type == "servicePage" && defined(slug.current) && coalesce(language,"en") == "en"]{
+  "slug": slug.current,
+  _updatedAt
+}`
+
+// Batch fetch of related projects by slug list. Used by service detail
+// pages to render case-study cards without N+1 queries.
+export const getProjectsBySlugs = groq`*[_type == "project" && slug.current in $slugs && coalesce(language, "en") == $language] {
+  _id,
+  title,
+  "slug": slug.current,
+  image,
+  location,
+  year,
+  description,
+  color
+}`
+
+// ── Location pages ────────────────────────────────────────────────────
+export const getLocationPageByKeys = groq`*[_type == "locationPage" && serviceKey == $serviceKey && locationKey == $locationKey && coalesce(language, "en") == $language][0] {
+  _id,
+  _updatedAt,
+  title,
+  "slug": slug.current,
+  language,
+  serviceKey,
+  locationKey,
+  locationName,
+  heroHeadline,
+  heroSubheading,
+  body,
+  localCaseStudySlug,
+  faq,
+  seoTitle,
+  seoDescription,
+  ogImage
+}`
+
+export const getAllLocationPageKeys = groq`*[_type == "locationPage" && defined(serviceKey) && defined(locationKey) && coalesce(language, "en") == "en"]{ serviceKey, locationKey }`
+
+export const getLocationPagesForSitemap = groq`*[_type == "locationPage" && defined(serviceKey) && defined(locationKey) && coalesce(language,"en") == "en"]{
+  serviceKey,
+  locationKey,
+  _updatedAt
+}`
