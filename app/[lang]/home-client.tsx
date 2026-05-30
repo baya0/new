@@ -9,6 +9,7 @@ import { useLang } from "@/lib/language-context";
 import { useLocalizedHref } from "@/lib/use-localized-href";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
+import { BLUR } from "@/lib/blur-placeholders";
 const NetworkSwitch3D = dynamic(() => import("@/components/sections/NetworkSwitch3D"), { ssr: false });
 
 const colorMap: Record<string, string> = {
@@ -134,6 +135,8 @@ export default function HomeClient() {
               filter: "blur(1px) grayscale(15%)",
             }}
             priority
+            placeholder="blur"
+            blurDataURL={BLUR["/images/backgrounds/serversroom.jpg"]}
           />
           {/* Gradient veil — purely inline so dark-mode CSS overrides don't fire */}
           <div className="absolute inset-0" style={{
@@ -224,6 +227,8 @@ export default function HomeClient() {
                   height={512}
                   sizes="(min-width: 1024px) 560px, 0px"
                   priority
+                  placeholder="blur"
+                  blurDataURL={BLUR[heroLogoSrc]}
                   className="relative z-10 animate-float-slow w-full max-w-[560px] h-auto object-contain"
                 />
               </div>

@@ -8,6 +8,7 @@ import { useLocalizedHref } from "@/lib/use-localized-href";
 import { useTheme } from "@/lib/theme-context";
 import { Play } from "lucide-react";
 import Image from "next/image";
+import { BLUR } from "@/lib/blur-placeholders";
 
 const colorMap: Record<string, string> = {
   blue: "var(--blue)", cyan: "var(--cyan)", green: "var(--green)",
@@ -71,6 +72,8 @@ export default function VisionPage() {
               filter: "blur(1px) grayscale(15%)",
             }}
             priority
+            placeholder="blur"
+            blurDataURL={BLUR["/images/backgrounds/serverroom2.jpg"]}
           />
           {/* Gradient veil — purely inline so dark-mode CSS overrides don't fire */}
           <div className="absolute inset-0" style={{

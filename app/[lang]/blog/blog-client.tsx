@@ -73,9 +73,12 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
 
         {/* Server room image — fades out before the split view starts */}
         <div className="absolute inset-0 pointer-events-none">
+          {/* Decorative; current opacity is 0 in both themes, so it's not
+              priority-loaded — kept here so re-enabling is a one-line change. */}
           <Image
             src="/images/backgrounds/serversroom.jpg"
-            alt="Enterprise IT insights — Supportiva blog"
+            alt=""
+            aria-hidden
             fill
             sizes="100vw"
             className="object-cover object-top"
@@ -83,7 +86,7 @@ export default function BlogClient({ posts }: { posts: BlogPostView[] }) {
               opacity: dark ? 0.00 : 0.00,
               filter: "blur(1px) grayscale(15%)",
             }}
-            priority
+            loading="lazy"
           />
         </div>
 
