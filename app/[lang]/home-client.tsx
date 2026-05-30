@@ -10,6 +10,7 @@ import { useLocalizedHref } from "@/lib/use-localized-href";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
 import { BLUR } from "@/lib/blur-placeholders";
+import { LogoMarquee, type LogoMarqueeItem } from "@/components/ui/LogoMarquee";
 const NetworkSwitch3D = dynamic(() => import("@/components/sections/NetworkSwitch3D"), { ssr: false });
 
 const colorMap: Record<string, string> = {
@@ -59,44 +60,15 @@ function FadeIn({ children, className, delay = 0, y = 24 }: { children: React.Re
 const HERO_LOGO_LIGHT_SRC = "/images/backgrounds/logolight.png";
 const HERO_LOGO_DARK_SRC = "/images/backgrounds/logodark4.png";
 
-/* ─────────── Client logo map ─────────── */
-// Brand names are NEVER translated — they're trademarks. Always rendered in
-// English so the keys here always match the marquee list below.
-const CLIENT_LOGOS: Record<string, string | null> = {
-  "Dow":           "/images/clients/Dow.png",
-  "Medtronic":     "/images/clients/Medtronic.png",
-  "Mercedes-Benz": "/images/clients/Mercedes.png",
-  "Viatris":       "/images/clients/Viatris.png",
-};
-
-const TRUSTED_CLIENTS = ["Dow", "Medtronic", "Mercedes-Benz", "Viatris"] as const;
-
-function ClientLogo({ name }: { name: string }) {
-  const src = CLIENT_LOGOS[name] ?? null;
-  if (src) {
-    return (
-      <span className="shrink-0 flex items-center justify-center" style={{ height: 80 }}>
-        <Image
-          src={src}
-          alt={name}
-          width={300}
-          height={200}
-          sizes="220px"
-          style={{ height: 72, width: "auto" }}
-          className="object-contain"
-        />
-      </span>
-    );
-  }
-  return (
-    <span
-      className="shrink-0 text-[22px] lg:text-[32px] font-bold tracking-tight select-none"
-      style={{ color: "var(--w85)", opacity: 0.32, letterSpacing: "0.02em" }}
-    >
-      {name}
-    </span>
-  );
-}
+/* ─────────── Client logos ─────────── */
+// Brand names are trademarks — never translated. The marquee renders the
+// canonical asset regardless of page locale.
+const TRUSTED_LOGOS: LogoMarqueeItem[] = [
+  { src: "/images/clients/Dow.png",       alt: "Dow",           width: 300, height: 200 },
+  { src: "/images/clients/Medtronic.png", alt: "Medtronic",     width: 300, height: 200 },
+  { src: "/images/clients/Mercedes.png",  alt: "Mercedes-Benz", width: 300, height: 200 },
+  { src: "/images/clients/Viatris.png",   alt: "Viatris",       width: 300, height: 200 },
+];
 
 /* ─────────── Page ─────────── */
 
@@ -242,15 +214,13 @@ export default function HomeClient() {
           <div className="absolute left-1/2 -top-3 -translate-x-1/2 px-3 text-[10px] font-bold tracking-[0.2em] uppercase" style={{ background: "var(--bg0)", color: "var(--w25)" }}>
             {th.trustedBy}
           </div>
-          <div className="marquee-track">
-            {[...TRUSTED_CLIENTS, "—", ...TRUSTED_CLIENTS, "—", ...TRUSTED_CLIENTS, "—"].map((c, i) =>
-              c === "—" ? (
-                <span key={i} className="shrink-0 text-[24px] lg:text-[36px] font-bold" style={{ color: "var(--blue)" }}>—</span>
-              ) : (
-                <ClientLogo key={i} name={c} />
-              )
-            )}
-          </div>
+          <LogoMarquee
+            logos={TRUSTED_LOGOS}
+            speed={45}
+            itemHeight={72}
+            gap="5rem"
+            ariaLabel={th.trustedBy}
+          />
         </div>
       </section>
 
