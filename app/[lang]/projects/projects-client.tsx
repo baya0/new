@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { useLocalizedHref } from "@/lib/use-localized-href";
 import { useTheme } from "@/lib/theme-context";
+import { BLUR } from "@/lib/blur-placeholders";
 import {
   MapPin, ChevronLeft, ChevronRight, ChevronDown,
   LayoutGrid, ArrowLeftRight, Server, Headphones, Network, Leaf,
@@ -600,6 +601,8 @@ export default function ProjectsClient({ items }: { items: any[] }) {
               filter: "blur(1px) grayscale(15%)",
             }}
             priority
+            placeholder="blur"
+            blurDataURL={BLUR["/images/backgrounds/back1.jpg"]}
           />
           {/* Gradient: transparent at top → solid section bg at ~55% */}
           <div

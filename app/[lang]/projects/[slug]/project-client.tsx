@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/Button";
 import { useLang } from "@/lib/language-context";
 import { useLocalizedHref } from "@/lib/use-localized-href";
 import { useTheme } from "@/lib/theme-context";
+import { BLUR } from "@/lib/blur-placeholders";
 
 export type ProjectView = {
   slug: string;
@@ -289,6 +290,8 @@ export default function ProjectDetailClient({ proj }: { proj: ProjectView }) {
               filter: "blur(1px) grayscale(15%)",
             }}
             priority
+            placeholder="blur"
+            blurDataURL={BLUR["/images/backgrounds/back1.jpg"]}
           />
           <div
             className="absolute inset-0"
